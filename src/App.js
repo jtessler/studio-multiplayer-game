@@ -1,5 +1,6 @@
 import CircularProgress from 'material-ui/CircularProgress';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Header from './Header.js'
 import Paper from 'material-ui/Paper';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import React, { Component } from 'react';
@@ -77,7 +78,9 @@ export default class App extends Component {
       );
     } else {
       return (
-        <div></div>
+        <div>
+          <Header />
+        </div>
       );
     }
   }
