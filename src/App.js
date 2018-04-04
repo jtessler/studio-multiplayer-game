@@ -4,8 +4,10 @@ import Header from './Header.js'
 import Paper from 'material-ui/Paper';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import React, { Component } from 'react';
+import WaitingRoom from './WaitingRoom.js';
 import firebase from 'firebase';
 import firebaseConfig from './firebaseConfig.js';
+import { Route } from 'react-router-dom';
 
 const buttonStyle = {
   width: 56,
@@ -66,7 +68,7 @@ export default class App extends Component {
           </Paper>
         </center>
       );
-    } else if (this.state.user == null) {
+    } else if (this.state.user === null) {
       return (
         <center>
           <FloatingActionButton
@@ -80,6 +82,7 @@ export default class App extends Component {
       return (
         <div>
           <Header />
+          <Route path="/" component={WaitingRoom} exact />
         </div>
       );
     }
