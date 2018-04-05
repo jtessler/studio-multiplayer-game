@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton';
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import { Card, CardActions, CardTitle } from 'material-ui/Card';
+import { Link } from 'react-router-dom';
 
 const cardStyle = {
   marginTop: 14,
@@ -63,7 +64,9 @@ export default class WaitingRoom extends Component {
               title={session.type}
               subtitle={subtitle} />
           <CardActions>
-            <FlatButton label="Join" href={path} />
+            <Link to={path}>
+              <FlatButton label="Join" />
+            </Link>
           </CardActions>
         </Card>
       );

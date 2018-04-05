@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import React, { Component } from 'react';
 import Subheader from 'material-ui/Subheader';
 import firebase from 'firebase';
+import { Link } from 'react-router-dom';
 
 export default class Header extends Component {
   constructor(props) {
@@ -37,6 +38,11 @@ export default class Header extends Component {
             docked={false}
             open={this.state.drawerOpen}
             onRequestChange={(open) => this.setDrawerOpen(open)}>
+          <Link style={{textDecoration: 'none'}} to="/">
+            <MenuItem
+                onClick={() => this.setDrawerOpen(false)}
+                primaryText="Go to the waiting room" />
+          </Link>
           <Subheader>Active Games</Subheader>
           <MenuItem primaryText="No active sessions" disabled={true} />
         </Drawer>
