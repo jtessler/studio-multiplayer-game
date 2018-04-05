@@ -53,6 +53,20 @@ export default class GameCard extends Component {
     return "/" + type + "/" + id;
   }
 
+  joinSession() {
+    var uid = firebase.auth().currentUser.uid;
+    var path = "/session-metadata/" + this.props.session.id + "/users";
+    var sessionDatabaseRef = firebase.database().ref(path);
+    sessionDatabaseRef.transaction((users) => {
+      if (users.indexOf(uid) < 0) {
+        users.push(uid);
+      }
+      return users;
+    }).catch((error, committed, snapshot) => {
+      console.error("Error removing session metadata", error);
+    });
+  }
+
   deleteSession() {
     var path = "/session-metadata/" + this.props.session.id;
     var sessionDatabaseRef = firebase.database().ref(path);
@@ -66,6 +80,23 @@ export default class GameCard extends Component {
     return user.uid === this.props.session.creator;
   }
 
+  isInSession() {
+    var uid = firebase.auth().currentUser.uid;
+    return this.props.session.users.indexOf(uid) >= 0;
+  }
+
+  shouldShowStartButton() {
+    var users = this.props.session.users;
+    var minUsers = gameData[this.props.session.type].minUsers;
+    return this.isInSession() && users.length >= minUsers;
+  }
+
+  isFull() {
+    var users = this.props.session.users;
+    var maxUsers = gameData[this.props.session.type].maxUsers;
+    return users.length >= maxUsers;
+  }
+
   render() {
     var userListItems = this.props.session.users.map((uid) => (
       <ListItem
@@ -74,6 +105,30 @@ export default class GameCard extends Component {
           primaryText={UserApi.getName(uid)}
           leftAvatar={<Avatar src={UserApi.getPhotoUrl(uid)} />} />
     ));
+
+    var joinOrStartButton;
+    if (this.shouldShowStartButton()) {
+      var target = {
+        pathname: this.getGamePath(),
+        state: {
+          id: this.props.session.id,
+          creator: this.props.session.creator,
+          users: this.props.session.users
+        }
+      }
+      joinOrStartButton = (
+        <Link to={target}>
+          <FlatButton label="Start game" primary={true} />
+        </Link>
+      );
+    } else {
+      joinOrStartButton = (
+        <FlatButton
+            label={this.isFull() ? "Game is full" : "Join"}
+            onClick={() => this.joinSession()}
+            disabled={this.isInSession() || this.isFull()} />
+      );
+    }
 
     return (
       <Card style={this.props.style}>
@@ -93,10 +148,7 @@ export default class GameCard extends Component {
           <p style={{fontSize: 10}}>{this.getAuthors()}</p>
         </CardText>
         <CardActions>
-          <Link to={this.getGamePath()}>
-            <FlatButton label="Join" />
-          </Link>
-
+          {joinOrStartButton}
           <FlatButton
               label="Delete"
               onClick={() => this.deleteSession()}

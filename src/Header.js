@@ -60,7 +60,7 @@ class Header extends Component {
                 disabled={this.isInWaitingRoom()} />
           </Link>
           <Subheader>Active Games</Subheader>
-          <MenuItem primaryText="No active sessions" disabled={true} />
+          <MenuItem primaryText="Not implemented yet" disabled={true} />
         </Drawer>
       </div>
     );
