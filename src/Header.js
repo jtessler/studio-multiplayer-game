@@ -5,9 +5,11 @@ import MenuItem from 'material-ui/MenuItem';
 import React, { Component } from 'react';
 import Subheader from 'material-ui/Subheader';
 import firebase from 'firebase';
+import gameData from './gameData.js';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
-export default class Header extends Component {
+class Header extends Component {
   constructor(props) {
     super(props);
     this.state = { drawerOpen: false };
@@ -22,12 +24,25 @@ export default class Header extends Component {
         (error) => console.error("Failed to sign out", error));
   }
 
+  getTitle() {
+    var parts = this.props.location.pathname.split("/");
+    if (parts.length >= 2 && parts[1] in gameData) {
+      return gameData[parts[1]].title;
+    } else {
+      return "Studio Games!";
+    }
+  }
+
+  isInWaitingRoom() {
+    return this.props.location.pathname === "/";
+  }
+
   render() {
     var user = firebase.auth().currentUser;
     return (
       <div>
         <AppBar
-            title="ScriptEd Studio Games!"
+            title={this.getTitle()}
             iconElementRight={
               <FlatButton label={"Sign out as " + user.displayName} />
             }
@@ -41,7 +56,8 @@ export default class Header extends Component {
           <Link style={{textDecoration: 'none'}} to="/">
             <MenuItem
                 onClick={() => this.setDrawerOpen(false)}
-                primaryText="Go to the waiting room" />
+                primaryText="Go back to the waiting room"
+                disabled={this.isInWaitingRoom()} />
           </Link>
           <Subheader>Active Games</Subheader>
           <MenuItem primaryText="No active sessions" disabled={true} />
@@ -50,3 +66,5 @@ export default class Header extends Component {
     );
   }
 }
+
+export default withRouter(Header);
