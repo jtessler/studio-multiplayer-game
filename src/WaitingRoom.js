@@ -27,8 +27,6 @@ export default class WaitingRoom extends Component {
         return {
           id: id,
           type: sessionsSnapshot[id].type,
-          minUsers: sessionsSnapshot[id].minUsers,
-          maxUsers: sessionsSnapshot[id].maxUsers,
           users: sessionsSnapshot[id].users,
           creator: sessionsSnapshot[id].creator,
           timestamp: sessionsSnapshot[id].timestamp,

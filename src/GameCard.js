@@ -5,13 +5,14 @@ import React, { Component } from 'react';
 import Subheader from 'material-ui/Subheader';
 import UserApi from './UserApi.js';
 import firebase from 'firebase';
+import gameData from './gameData.js';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import { Link } from 'react-router-dom';
 import { List, ListItem } from 'material-ui/List';
 
 export default class GameCard extends Component {
   getTitle() {
-    return this.props.session.type;
+    return gameData[this.props.session.type].title;
   }
 
   getSubtitle() {
@@ -31,9 +32,18 @@ export default class GameCard extends Component {
     return "Created on " + dateString + " by " + creator;
   }
 
-  getText() {
+  getAuthors() {
+    var authors = gameData[this.props.session.type].authors;
+    return "This game was created by " + authors;
+  }
+
+  getDescription() {
+    return gameData[this.props.session.type].description;
+  }
+
+  getUserListHeader() {
     var numUsers = this.props.session.users.length;
-    var maxUsers = this.props.session.maxUsers;
+    var maxUsers = gameData[this.props.session.type].maxUsers;
     return numUsers + "/" + maxUsers + " users waiting to start";
   }
 
@@ -67,14 +77,20 @@ export default class GameCard extends Component {
 
     return (
       <Card style={this.props.style}>
-        <CardTitle title={this.getTitle()} subtitle={this.getSubtitle()} />
-        <CardText>
+        <CardTitle
+            title={this.getTitle()}
+            subtitle={this.getSubtitle()}
+            actAsExpander={true}
+            showExpandableButton={true} />
+        <CardText expandable={true}>
+          <p>{this.getDescription()}</p>
           <Divider />
           <List>
-            <Subheader>{this.getText()}</Subheader>
+            <Subheader>{this.getUserListHeader()}</Subheader>
             {userListItems}
           </List>
           <Divider />
+          <p style={{fontSize: 10}}>{this.getAuthors()}</p>
         </CardText>
         <CardActions>
           <Link to={this.getGamePath()}>

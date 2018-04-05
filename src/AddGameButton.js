@@ -4,14 +4,13 @@ import Popover from 'material-ui/Popover';
 import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import gameData from './gameData.js';
 
 class AddGameMenuItem extends Component {
   addGame() {
     var user = firebase.auth().currentUser;
     var sessionData = {
-      type: this.props.title,
-      minUsers: this.props.minUsers,
-      maxUsers: this.props.maxUsers,
+      type: this.props.type,
       users: [user.uid],
       creator: user.uid,
       timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -58,6 +57,14 @@ export default class AddGameButton extends Component {
   };
 
   render() {
+    var menuItems = Object.keys(gameData).map((type) => (
+      <AddGameMenuItem
+          key={type}
+          type={type}
+          title={gameData[type].title}
+          onClick={() => this.closePopover()} />
+    ));
+
     return (
       <center style={this.props.style}>
         <RaisedButton
@@ -71,16 +78,7 @@ export default class AddGameButton extends Component {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
             onRequestClose={() => this.closePopover()}>
           <Menu>
-            <AddGameMenuItem
-                title="chat-room"
-                minUsers={1}
-                maxUsers={10}
-                onClick={() => this.closePopover()} />
-            <AddGameMenuItem
-                title="tic-tac-toe"
-                minUsers={2}
-                maxUsers={2}
-                onClick={() => this.closePopover()} />
+            {menuItems}
           </Menu>
         </Popover>
       </center>

@@ -4,11 +4,12 @@ import Header from './Header.js'
 import Paper from 'material-ui/Paper';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import React, { Component } from 'react';
-import { UserApiConfig } from './UserApi.js';
 import WaitingRoom from './WaitingRoom.js';
 import firebase from 'firebase';
 import firebaseConfig from './firebaseConfig.js';
+import gameData from './gameData.js';
 import { Route } from 'react-router-dom';
+import { UserApiConfig } from './UserApi.js';
 
 const buttonStyle = {
   width: 56,
@@ -87,10 +88,17 @@ export default class App extends Component {
         </center>
       );
     } else {
+      var gameRoutes = Object.keys(gameData).map((type) => (
+        <Route
+            key={type}
+            path={"/" + type + "/:id"}
+            component={gameData[type].component} />
+      ));
       return (
         <div>
           <Header />
           <Route path="/" component={WaitingRoom} exact />
+          {gameRoutes}
         </div>
       );
     }
