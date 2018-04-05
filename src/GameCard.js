@@ -1,8 +1,13 @@
+import Avatar from 'material-ui/Avatar';
+import Divider from 'material-ui/Divider';
 import FlatButton from 'material-ui/FlatButton';
 import React, { Component } from 'react';
+import Subheader from 'material-ui/Subheader';
+import UserApi from './UserApi.js';
 import firebase from 'firebase';
 import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import { Link } from 'react-router-dom';
+import { List, ListItem } from 'material-ui/List';
 
 export default class GameCard extends Component {
   getTitle() {
@@ -22,7 +27,8 @@ export default class GameCard extends Component {
       year: "numeric",
     };
     var dateString = new Intl.DateTimeFormat("en-US", options).format(date);
-    return "Created on " + dateString;
+    var creator = UserApi.getName(this.props.session.creator);
+    return "Created on " + dateString + " by " + creator;
   }
 
   getText() {
@@ -51,10 +57,25 @@ export default class GameCard extends Component {
   }
 
   render() {
+    var userListItems = this.props.session.users.map((uid) => (
+      <ListItem
+          key={uid}
+          disabled={true}
+          primaryText={UserApi.getName(uid)}
+          leftAvatar={<Avatar src={UserApi.getPhotoUrl(uid)} />} />
+    ));
+
     return (
       <Card style={this.props.style}>
         <CardTitle title={this.getTitle()} subtitle={this.getSubtitle()} />
-        <CardText>{this.getText()}</CardText>
+        <CardText>
+          <Divider />
+          <List>
+            <Subheader>{this.getText()}</Subheader>
+            {userListItems}
+          </List>
+          <Divider />
+        </CardText>
         <CardActions>
           <Link to={this.getGamePath()}>
             <FlatButton label="Join" />

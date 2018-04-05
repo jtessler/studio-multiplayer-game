@@ -4,6 +4,7 @@ import Header from './Header.js'
 import Paper from 'material-ui/Paper';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import React, { Component } from 'react';
+import { UserApiConfig } from './UserApi.js';
 import WaitingRoom from './WaitingRoom.js';
 import firebase from 'firebase';
 import firebaseConfig from './firebaseConfig.js';
@@ -40,11 +41,18 @@ export default class App extends Component {
           }
         },
         (error) => { console.error("Failed to sign in", error) });
+
+    UserApiConfig.startListeningForChanges();
+  }
+
+  componentWillUnmount() {
+    UserApiConfig.stopListeningForChanges();
   }
 
   logSignIn(user) {
     var userData = {
       name: user.displayName,
+      photoURL: user.photoURL,
       lastSignIn: firebase.database.ServerValue.TIMESTAMP,
     }
     var userDatabaseRef = firebase.database().ref('/user/' + user.uid);
