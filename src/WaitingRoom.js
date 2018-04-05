@@ -1,10 +1,8 @@
 import AddGameButton from './AddGameButton.js';
 import CircularProgress from 'material-ui/CircularProgress';
-import FlatButton from 'material-ui/FlatButton';
+import GameCard from './GameCard.js';
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { Card, CardActions, CardTitle } from 'material-ui/Card';
-import { Link } from 'react-router-dom';
 
 const cardStyle = {
   marginTop: 14,
@@ -53,24 +51,12 @@ export default class WaitingRoom extends Component {
       )
     }
 
-    var cards = this.state.sessions.map((session) => {
-      var subtitle = session.users.length + "/" + session.maxUsers +
-          " users waiting to start";
-      var path = "/" + session.type + "/" + session.id;
-      return (
-        <Card key={session.id}>
-          <CardTitle
-              style={cardStyle}
-              title={session.type}
-              subtitle={subtitle} />
-          <CardActions>
-            <Link to={path}>
-              <FlatButton label="Join" />
-            </Link>
-          </CardActions>
-        </Card>
-      );
-    });
+    var cards = this.state.sessions.map((session) => (
+      <GameCard
+          key={session.id}
+          style={cardStyle}
+          session={session} />
+    ));
 
     return (
       <div>
