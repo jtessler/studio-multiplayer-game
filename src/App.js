@@ -21,7 +21,8 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      authIsLoading: true,
+      userApiIsLoading: true,
       user: null
     };
   }
@@ -31,7 +32,7 @@ export default class App extends Component {
 
     firebase.auth().onAuthStateChanged(
         (user) => this.setState({
-          loading: false,
+          authIsLoading: false,
           user: user
         }));
 
@@ -43,7 +44,8 @@ export default class App extends Component {
         },
         (error) => { console.error("Failed to sign in", error) });
 
-    UserApiConfig.startListeningForChanges();
+    UserApiConfig.startListeningForChanges().then(
+        () => this.setState({ userApiIsLoading: false }));
   }
 
   componentWillUnmount() {
@@ -63,13 +65,13 @@ export default class App extends Component {
   }
 
   signIn() {
-    this.setState({ loading: true });
+    this.setState({ authIsLoading: true });
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
   }
 
   render() {
-    if (this.state.loading) {
+    if (this.state.authIsLoading || this.state.userApiIsLoading) {
       return (
         <center>
           <Paper style={buttonStyle} circle={true}>

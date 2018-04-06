@@ -5,7 +5,7 @@ export default class UserApi {
 
   /** Returns true if the given user UID exists in memory. */
   static hasUid(uid) {
-    return uid in users;
+    return users === null || uid in users;
   }
 
   /** Returns the user's display name or null if it does not exist. */
@@ -40,24 +40,28 @@ export default class UserApi {
 }
 
 
-var users = {}; // In-memory cache of all user metadata.
-
-function onUserUpdate(snapshot) {
-  console.log("In-memory user cache updated", snapshot.val());
-  if (snapshot.val() === null) {
-    users = {};
-  } else {
-    users = snapshot.val();
-  }
-}
+var users = null; // In-memory cache of all user metadata.
 
 export class UserApiConfig {
   static startListeningForChanges() {
     var usersDatabaseRef = firebase.database().ref("/user");
-    usersDatabaseRef.on("value", onUserUpdate);
+    // Returns a Promise that resolves whenever the first load completes.
+    return new Promise((resolve) => {
+      usersDatabaseRef.on("value", (snapshot) => {
+        if (users === null) {
+          resolve();
+        }
+
+        if (snapshot.val() === null) {
+          users = {};
+        } else {
+          users = snapshot.val();
+        }
+      })
+    });
   }
 
   static stopListeningForChanges() {
-    firebase.database().ref("/user").off("value", onUserUpdate);
+    firebase.database().ref("/user").off();
   }
 }
