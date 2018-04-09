@@ -1,6 +1,7 @@
 import ChatRoom from './ChatRoom.js';
 import TicTacToe from './TicTacToe.js';
 import RockPaperScissors from './RockPaperScissors.js';
+import Multiplication from './Multiplication.js';
 
 const gameData = {
 
@@ -30,7 +31,15 @@ const gameData = {
     maxUsers: 2,
     component: RockPaperScissors,
   },
-
+  
+  wordgame: {
+    title: "Multiplication",
+    authors: "Edwin Fuquen",
+    description: "A multiplication speed game",
+    minUsers: 2,
+    maxUsers: 2,
+    component: Multiplication,
+  },
 
 }
 
