@@ -71,15 +71,7 @@ export default class App extends Component {
   }
 
   render() {
-    if (this.state.authIsLoading || this.state.userApiIsLoading) {
-      return (
-        <center>
-          <Paper style={buttonStyle} circle={true}>
-            <CircularProgress size={56} />
-          </Paper>
-        </center>
-      );
-    } else if (this.state.user === null) {
+    if (!this.state.authIsLoading && this.state.user === null) {
       return (
         <center>
           <FloatingActionButton
@@ -87,6 +79,14 @@ export default class App extends Component {
               onClick={() => this.signIn()}>
             <PersonAdd />
           </FloatingActionButton>
+        </center>
+      );
+    } else if (this.state.authIsLoading || this.state.userApiIsLoading) {
+      return (
+        <center>
+          <Paper style={buttonStyle} circle={true}>
+            <CircularProgress size={56} />
+          </Paper>
         </center>
       );
     } else {
