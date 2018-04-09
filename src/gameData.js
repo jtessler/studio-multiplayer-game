@@ -32,7 +32,7 @@ const gameData = {
     component: RockPaperScissors,
   },
   
-  wordgame: {
+  multiplication: {
     title: "Multiplication",
     authors: "Edwin Fuquen",
     description: "A multiplication speed game",
