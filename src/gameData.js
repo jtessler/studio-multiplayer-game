@@ -47,7 +47,7 @@ const gameData = {
     authors: "Devraj Mehta",
     description: "Classic Pong",
     minUsers: 1,
-    maxUsers: 1,
+    maxUsers: 2,
     component: Pong,
   },
 

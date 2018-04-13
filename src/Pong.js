@@ -1,26 +1,28 @@
+import Avatar from 'material-ui/Avatar';
+import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
+import Subheader from 'material-ui/Subheader';
 import UserApi from './UserApi.js';
 import firebase from 'firebase';
 
 /*
  * Database schema:
- *  - players:
- *    - "$userid": Integer position of paddle
+ *  - left: // Left player one == creator
+ *    - userid: User id
+ *    - height: Integer position of the top of paddle
+ *  - right: // Right player two == creator
+ *    - userid: User id (0 if one-player game)
+ *    - height: Integer position of the top of paddle
  *  - ball:
  *    - x: Integer ball horizontal position
  *    - y: Integer ball veritical position
  *  - winner: null until game over then user id of winner
+ *  - started: Boolean of whether or not game has started
  */
 
 const W = 500, H = 500; // Size of game
 const R = 20; // Radius of ball
 const paddleWidth = 10, paddleHeight = 100;
-
-const err = (error) => {
-  if(error) {
-    console.error("Error communicating with firebase", error);
-  }
-}
 
 export default class Pong extends Component {
   constructor(props) {
@@ -28,85 +30,152 @@ export default class Pong extends Component {
     this.user = firebase.auth().currentUser.uid;
     this.isCreator = this.user === props.location.state.creator;
     this.session = firebase.database().ref(`/session/${props.location.state.id}`);
-    this.state = {
-      ball: {
-        x: W/2 - R,
-        y: H/2 - R,
-        dx: 0,
-        dy: 0,
-      },
-      players: {
-        [this.user]: H/2,
-      },
-      winner: null,
-    };
-    this.player = this.session.child("players").child(this.user);
-    this.player.set(H/2, err);
     if(this.isCreator) {
-      this.ball = this.session.child("ball");
-      this.state.ball.dx = Math.random() * -3 - 2;
-      this.state.ball.dy = Math.random() * 6 - 3;
-      this.ball.set(this.state.ball, err);
-      this.interval = setInterval(() => this.updateBall(), 10);
+      this.player = this.session.child("left");
+    } else {
+      this.player = this.session.child("right");
     }
+    this.ball = this.session.child("ball");
+    this.state = {winner: false, started: false};
+    this.started = this.session.child("started");
+    this.started.on("value", (snapshot) => {
+      if(snapshot.val()) {
+        this.onGameStarted();
+      }
+    });
+    this.winner = this.session.child("winner");
+    this.winner.on("value", (snapshot) => {
+      if(snapshot.val() !== false) {
+        this.onGameOver();
+      }
+    });
     this.session.on("value", (snapshot) => {
       this.setState(snapshot.val());
-    })
+    });
+  }
+
+  onGameStarted() {
+    if(this.isCreator) {
+      var initState = {
+        winner: false,
+        started: true,
+        ball: {
+          x: W/2 - R,
+          y: H/2 - R,
+          dx: Math.random() * -3 - 2,
+          dy: Math.random() * 6 - 3,
+        },
+        left: {
+          userid: this.user,
+          height: H/2 - paddleHeight/2,
+        },
+        right: {
+          height: H/2 - paddleHeight/2,
+        },
+      };
+      if(this.props.location.state.users.length === 1) {
+        initState.right.userid = 0;
+      } else {
+        this.props.location.state.users.forEach(uid => {
+          if(uid !== this.user) {
+            initState.right.userid = uid;
+          }
+        });
+      }
+      this.session.set(initState);
+      this.setState(initState);
+      this.interval = setInterval(() => this.gameLoop(), 10);
+    }
+  }
+
+  gameLoop() {
+    this.updateBall();
+    // For one player game keep computer player paddle centered on ball
+    if(this.state.right.userid === 0) {
+      this.session.update({
+        "right/height": this.state.ball.y + R - paddleHeight/2
+      });
+    }
   }
 
   updateBall() {
-    var update = {};
     var {x, y, dx, dy} = this.state.ball;
-    // TODO check for paddle collision
-    if(x + dx < 0 || x + dx + R > W) {
-      dx = -dx;
-      update.dx = dx;
-      // TODO this should trigger game over
+    if(x <= 2*paddleWidth && y + 2*R >= this.state.left.height &&
+      y <= this.state.left.height + paddleHeight) {
+      dx = -dx; // Hit left paddle
+    } else if(x + 2*R >= W - 2*paddleWidth && y + 2*R >= this.state.right.height &&
+      y <= this.state.right.height + paddleHeight) {
+      dx = -dx; // Hit right paddle
+    } else if(x <= 0) {
+      this.winner.set(this.state.right.userid); // Hit left wall
+    } else if(x + 2*R >= W) {
+      this.winner.set(this.state.left.userid); // Hit right wall
     }
-    update.x = x + dx;
-    if(y + dy < 0 || y + dy + R > H) {
-      dy = -dy;
-      update.dy = dy;
+    if(y <= 0 || y + 2*R >= H) {
+      dy = -dy; // Hit top/bottom
     }
-    update.y = y + dy;
-    // TODO add corner checks?
-    this.ball.update(update);
+    this.ball.update({ x: x + dx, y: y + dy, dx: dx, dy: dy });
+  }
+
+  onMouseMove(e) {
+    this.player.update({height: e.clientY - paddleHeight});
+  }
+
+  onGameOver(uid) {
+    if(this.interval) {
+      clearInterval(this.interval);
+      this.interval = false;
+    }
+    if(this.state.started) {
+      this.started.set(false);
+    }
   }
 
   componentWillUnmount() {
     this.session.off();
-    if(this.interval) {
-      clearInterval(this.interval);
-    }
+    this.started.off();
+    this.winner.off();
+    this.onGameOver();
   }
 
   render() {
-    if(this.state.winner !== null) {
+    if(this.state.started === false) {
       return (
-        <div style={{display: 'flex'}}>
-          <h1>Game Over</h1>
-          <h2>{UserApi.getName(this.state.winner)} won</h2>
+        <div style={{textAlign: 'center'}}>
+          { this.state.winner !== false &&
+            <h1>Game Over: {this.state.winner === 0 ?  'Computer':
+                UserApi.getName(this.state.winner)} won</h1>
+          }
+          <RaisedButton label="Start Game"
+            onClick={() => this.started.set(true)}/>
+          <div>
+            <Subheader>Users:</Subheader>
+            {this.props.location.state.users.map((uid) =>
+                <Avatar key={uid} src={UserApi.getPhotoUrl(uid)} />
+            )}
+          </div>
         </div>
       );
     }
     return (
       <div style={{
-        margin: '30px auto', position: 'relative',
-        width: W+'px', height: H+'px',
-        backgroundColor: 'black',
-      }}>
+        margin: '30px auto', position: 'relative', backgroundColor: 'black',
+        width: W+'px', height: H+'px', cursor: 'none',
+      }} onMouseMove={(e) => this.onMouseMove(e)}>
       <div style={{
-        position: 'absolute',
+        position: 'absolute', backgroundColor: 'white',
         width: paddleWidth+'px', height: paddleHeight+'px',
-        top: (this.state.players[this.user] - paddleHeight/2)+'px',
-        left: paddleWidth+'px',
-        backgroundColor: 'white',
+        top: this.state.left.height+'px', left: paddleWidth+'px',
       }}></div>
       <div style={{
-        position: 'absolute',
+        position: 'absolute', backgroundColor: 'white',
+        width: paddleWidth+'px', height: paddleHeight+'px',
+        top: this.state.right.height+'px', right: paddleWidth+'px',
+      }}></div>
+      <div style={{
+        position: 'absolute', backgroundColor: 'white',
         width: 2*R+'px', height: 2*R+'px', borderRadius: R+'px',
         top: this.state.ball.y+'px', left: this.state.ball.x+'px',
-        backgroundColor: 'white',
       }}></div>
       </div>
     );
