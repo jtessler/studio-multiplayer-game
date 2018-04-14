@@ -2,6 +2,7 @@ import ChatRoom from './ChatRoom.js';
 import TicTacToe from './TicTacToe.js';
 import RockPaperScissors from './RockPaperScissors.js';
 import Multiplication from './Multiplication.js';
+import Pong from './Pong.js';
 
 const gameData = {
 
@@ -39,6 +40,15 @@ const gameData = {
     minUsers: 2,
     maxUsers: 2,
     component: Multiplication,
+  },
+
+  pong: {
+    title: "Pong",
+    authors: "Devraj Mehta",
+    description: "Classic Pong",
+    minUsers: 1,
+    maxUsers: 2,
+    component: Pong,
   },
 
 }
