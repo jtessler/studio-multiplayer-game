@@ -3,6 +3,7 @@ import TicTacToe from './TicTacToe.js';
 import RockPaperScissors from './RockPaperScissors.js';
 import Multiplication from './Multiplication.js';
 import Pong from './Pong.js';
+import Questions from './TwentyOneQuestions.js';
 
 const gameData = {
 
@@ -49,6 +50,15 @@ const gameData = {
     minUsers: 1,
     maxUsers: 2,
     component: Pong,
+  },
+
+  questions: {
+    title: "21 Questions",
+    authors: "Jordan K., Prieya N.",
+    description: "21 questions between 2 players",
+    minUsers: 1,
+    maxUsers: 2,
+    component: Questions,
   },
 
 }
