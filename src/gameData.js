@@ -6,6 +6,7 @@ import Pong from './Pong.js';
 import Questions from './TwentyOneQuestions.js';
 import Spark from './Spark.js';
 import uno from './uno.js';
+import Mafia from './Mafia.js';
 
 const gameData = {
 
@@ -79,6 +80,15 @@ const gameData = {
     minUsers: 2,
     maxUsers: 2,
     component: uno,
+  },
+
+  mafia: {
+    title: "Mafia",
+    authors: "Caelan Springer, Daniel Lin, Daniel Zamilatskiy",
+    description: "Your greatest friends can be your greatest enemy. Trust no one but yourself.",
+    minUsers: 1,
+    maxUsers: 20,
+    component: Mafia,
   },
 }
 
