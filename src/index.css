@@ -7,3 +7,40 @@ body {
 .twentyonequestion .question:hover{
   text-decoration:underline;
 }
+
+.spark {
+  background-color: #ffcccc;
+}
+
+.spark img{
+  width: 100%;
+  max-height: auto;
+}
+
+.spark .list {
+  position: relative;
+  float: right;
+  left: 550px;
+}
+
+.spark .blurb {
+  position: relative;
+  width: 700px;
+  bottom: 450px;
+  border-style: dashed;
+  float: right;
+}
+
+.war {
+  text-align: center;
+}
+
+.war .playerTwo {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.war .number {
+  font-size: 6.5em;
+}

@@ -4,6 +4,8 @@ import RockPaperScissors from './RockPaperScissors.js';
 import Multiplication from './Multiplication.js';
 import Pong from './Pong.js';
 import Questions from './TwentyOneQuestions.js';
+import Spark from './Spark.js';
+import uno from './uno.js';
 
 const gameData = {
 
@@ -61,6 +63,23 @@ const gameData = {
     component: Questions,
   },
 
+  photosharing: {
+    title: "Spark",
+    authors: "Ramata Williams and Andrea Cajamarca",
+    description: "Ripping off Twitter, Instagram, AND Tumblr.",
+    minUsers: 2,
+    maxUserss: 5,
+    component: Spark,
+  },
+
+  uno: {
+    title: "I Declare War",
+    authors: "Nia Davis, Jackie He, Lisandro Mayancela, Steven Rosario",
+    description: "The classic UNO game",
+    minUsers: 2,
+    maxUsers: 2,
+    component: uno,
+  },
 }
 
 export default gameData;
