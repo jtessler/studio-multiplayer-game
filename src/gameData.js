@@ -54,6 +54,15 @@ const gameData = {
     maxUsers: 2,
     component: Pong,
   },
+  
+  pokemon: {
+      title: "Pokemon Simulator",
+      authors: "Imani Greenidge and Raishan Bernard",
+      description: "Turn Based Pokemon Battle",
+      minUsers: 2,
+      maxUsers: 2,
+      component: Pokemon,
+  },
 
   questions: {
     title: "21 Questions",
