@@ -3,11 +3,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 // import AppBar from 'material-ui/AppBar';
 import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
-import pokeStyle from './pokeStyle.css'
 import firebase from 'firebase'
-import backgroundImage1 from './images/Background1.png'
-import Trainer1Image from './images/Trainer1.png'
-import Trainer2Image from './images/Trainer2.png'
 import UserApi from './UserApi.js';
 import Avatar from 'material-ui/Avatar';
 
@@ -32,7 +28,7 @@ export default class Pokemon extends Component {
 
     componentWillMount() {
         var id = this.props.match.params.id;
-        this.sessionDatabaseRef = firebase.database().ref("/session/"  id);
+        this.sessionDatabaseRef = firebase.database().ref("/session/" + id);
         var currentUser = firebase.auth().currentUser.uid;
 
         this.sessionDatabaseRef.on("value", (snapshot) => {
@@ -88,7 +84,7 @@ export default class Pokemon extends Component {
 
     render() {
         
-                 let display 
+        let display 
          if(this.state.playerOneHealth <= 0) {
              display = <h1>{UserApi.getName(this.state.playerTwo)} Wins</h1>
              {this.gameReset}
@@ -98,13 +94,13 @@ export default class Pokemon extends Component {
          }
 
         return (
-            <div className="main">
+            <div className="pokemon">
                 <div id="mainTitle">
                     <h1> Pokemon Universe! </h1>
                     <RaisedButton label="Start/Reset" primary={true} onClick={this.gameReset.bind(this)}/>
                     {display}
                 </div>
-                <div class="playerOne">
+                <div className="playerOne">
                     <h2>Player 1: {UserApi.getName(this.state.playerOne)}</h2>
                     <Avatar src={UserApi.getPhotoUrl(this.state.playerOne)}/>
                     <h3> HP {this.state.playerOneHealth} </h3>
@@ -116,7 +112,7 @@ export default class Pokemon extends Component {
                     </div>
                 </div>
                 <div id="mainBox">
-                <img className="battleImage" src={backgroundImage1} />
+                    <img className="battleImage" src="https://raw.githubusercontent.com/ijgreenidge/studio-multiplayer-game/master/src/images/Background1.png" />
                 </div>
                 <div class="playerTwo">
                     <div id="playerInfo2">

@@ -7,6 +7,7 @@ import Questions from './TwentyOneQuestions.js';
 import Spark from './Spark.js';
 import uno from './uno.js';
 import Mafia from './Mafia.js';
+import Pokemon from './Pokemon.js'
 
 const gameData = {
 
@@ -59,7 +60,7 @@ const gameData = {
       title: "Pokemon Simulator",
       authors: "Imani Greenidge and Raishan Bernard",
       description: "Turn Based Pokemon Battle",
-      minUsers: 2,
+      minUsers: 1,
       maxUsers: 2,
       component: Pokemon,
   },

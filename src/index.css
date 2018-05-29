@@ -68,3 +68,54 @@ body {
    font-family: "Times New Roman", Times, serif;
    border-radius: 8px;
 }
+
+
+.pokemon #mainTitle {
+  text-align: center;
+}
+
+.pokemon {
+  height:1000px;
+  background-image: url("https://img00.deviantart.net/0343/i/2013/048/b/b/pokemon_wallpaper___pikachu_by_kennedyzak-d5vb6hq.png");
+}
+
+.pokemon .playerImage{
+  width:160px;
+}
+
+.pokemon .playerTwo{
+  float:right;
+}
+
+.pokemon #sub-title {
+text-align: center;
+color: red;
+}
+
+.pokemon #mainBox{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
+}
+
+.pokemon #mainBox .battleImage{
+  height:150px
+}
+
+.pokemon .playerTwo #playerInfo2{
+position: absolute;
+top: 22%;
+left: 75%;
+}
+
+.pokemon .playerOne .fixed-btns {
+display: flex;
+margin: 0 auto;
+}
+
+.pokemon .playerTwo .fixed-btns {
+  display: flex;
+  margin: 0 auto;
+  }
