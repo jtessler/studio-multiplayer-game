@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "firebase": "^4.12.1",
-    "material-ui": "^0.20.0",
-    "react": "^16.3.0",
-    "react-dom": "^16.3.0",
-    "react-router-dom": "^4.2.2"
+    "firebase": "^5.8.4",
+    "material-ui": "^0.20.2",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-router-dom": "^4.3.1"
   },
   "devDependencies": {
-    "react-scripts": "1.1.1"
+    "react-scripts": "^2.1.5"
   },
   "scripts": {
     "start": "react-scripts start",
