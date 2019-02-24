@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import firebase from 'firebase';
 import Day from './Day.js';
 import Night from './Night.js';
 import Announcment from './Announcment.js';
-import Voting from './Voting.js';
 
 var roles = {
     Mafia: {
@@ -146,7 +143,6 @@ export default class Mafia extends Component {
 
                 var numUsers = users.length;
                 var numMafia = Math.ceil(numUsers / 3);
-                var numCitizens = numUsers - numMafia;
 
                 this.shuffle(users);
 
@@ -157,7 +153,7 @@ export default class Mafia extends Component {
                     });
                 }
 
-                for (var i = numMafia; i < numUsers; i++) {
+                for (i = numMafia; i < numUsers; i++) {
                     players.push({
                         id: users[i],
                         role: roles.Citizen

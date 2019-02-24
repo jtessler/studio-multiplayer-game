@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import Avatar from 'material-ui/Avatar';
-import FlatButton from 'material-ui/FlatButton';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
 import RaisedButton from 'material-ui/RaisedButton';
-import UserApi from './UserApi.js';
 import firebase from 'firebase';
 
 function shuffle(a) {
@@ -163,7 +158,7 @@ export default class uno extends Component {
       if(this.state.pile1[0] != null && this.state.pile2[0] != null){
         if(this.state.pile1[0][0] > this.state.pile2[0][0]){
           this.winner.set("P1 Wins")
-          var win = this.state.stack1.push(this.state.pile1)
+          this.state.stack1.push(this.state.pile1)
         } else if(this.state.pile1[0][0] < this.state.pile2[0][0]){
           this.winner.set("P2 Wins!")
         } 

@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 // import AppBar from 'material-ui/AppBar';
-import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
 import firebase from 'firebase'
 import UserApi from './UserApi.js';
 import Avatar from 'material-ui/Avatar';
-
-
-const style = {
-    margin: 12,
-};
 
 export default class Pokemon extends Component {
 
@@ -70,8 +63,8 @@ export default class Pokemon extends Component {
 
 
     gameReset() {
-        this.sessionDatabaseRef.update({ playerOneHealth: this.state.playerOneHealth = 100 });
-        this.sessionDatabaseRef.update({ playerTwoHealth: this.state.playerTwoHealth = 100 });
+        this.sessionDatabaseRef.update({ playerOneHealth: 100 });
+        this.sessionDatabaseRef.update({ playerTwoHealth: 100 });
     }
     
     runScene(){
@@ -87,10 +80,10 @@ export default class Pokemon extends Component {
         let display 
          if(this.state.playerOneHealth <= 0) {
              display = <h1>{UserApi.getName(this.state.playerTwo)} Wins</h1>
-             {this.gameReset()}
+             this.gameReset()
          } else if(this.state.playerTwoHealth <= 0) {
              display = <h1>{UserApi.getName(this.state.playerOne)} Wins</h1>
-             {this.gameReset()}
+             this.gameReset()
          }
 
         return (
@@ -112,7 +105,7 @@ export default class Pokemon extends Component {
                     </div>
                 </div>
                 <div id="mainBox">
-                    <img className="battleImage" src="https://raw.githubusercontent.com/ijgreenidge/studio-multiplayer-game/master/src/images/Background1.png" />
+                    <img alt='' className="battleImage" src="https://raw.githubusercontent.com/ijgreenidge/studio-multiplayer-game/master/src/images/Background1.png" />
                 </div>
                 <div class="playerTwo">
                     <div id="playerInfo2">

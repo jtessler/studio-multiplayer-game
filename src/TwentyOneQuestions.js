@@ -1,5 +1,3 @@
-import CircularProgress from 'material-ui/CircularProgress';
-import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -114,13 +112,12 @@ export default class TwentyOneQuestions extends Component {
             question2: []
         };
         var currentUser = firebase.auth().currentUser.uid;
-        this.creator = props.location.state.creator == currentUser;
+        this.creator = props.location.state.creator === currentUser;
     }
 
     componentWillMount() {
         var id = this.props.match.params.id;
         var sessionDatabaseRef = firebase.database().ref("/session/" + id);
-        var currentUser = firebase.auth().currentUser.uid;
         sessionDatabaseRef.on("value", (snapshot) => {
             var sessionSnapshot = snapshot.val();
             if (sessionSnapshot !== null) {
@@ -217,7 +214,6 @@ export default class TwentyOneQuestions extends Component {
         if (a) {
             var sessionId = this.props.match.params.id;
             var sessionDatabaseRef = firebase.database().ref("/session/" + sessionId);
-            var currentUser = firebase.auth().currentUser.uid;
          
             if(this.creator) {
                 sessionDatabaseRef.child("tally1").set(this.state.tally1 + 1, (error) => {
@@ -246,7 +242,6 @@ export default class TwentyOneQuestions extends Component {
             tally2: 0,
             answerIsCorrect: false,
             hidden: true,
-            open: false,
             cUser: this.props.location.state.creator,
             winner: "",
             isGameFinished: false

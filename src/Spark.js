@@ -1,7 +1,6 @@
 import Avatar from 'material-ui/Avatar';
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
-import UserApi from './UserApi.js';
 import firebase from 'firebase';
 import { List, ListItem } from 'material-ui/List';
 import {GridList, GridTile} from 'material-ui/GridList';
@@ -9,10 +8,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 
 import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 
 
@@ -154,8 +151,8 @@ export default class Spark extends Component {
       >
           {this.state.posts.map((tile) => (
             <GridTile
-              title={tile.name, tile.user}>
-              <img src={tile.image} />
+              title={tile.name}>
+              <img alt='' src={tile.image} />
             </GridTile>
           ))}
         </GridList>
