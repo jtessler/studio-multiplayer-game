@@ -289,7 +289,7 @@ export default class TwentyOneQuestions extends Component {
             <FlatButton
             label="Cancel"
             primary={true}
-            onClick={() => { console.log(1); {this.handleClose} }}
+            onClick={() => { console.log(1); this.handleClose() }}
             //onClick={this.handleClose}
           />,
             <FlatButton

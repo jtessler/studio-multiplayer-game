@@ -87,10 +87,10 @@ export default class Pokemon extends Component {
         let display 
          if(this.state.playerOneHealth <= 0) {
              display = <h1>{UserApi.getName(this.state.playerTwo)} Wins</h1>
-             {this.gameReset}
+             {this.gameReset()}
          } else if(this.state.playerTwoHealth <= 0) {
              display = <h1>{UserApi.getName(this.state.playerOne)} Wins</h1>
-             {this.gameReset}
+             {this.gameReset()}
          }
 
         return (
