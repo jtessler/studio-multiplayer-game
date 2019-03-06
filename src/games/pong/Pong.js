@@ -2,7 +2,7 @@ import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
 import Subheader from 'material-ui/Subheader';
-import UserApi from './UserApi.js';
+import UserApi from '../../UserApi.js';
 import firebase from 'firebase';
 
 /*
