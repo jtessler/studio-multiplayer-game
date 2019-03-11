@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import UserApi from './UserApi.js';
+import UserApi from '../../UserApi.js';
 import firebase from 'firebase';
 
 const State = {

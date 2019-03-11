@@ -1,13 +1,13 @@
-import ChatRoom from './ChatRoom.js';
-import TicTacToe from './TicTacToe.js';
-import RockPaperScissors from './RockPaperScissors.js';
-import Multiplication from './Multiplication.js';
-import Pong from './Pong.js';
-import Questions from './TwentyOneQuestions.js';
-import Spark from './Spark.js';
-import uno from './uno.js';
-import Mafia from './Mafia.js';
-import Pokemon from './Pokemon.js'
+import ChatRoom from './games/chatroom/ChatRoom.js';
+import TicTacToe from './games/tictactoe/TicTacToe.js';
+import RockPaperScissors from './games/rps/RockPaperScissors.js';
+import Multiplication from './games/multiplication/Multiplication.js';
+import Pong from './games/pong/Pong.js';
+import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js';
+import Spark from './games/spark/Spark.js';
+import uno from './games/uno/uno.js';
+import Mafia from './games/mafia/Mafia.js';
+import Pokemon from './games/pokemon/Pokemon.js'
 
 const gameData = {
 
@@ -37,7 +37,7 @@ const gameData = {
     maxUsers: 2,
     component: RockPaperScissors,
   },
-  
+
   multiplication: {
     title: "Multiplication",
     authors: "Edwin Fuquen",
@@ -55,7 +55,7 @@ const gameData = {
     maxUsers: 2,
     component: Pong,
   },
-  
+
   pokemon: {
       title: "Pokemon Simulator",
       authors: "Imani Greenidge and Raishan Bernard",
@@ -71,7 +71,7 @@ const gameData = {
     description: "21 questions between 2 players",
     minUsers: 1,
     maxUsers: 2,
-    component: Questions,
+    component: TwentyOneQuestions,
   },
 
   photosharing: {

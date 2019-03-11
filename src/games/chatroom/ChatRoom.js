@@ -1,7 +1,7 @@
 import Avatar from 'material-ui/Avatar';
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
-import UserApi from './UserApi.js';
+import UserApi from '../../UserApi.js';
 import firebase from 'firebase';
 import { List, ListItem } from 'material-ui/List';
 
