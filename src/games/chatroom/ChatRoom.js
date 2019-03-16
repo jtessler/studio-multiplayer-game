@@ -1,11 +1,12 @@
 import Avatar from 'material-ui/Avatar';
-import React, { Component } from 'react';
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
 import TextField from 'material-ui/TextField';
 import UserApi from '../../UserApi.js';
 import firebase from 'firebase';
 import { List, ListItem } from 'material-ui/List';
 
-export default class ChatRoom extends Component {
+export default class ChatRoom extends GameComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,30 +15,15 @@ export default class ChatRoom extends Component {
     };
   }
 
-  componentWillMount() {
-    var id = this.props.match.params.id;
-    var sessionDatabaseRef = firebase.database().ref("/session/" + id);
-    sessionDatabaseRef.on("value", (snapshot) => {
-      var sessionSnapshot = snapshot.val();
-      if (sessionSnapshot === null) {
-        this.setState({ chats: [] });
-        return;
-      }
-
-      var chats = Object.keys(sessionSnapshot).map((id) => ({
-        id: id,
-        message: sessionSnapshot[id].message,
-        timestamp: sessionSnapshot[id].timestamp,
-        user: sessionSnapshot[id].user,
-      }));
-      chats.sort((a, b) => b.timestamp - a.timestamp);
-      this.setState({ chats: chats });
-    });
-  }
-
-  componentWillUnmount() {
-    var id = this.props.match.params.id;
-    firebase.database().ref("/session/" + id).off();
+  onSessionDataChanged(data) {
+    var chats = Object.keys(data).map((id) => ({
+      id: id,
+      message: data[id].message,
+      timestamp: data[id].timestamp,
+      user: data[id].user,
+    }));
+    chats.sort((a, b) => b.timestamp - a.timestamp);
+    this.setState({ chats: chats });
   }
 
   handleKeyEvent(key) {
@@ -45,11 +31,9 @@ export default class ChatRoom extends Component {
       var chatData = {
         message: this.state.input,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
-        user: firebase.auth().currentUser.uid
+        user: this.getMyUserId(),
       }
-      var sessionId = this.props.match.params.id;
-      var sessionDatabaseRef = firebase.database().ref("/session/" + sessionId);
-      sessionDatabaseRef.push(chatData, (error) => {
+      this.getSessionDatabaseRef().push(chatData, (error) => {
         if (error) {
           console.error("Error storing session metadata", error);
         }

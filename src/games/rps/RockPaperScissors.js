@@ -1,7 +1,7 @@
 import CircularProgress from 'material-ui/CircularProgress';
+import GameComponent from '../../GameComponent.js';
 import RaisedButton from 'material-ui/RaisedButton';
-import React, { Component } from 'react';
-import firebase from 'firebase';
+import React from 'react';
 
 const gameOverMessages = {
   Rock: {
@@ -21,7 +21,7 @@ const gameOverMessages = {
   },
 };
 
-export default class RockPaperScissors extends Component {
+export default class RockPaperScissors extends GameComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,36 +30,20 @@ export default class RockPaperScissors extends Component {
     };
   }
 
-  componentWillMount() {
-    var id = this.props.match.params.id;
-    var sessionDatabaseRef = firebase.database().ref("/session/" + id);
-    var currentUser = firebase.auth().currentUser.uid;
-    sessionDatabaseRef.on("value", (snapshot) => {
-      var sessionSnapshot = snapshot.val();
-      if (sessionSnapshot === null) {
-        return;
+  onSessionDataChanged(data) {
+    for(var uid in data) {
+      if(uid === this.getMyUserId()) {
+        this.setState({choice: data[uid]});
+      } else {
+        this.setState({opponent: data[uid]});
       }
-      for(var uid in sessionSnapshot) {
-        if(uid === currentUser) {
-          this.setState({choice: sessionSnapshot[uid]});
-        } else {
-          this.setState({opponent: sessionSnapshot[uid]});
-        }
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    var id = this.props.match.params.id;
-    firebase.database().ref("/session/" + id).off();
+    }
   }
 
   select(choice) {
     var userChoice = {};
-    userChoice[firebase.auth().currentUser.uid] = choice;
-    var sessionId = this.props.match.params.id;
-    var sessionDatabaseRef = firebase.database().ref("/session/" + sessionId);
-    sessionDatabaseRef.set(userChoice, (error) => {
+    userChoice[this.getMyUserId()] = choice;
+    this.getSessionDatabaseRef().set(userChoice, (error) => {
       if (error) {
         console.error("Error storing session metadata", error);
       }

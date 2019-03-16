@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import UserApi from '../../UserApi.js';
-import firebase from 'firebase';
 
 const State = {
   EMPTY: " ",
@@ -9,48 +9,37 @@ const State = {
   O: "0",
 };
 
-export default class TicTacToe extends Component {
+export default class TicTacToe extends GameComponent {
   constructor(props) {
     super(props);
     this.state = {
       cellState: (new Array(9)).fill(State.EMPTY),
-      currentUser: this.props.location.state.creator,
+      currentUser: this.getSessionCreatorUserId(),
     };
   }
 
-  componentWillMount() {
-    var id = this.props.match.params.id;
-    var sessionDatabaseRef = firebase.database().ref("/session/" + id);
-    sessionDatabaseRef.on("value", (snapshot) => {
-      var sessionSnapshot = snapshot.val();
-      if (sessionSnapshot !== null) {
-        this.setState({
-          cellState: sessionSnapshot.cell_state,
-          currentUser: sessionSnapshot.current_user,
-        });
-      }
+  onSessionDataChanged(data) {
+    this.setState({
+      cellState: data.cell_state,
+      currentUser: data.current_user,
     });
   }
 
-  componentWillUnmount() {
-    var id = this.props.match.params.id;
-    firebase.database().ref("/session/" + id).off();
-  }
-
   isMyTurn() {
-    var uid = firebase.auth().currentUser.uid;
-    return this.state.currentUser === uid;
+    return this.state.currentUser === this.getMyUserId();
   }
 
   getMyCellState() {
-    // The creator is always "X".
-    var uid = firebase.auth().currentUser.uid;
-    return this.props.location.state.creator === uid ? State.X : State.O;
+    if (this.getSessionCreatorUserId() === this.getMyUserId()) {
+      return State.X;  // The session creator is always "X".
+    } else {
+      return State.O;
+    }
   }
 
   getOtherUser() {
-    return this.props.location.state.users.find((uid) => {
-      return uid !== firebase.auth().currentUser.uid;
+    return this.getSessionUserIds().find((uid) => {
+      return uid !== this.getMyUserId();
     });
   }
 
@@ -61,9 +50,7 @@ export default class TicTacToe extends Component {
       cell_state: cellState,
       current_user: this.getOtherUser(),
     }
-    var sessionId = this.props.match.params.id;
-    var sessionDatabaseRef = firebase.database().ref("/session/" + sessionId);
-    sessionDatabaseRef.set(databaseState, (error) => {
+    this.getSessionDatabaseRef().set(databaseState, (error) => {
       if (error) {
         console.error("Error updating TicTacToe state", error);
       }
