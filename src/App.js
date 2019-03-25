@@ -36,32 +36,12 @@ export default class App extends Component {
           user: user
         }));
 
-    firebase.auth().getRedirectResult().then(
-        (result) => {
-          if (result.user) {
-            this.logSignIn(result.user);
-          }
-        },
-        (error) => { console.error("Failed to sign in", error) });
-
     UserApiConfig.startListeningForChanges().then(
         () => this.setState({ userApiIsLoading: false }));
   }
 
   componentWillUnmount() {
     UserApiConfig.stopListeningForChanges();
-  }
-
-  logSignIn(user) {
-    var userData = {
-      name: user.displayName,
-      photoURL: user.photoURL,
-      lastSignIn: firebase.database.ServerValue.TIMESTAMP,
-    }
-    var userDatabaseRef = firebase.database().ref('/user/' + user.uid);
-
-    userDatabaseRef.set(userData).catch(
-        (error) => console.error("Error storing user metadata", error));
   }
 
   signIn() {
