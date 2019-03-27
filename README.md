@@ -26,25 +26,10 @@ _designer_'s plans are possible, etc.
 Getting Started
 ---------------
 
-First, [create a new Firebase project][firebase]. Then make the following
-changes in the Firebase console:
-
-  1. Develop > Authentication > Sign-in Method > Sign-in providers: Enable
-     Google
-  1. Develop > Authentication > Sign-in Method > Authorized domains: Add domain
-     `c9users.io` (if you're using Cloud9)
-  1. Project Overview > Add Firebase to your web app: Keep this window open
-     (you'll use it later)
-
-Fork this repository, check out the code, then run the following commands:
-
-  1. `npm install`
-  1. `npm start`
-
 You should see an error saying `src/firebaseConfig.js` does not exist (it
 doesn't). Using the following template, create this file and replace the values
-for `apiKey`, `authDomain`, etc. with your Firebase configuration created in a
-previous step.
+for `apiKey`, `authDomain`, etc. with the Firebase configuration provided by
+your teacher.
 
 ```
 const firebaseConfig = {
@@ -72,7 +57,7 @@ will typically be equal, unless you design a game that can have a variable
 number of players, e.g. a chat room.
 
 ```
-import MyGameComponent from './MyGameComponent.js';
+import MyGameComponent from './games/mygame/MyGameComponent.js';
 
 const gameData = {
 
@@ -95,49 +80,45 @@ export default gameData;
 ```
 
 Then create a component to run your game. Using the `mygameid` example above,
-we must create `src/MyGameComponent.js` (shown below). Feel free to copy this
-template for your own game. Notice how it uses the following properties to
-access important game session data:
+we must create `src/game/mygame/MyGameComponent.js` (shown below). Feel free to
+copy this template for your own game. Notice how it extends from
+`GameComponent` and uses the following functions to access important game
+session data:
 
-  1. `this.props.match.params.id`: The session ID from the URL
-  1. `this.props.location.state.id`: Another way to access session ID (same as
-     above)
-  1. `this.props.location.state.users`: Array of user UIDs currently playing
-  1. `this.props.location.state.creator`: The user UID of the game session
-     creator
+  1. `this.onSessionDataChanged(data)`: Called whenever the session data stored
+     at `/session/<id>/` changes (passes said `data` as the argument)
+  1. `this.getSessionDatabaseRef()`: Returns a Firebase real-time database
+     reference to the current session data, i.e. `/session/<id>/`
+  1. `this.getSessionId()`: Returns the current session ID as stored in
+     Firebase
+  1. `this.getSessionUserIds()`: Returns the list of user IDs connected to the
+     current session
+  1. `this.getSessionCreatorUserId()`: Returns the user ID of the one who
+     created this current session
+  1. `this.getMyUserId()`: Returns the user ID of the current user, i.e. YOU
 
-It also references the following [Firebase Realtime Database][firebase-db]
-path: `"/session/<session-id>"`. This is the database shared with all users
-playing the current game session.
+All of the above functions are accessing the [Firebase Realtime
+Database][firebase-db] path `/session/<session-id>`. This is the database
+shared with all users playing the current game session.
 
 ```
-import React, { Component } from 'react';
+import GameComponent from '../../GameComponent.js';
 import UserApi from './UserApi.js';
 import firebase from 'firebase';
 
-export default class MyGameComponent extends Component {
-  componentWillMount() {
-    // Listen for changes to your game data.
-    var id = this.props.match.params.id;
-    var sessionDatabaseRef = firebase.database().ref("/session/" + id);
-    sessionDatabaseRef.on("value", (snapshot) => {
-      // TODO: Do something with your new game data!
-      console.log("Game data updated", snapshot.val());
-    });
-  }
+export default class MyGameComponent extends GameComponent {
 
-  componentWillUnmount() {
-    // Stop listening for changes.
-    var id = this.props.match.params.id;
-    firebase.database().ref("/session/" + id).off();
+  onSessionDataChanged(data) {
+    // TODO: Do something with your new game data!
+    console.log("Game data updated", data);
   }
 
   render() {
-    var id = this.props.match.params.id; // Or: this.props.location.state.id
-    var users = this.props.location.state.users.map((uid) => (
+    var id = this.getSessionId();
+    var users = this.getSessionUserIds().map((uid) => (
       <li key={uid}>{UserApi.getName(uid)}</li>
     ));
-    var creator = UserApi.getName(this.props.location.state.creator);
+    var creator = UserApi.getName(this.getSessionCreatorUserId());
     return (
       <div>
         <p>Session ID: {id}</p>
@@ -161,7 +142,6 @@ Resources
 
 [firebase-db]:https://firebase.google.com/docs/database/web/read-and-write
 [firebase-js]:https://firebase.google.com/docs/reference/js/
-[firebase]:https://console.firebase.google.com
 [material-ui]:https://www.material-ui.com/#/components/app-bar
 [reactjs]:https://reactjs.org/docs/hello-world.html
 [scripted]:https://scripted.org
