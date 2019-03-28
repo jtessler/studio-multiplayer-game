@@ -78,7 +78,7 @@ class DatabaseViewer extends Component {
                 style={{paddingLeft: 0}}
                 expandIcon={<ExpandMoreIcon />}>
             <Typography>
-                Expand to see JSON view of entire question database
+                Expand to see JSON view of entire database
             </Typography>
             </ExpansionPanelSummary>
 
