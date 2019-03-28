@@ -96,6 +96,18 @@ class Header extends Component {
               Not implemented yet
             </MenuItem>
 
+            <ListItem>
+              <ListItemText
+                primaryTypographyProps={{variant: "title"}}
+                primary="Debug Tools" />
+            </ListItem>
+            <Link style={{textDecoration: 'none'}} to="/dataViewer">
+                <MenuItem
+                    onClick={() => this.setDrawerOpen(false)}
+                    primaryText="View Game Data"
+                />
+            </Link>
+
           </List>
         </Drawer>
       </div>

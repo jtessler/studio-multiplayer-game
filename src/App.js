@@ -4,6 +4,7 @@ import Header from './Header.js'
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import React, { Component } from 'react';
 import WaitingRoom from './WaitingRoom.js';
+import DataViewer from './DataViewer.js';
 import firebase from 'firebase';
 import gameData from './gameData.js';
 import { Route } from 'react-router-dom';
@@ -84,6 +85,7 @@ export default class App extends Component {
       return (
         <div>
           <Header />
+          <Route path="/dataViewer" component={DataViewer} exact />
           <Route path="/" component={WaitingRoom} exact />
           {gameRoutes}
         </div>
