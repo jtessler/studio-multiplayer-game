@@ -57,9 +57,8 @@ class DatabaseViewer extends Component {
             <ReactJson
                 name="/"
                 collapsed={1}
-                src={{
-                    data: this.state.data,
-                }} />
+                src={this.state.data} 
+            />
         );
       default:
         console.error("Invalid DB state", this.state.db_state);
