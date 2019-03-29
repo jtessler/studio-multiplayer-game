@@ -92,6 +92,7 @@ class Header extends Component {
                 primaryTypographyProps={{variant: "title"}}
                 primary="Active Games" />
             </ListItem>
+
             <MenuItem disabled={true}>
               Not implemented yet
             </MenuItem>
@@ -101,11 +102,12 @@ class Header extends Component {
                 primaryTypographyProps={{variant: "title"}}
                 primary="Debug Tools" />
             </ListItem>
+            
             <Link style={{textDecoration: 'none'}} to="/dataViewer">
                 <MenuItem
-                    onClick={() => this.setDrawerOpen(false)}
-                    primaryText="View Game Data"
-                />
+                    onClick={() => this.setDrawerOpen(false)}>
+                  View Game Data
+                </MenuItem>
             </Link>
 
           </List>
