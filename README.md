@@ -23,30 +23,6 @@ the theme consistent, etc. The _implementer_ will make sure everything works,
 writing most of the code, confirming whether the _architect_ and the
 _designer_'s plans are possible, etc.
 
-Getting Started
----------------
-
-You should see an error saying `src/firebaseConfig.js` does not exist (it
-doesn't). Using the following template, create this file and replace the values
-for `apiKey`, `authDomain`, etc. with the Firebase configuration provided by
-your teacher.
-
-```
-const firebaseConfig = {
-  apiKey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-  authDomain: "XXXXXXXXXXXXXXXXXXXXX.firebaseapp.com",
-  databaseURL: "https://XXXXXXXXXXXXXXXXXXXXX.firebaseio.com",
-  projectId: "XXXXXXXXXXXXXXXXXXXXX",
-  storageBucket: "XXXXXXXXXXXXXXXXXXXXX.appspot.com",
-  messagingSenderId: "XXXXXXXXXXXX"
-};
-
-export default firebaseConfig;
-```
-
-Now the application should be running. Try signing in and starting a game
-session using one of the existing games.
-
 Adding a New Game
 -----------------
 
