@@ -1,4 +1,5 @@
 import AddGameButton from './AddGameButton.js';
+import FilterButton from './FilterButton.js';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import GameCard from './GameCard.js';
 import React, { Component } from 'react';
@@ -11,7 +12,10 @@ const cardStyle = {
 export default class WaitingRoom extends Component {
   constructor(props) {
     super(props);
-    this.state = { sessions: null };
+    this.state = {
+        sessions: null,
+        filterType: "all",
+    };
   }
 
   componentWillMount() {
@@ -42,6 +46,10 @@ export default class WaitingRoom extends Component {
     firebase.database().ref("/session-metadata").off();
   }
 
+  onFilterGames(filterType) {
+    this.setState({ filterType });
+  }
+
   render() {
     if (this.state.sessions === null) {
       return (
@@ -51,7 +59,16 @@ export default class WaitingRoom extends Component {
       )
     }
 
-    var cards = this.state.sessions.map((session) => (
+    let sessions = [];
+    if(this.state.filterType === "all") {
+        sessions = this.state.sessions
+    } else if (this.state.filterType === "myGames") {
+        sessions = this.state.sessions.filter((session) => {
+            return session.creator === firebase.auth().currentUser.uid;
+        })
+    }
+
+    var cards = sessions.map((session) => (
       <GameCard
           key={session.id}
           style={cardStyle}
@@ -61,6 +78,7 @@ export default class WaitingRoom extends Component {
     return (
       <div>
         <AddGameButton style={cardStyle} />
+        <FilterButton style={cardStyle} onFilterGames={(f)=>this.onFilterGames(f)} />
         {cards}
       </div>
     );
