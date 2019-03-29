@@ -30,10 +30,8 @@ class DatabaseViewer extends Component {
           this.setState({ db_state: DB_STATE.LOADING });
           firebase.database().ref("/").once("value", (snapshot) => {
             // Check if user data firebase download is done yet.
-            var db_state = this.state.user_data === null
-                ? DB_STATE.LOADING : DB_STATE.LOADED;
             this.setState({
-              db_state: db_state,
+              db_state: DB_STATE.LOADED,
               data: snapshot.val(),
             });
           });
@@ -57,7 +55,7 @@ class DatabaseViewer extends Component {
             <ReactJson
                 name="/"
                 collapsed={1}
-                src={this.state.data} 
+                src={this.state.data}
             />
         );
       default:
@@ -67,25 +65,24 @@ class DatabaseViewer extends Component {
 
   render() {
     return (
-      <Paper className="Container">  
+      <Paper className="Container">
         <ExpansionPanel
-            style={{boxShadow: 'none'}}
-            disabled={this.props.disabled}
-            onChange={(e, expanded) => this.handleExpanded(expanded)}>
+          style={{boxShadow: 'none'}}
+          disabled={this.props.disabled}
+          onChange={(e, expanded) => this.handleExpanded(expanded)}>
 
-            <ExpansionPanelSummary
-                style={{paddingLeft: 0}}
-                expandIcon={<ExpandMoreIcon />}>
+          <ExpansionPanelSummary
+            style={{paddingLeft: 0}}
+            expandIcon={<ExpandMoreIcon />}>
             <Typography>
-                Expand to see JSON view of entire database
+              Expand to see JSON view of entire database
             </Typography>
-            </ExpansionPanelSummary>
+          </ExpansionPanelSummary>
 
-            <ExpansionPanelDetails
-                style={{display: 'block', paddingLeft: 0, textAlign: 'left'}}>
+          <ExpansionPanelDetails
+            style={{display: 'block', paddingLeft: 0, textAlign: 'left'}}>
             {this.renderDatabaseViewer()}
-            </ExpansionPanelDetails>
-
+          </ExpansionPanelDetails>
         </ExpansionPanel>
       </Paper>
     );
