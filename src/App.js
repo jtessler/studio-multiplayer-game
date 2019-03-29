@@ -6,7 +6,6 @@ import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import React, { Component } from 'react';
 import WaitingRoom from './WaitingRoom.js';
 import firebase from 'firebase';
-import firebaseConfig from './firebaseConfig.js';
 import gameData from './gameData.js';
 import { Route } from 'react-router-dom';
 import { UserApiConfig } from './UserApi.js';
@@ -28,7 +27,14 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp({
+      apiKey: "AIzaSyCJPYgNY-rgkZul563iUipYrFKD7BLt_HA",
+      authDomain: "studio-multiplayer-game.firebaseapp.com",
+      databaseURL: "https://studio-multiplayer-game.firebaseio.com",
+      projectId: "studio-multiplayer-game",
+      storageBucket: "studio-multiplayer-game.appspot.com",
+      messagingSenderId: "953054375831"
+    });
 
     firebase.auth().onAuthStateChanged(
         (user) => this.setState({
