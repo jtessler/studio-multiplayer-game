@@ -1,5 +1,7 @@
 import './index.css';
 import App from './App';
+// TODO(jrt): Migrate to newer Material UI theme provider after migrating all
+// game components.
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import React from 'react';
 import ReactDOM from 'react-dom';

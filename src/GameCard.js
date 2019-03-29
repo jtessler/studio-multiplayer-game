@@ -1,16 +1,32 @@
-import Avatar from 'material-ui/Avatar';
-import Divider from 'material-ui/Divider';
-import FlatButton from 'material-ui/FlatButton';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Collapse from '@material-ui/core/Collapse';
+import Divider from '@material-ui/core/Divider';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import React, { Component } from 'react';
-import Subheader from 'material-ui/Subheader';
+import Typography from '@material-ui/core/Typography';
 import UserApi from './UserApi.js';
 import firebase from 'firebase';
 import gameData from './gameData.js';
-import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card';
 import { Link } from 'react-router-dom';
-import { List, ListItem } from 'material-ui/List';
 
 export default class GameCard extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      expanded: false,
+    };
+  }
   getTitle() {
     return gameData[this.props.session.type].title;
   }
@@ -34,7 +50,7 @@ export default class GameCard extends Component {
 
   getAuthors() {
     var authors = gameData[this.props.session.type].authors;
-    return "This game was created by " + authors;
+    return "This game was designed and built by " + authors;
   }
 
   getDescription() {
@@ -97,13 +113,16 @@ export default class GameCard extends Component {
     return users.length >= maxUsers;
   }
 
+  handleExpand() {
+    this.setState({expanded: !this.state.expanded});
+  }
+
   render() {
     var userListItems = this.props.session.users.map((uid) => (
-      <ListItem
-          key={uid}
-          disabled={true}
-          primaryText={UserApi.getName(uid)}
-          leftAvatar={<Avatar src={UserApi.getPhotoUrl(uid)} />} />
+      <ListItem key={uid}>
+        <Avatar src={UserApi.getPhotoUrl(uid)} />
+        <ListItemText primary={UserApi.getName(uid)}/>
+      </ListItem>
     ));
 
     var joinOrStartButton;
@@ -117,42 +136,62 @@ export default class GameCard extends Component {
         }
       }
       joinOrStartButton = (
-        <Link to={target}>
-          <FlatButton label="Start game" primary={true} />
+        <Link
+            style={{textDecoration: 'none'}}
+            to={target}>
+          <Button color="primary">
+            Start game
+          </Button>
         </Link>
       );
     } else {
       joinOrStartButton = (
-        <FlatButton
-            label={this.isFull() ? "Game is full" : "Join"}
+        <Button
             onClick={() => this.joinSession()}
-            disabled={this.isInSession() || this.isFull()} />
+            disabled={this.isInSession() || this.isFull()}>
+          {this.isFull() ? "Game is full" : "Join"}
+        </Button>
       );
     }
 
     return (
       <Card style={this.props.style}>
-        <CardTitle
+        <CardHeader
+            action={
+              <IconButton onClick={() => this.handleExpand()}>
+                {this.state.expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </IconButton>
+            }
             title={this.getTitle()}
-            subtitle={this.getSubtitle()}
-            actAsExpander={true}
-            showExpandableButton={true} />
-        <CardText expandable={true}>
-          <p>{this.getDescription()}</p>
-          <Divider />
-          <List>
-            <Subheader>{this.getUserListHeader()}</Subheader>
-            {userListItems}
-          </List>
-          <Divider />
-          <p style={{fontSize: 10}}>{this.getAuthors()}</p>
-        </CardText>
+            subheader={this.getSubtitle()} />
+        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <Typography variant="subtitle1">
+              {this.getDescription()}
+            </Typography>
+            <Divider />
+            <List>
+              <Typography
+                  variant="subtitle2"
+                  color="textSecondary"
+                  paragraph={true}>
+                {this.getUserListHeader()}
+              </Typography>
+              {userListItems}
+            </List>
+            <Divider />
+            <Typography color="textSecondary">
+              {this.getAuthors()}
+            </Typography>
+          </CardContent>
+        </Collapse>
         <CardActions>
           {joinOrStartButton}
-          <FlatButton
-              label="Delete"
+          <Button
               onClick={() => this.deleteSession()}
-              disabled={!this.isGameCreator()} />
+              disabled={!this.isGameCreator()}>
+            Delete
+          </Button>
         </CardActions>
       </Card>
     );

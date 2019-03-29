@@ -1,8 +1,7 @@
-import CircularProgress from 'material-ui/CircularProgress';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Fab from '@material-ui/core/Fab';
 import Header from './Header.js'
-import Paper from 'material-ui/Paper';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
+import PersonAdd from '@material-ui/icons/PersonAdd';
 import React, { Component } from 'react';
 import WaitingRoom from './WaitingRoom.js';
 import firebase from 'firebase';
@@ -60,19 +59,19 @@ export default class App extends Component {
     if (!this.state.authIsLoading && this.state.user === null) {
       return (
         <center>
-          <FloatingActionButton
+          <Fab
               style={buttonStyle}
               onClick={() => this.signIn()}>
             <PersonAdd />
-          </FloatingActionButton>
+          </Fab>
         </center>
       );
     } else if (this.state.authIsLoading || this.state.userApiIsLoading) {
       return (
         <center>
-          <Paper style={buttonStyle} circle={true}>
-            <CircularProgress size={56} />
-          </Paper>
+          <CircularProgress
+              style={buttonStyle}
+              size={56} />
         </center>
       );
     } else {

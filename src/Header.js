@@ -1,9 +1,15 @@
-import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import FlatButton from 'material-ui/FlatButton';
-import MenuItem from 'material-ui/MenuItem';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuIcon from '@material-ui/icons/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import React, { Component } from 'react';
-import Subheader from 'material-ui/Subheader';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import firebase from 'firebase';
 import gameData from './gameData.js';
 import { Link } from 'react-router-dom';
@@ -41,26 +47,56 @@ class Header extends Component {
     var user = firebase.auth().currentUser;
     return (
       <div>
-        <AppBar
-            title={this.getTitle()}
-            iconElementRight={
-              <FlatButton label={"Sign out as " + user.displayName} />
-            }
-            onLeftIconButtonClick={() => this.setDrawerOpen(true)}
-            onRightIconButtonClick={() => this.signOut()} />
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+                style={{marginLeft: -12, marginRight: 20}}
+                onClick={() => this.setDrawerOpen(true)}>
+              <MenuIcon />
+            </IconButton>
+            <Typography
+                variant="h6"
+                color="inherit"
+                style={{flexGrow: 1}}>
+              {this.getTitle()}
+            </Typography>
+            <Button
+                color="inherit"
+                onClick={() => this.signOut()}>
+              Sign out as {user.displayName}
+            </Button>
+          </Toolbar>
+        </AppBar>
 
         <Drawer
-            docked={false}
             open={this.state.drawerOpen}
-            onRequestChange={(open) => this.setDrawerOpen(open)}>
-          <Link style={{textDecoration: 'none'}} to="/">
-            <MenuItem
-                onClick={() => this.setDrawerOpen(false)}
-                primaryText="Go back to the waiting room"
-                disabled={this.isInWaitingRoom()} />
-          </Link>
-          <Subheader>Active Games</Subheader>
-          <MenuItem primaryText="Not implemented yet" disabled={true} />
+            onClose={() => this.setDrawerOpen(false)}>
+
+          <List>
+            <ListItem>
+              <ListItemText
+                primaryTypographyProps={{variant: "title"}}
+                primary="Navigation" />
+            </ListItem>
+
+            <Link style={{textDecoration: 'none'}} to="/">
+              <MenuItem
+                  onClick={() => this.setDrawerOpen(false)}
+                  disabled={this.isInWaitingRoom()}>
+                Go back to the waiting room
+              </MenuItem>
+            </Link>
+
+            <ListItem>
+              <ListItemText
+                primaryTypographyProps={{variant: "title"}}
+                primary="Active Games" />
+            </ListItem>
+            <MenuItem disabled={true}>
+              Not implemented yet
+            </MenuItem>
+
+          </List>
         </Drawer>
       </div>
     );

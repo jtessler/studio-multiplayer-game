@@ -1,7 +1,6 @@
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
-import Popover from 'material-ui/Popover';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import gameData from './gameData.js';
@@ -30,9 +29,9 @@ class AddGameMenuItem extends Component {
 
   render() {
     return (
-      <MenuItem
-          primaryText={this.props.title}
-          onClick={() => this.addGame()} />
+      <MenuItem onClick={() => this.addGame()}>
+        {this.props.title}
+      </MenuItem>
     );
   };
 }
@@ -67,20 +66,17 @@ export default class AddGameButton extends Component {
 
     return (
       <center style={this.props.style}>
-        <RaisedButton
-            onClick={(event) => this.openPopover(event)}
-            label="Create new game" />
-
-        <Popover
+        <Button
+            variant="contained"
+            onClick={(event) => this.openPopover(event)}>
+          Create new game
+        </Button>
+        <Menu
             open={this.state.popoverOpen}
             anchorEl={this.state.anchorEl}
-            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
-            onRequestClose={() => this.closePopover()}>
-          <Menu>
-            {menuItems}
-          </Menu>
-        </Popover>
+            onClose={() => this.closePopover()}>
+          {menuItems}
+        </Menu>
       </center>
     );
   }

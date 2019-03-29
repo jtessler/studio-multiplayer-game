@@ -1,5 +1,5 @@
 import AddGameButton from './AddGameButton.js';
-import CircularProgress from 'material-ui/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import GameCard from './GameCard.js';
 import React, { Component } from 'react';
 import firebase from 'firebase';
