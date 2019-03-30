@@ -2,11 +2,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
 import React, { Component } from 'react';
 import ReactJson from 'react-json-view'
-import Typography from '@material-ui/core/Typography';
 import firebase from 'firebase';
-import Paper from 'material-ui/Paper';
+
 
 const DB_STATE = Object.freeze({
   UNINITIALIZED: 0,
@@ -65,7 +66,7 @@ class DatabaseViewer extends Component {
 
   render() {
     return (
-      <Paper className="Container">
+      <Card className="Container">
         <ExpansionPanel
           style={{boxShadow: 'none'}}
           disabled={this.props.disabled}
@@ -84,7 +85,7 @@ class DatabaseViewer extends Component {
             {this.renderDatabaseViewer()}
           </ExpansionPanelDetails>
         </ExpansionPanel>
-      </Paper>
+      </Card>
     );
   }
 }
