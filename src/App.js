@@ -1,13 +1,14 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
+import DataViewer from './DataViewer.js';
 import Fab from '@material-ui/core/Fab';
 import Header from './Header.js'
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import React, { Component } from 'react';
+import UnknownGameType from './UnknownGameType.js';
 import WaitingRoom from './WaitingRoom.js';
-import DataViewer from './DataViewer.js';
 import firebase from 'firebase';
 import gameData from './gameData.js';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { UserApiConfig } from './UserApi.js';
 
 const buttonStyle = {
@@ -85,9 +86,14 @@ export default class App extends Component {
       return (
         <div>
           <Header />
-          <Route path="/dataViewer" component={DataViewer} exact />
-          <Route path="/" component={WaitingRoom} exact />
-          {gameRoutes}
+          <Switch>
+            <Route path="/" component={WaitingRoom} exact />
+            <Route path="/dataViewer" component={DataViewer} exact />
+            {gameRoutes}
+            <Route
+                path={"/:type/:id"}
+                component={UnknownGameType} exact />
+          </Switch>
         </div>
       );
     }
