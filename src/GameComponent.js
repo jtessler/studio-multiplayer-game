@@ -29,17 +29,37 @@ export default class GameComponent extends React.Component {
 
   /** Returns the list of user IDs connected to the current session.  */
   getSessionUserIds() {
-    return this.props.location.state.users;
+    return this.getSessionState("users");
   }
 
   /** Returns the user ID of the one who created this current session. */
   getSessionCreatorUserId() {
-    return this.props.location.state.creator;
+    return this.getSessionState("creator");
+  }
+
+  /** Returns the session title, e.g., "Rock, Paper, Scissors" */
+  getSessionTitle() {
+    return this.getSessionState("title");
   }
 
   /** Returns the user ID of the current user, i.e. YOU. */
   getMyUserId() {
     return firebase.auth().currentUser.uid;
+  }
+
+  /**
+   * Returns the session state object from browser history or null if it is
+   * missing.
+   */
+  getSessionState(state) {
+    if (this.props.location.state && state in this.props.location.state) {
+      return this.props.location.state[state];
+    } else {
+      console.warn(
+        "Missing session state. Please go back to the waiting room " +
+        "and reload this game.", state);
+      return null;
+    }
   }
 
   componentWillMount() {
@@ -48,7 +68,7 @@ export default class GameComponent extends React.Component {
         this.onSessionDataChanged(snapshot.val());
       }
     });
-    document.title = this.props.location.state.title || "Studio Games!";
+    document.title = this.getSessionTitle() || "Studio Games!";
   }
 
   componentWillUnmount() {
