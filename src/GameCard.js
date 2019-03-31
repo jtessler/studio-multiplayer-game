@@ -28,8 +28,32 @@ export default class GameCard extends Component {
     };
   }
 
+  gameDataExists() {
+    return this.props.session.type in gameData;
+  }
+
+  /**
+   * Returns the game data for the given type. If the game type doesn't exist
+   * (i.e., we're trying to load a game that doesn't yet exist in this client
+   * code), return blank data.
+   */
+  getGameData() {
+    if (this.gameDataExists()) {
+      return gameData[this.props.session.type];
+    } else {
+      return {
+        title: "Unknown Game Type",
+        authors: "Unknown Authors",
+        description: "You are missing the code for this game type. " +
+            "It is likely another team's project that is in development.",
+        minUsers: 0,
+        maxUsers: 0,
+      };
+    }
+  }
+
   getTitle() {
-    return gameData[this.props.session.type].title;
+    return this.getGameData().title;
   }
 
   getSubtitle() {
@@ -50,17 +74,17 @@ export default class GameCard extends Component {
   }
 
   getAuthors() {
-    var authors = gameData[this.props.session.type].authors;
+    var authors = this.getGameData().authors;
     return "This game was designed and built by " + authors;
   }
 
   getDescription() {
-    return gameData[this.props.session.type].description;
+    return this.getGameData().description;
   }
 
   getUserListHeader() {
     var numUsers = this.props.session.users.length;
-    var maxUsers = gameData[this.props.session.type].maxUsers;
+    var maxUsers = this.getGameData().maxUsers;
     return numUsers + "/" + maxUsers + " users waiting to start";
   }
 
@@ -104,13 +128,13 @@ export default class GameCard extends Component {
 
   shouldShowStartButton() {
     var users = this.props.session.users;
-    var minUsers = gameData[this.props.session.type].minUsers;
+    var minUsers = this.getGameData().minUsers;
     return this.isInSession() && users.length >= minUsers;
   }
 
   isFull() {
     var users = this.props.session.users;
-    var maxUsers = gameData[this.props.session.type].maxUsers;
+    var maxUsers = this.getGameData().maxUsers;
     return users.length >= maxUsers;
   }
 
@@ -126,8 +150,14 @@ export default class GameCard extends Component {
       </ListItem>
     ));
 
-    var joinOrStartButton;
-    if (this.shouldShowStartButton()) {
+    var gameActionButton;
+    if (!this.gameDataExists()) {
+      gameActionButton = (
+        <Button disabled={true}>
+          Cannot join unknown game type
+        </Button>
+      );
+    } else if (this.shouldShowStartButton()) {
       var target = {
         pathname: this.getGamePath(),
         state: {
@@ -137,7 +167,7 @@ export default class GameCard extends Component {
           title: this.getTitle(),
         }
       }
-      joinOrStartButton = (
+      gameActionButton = (
         <Link
             style={{textDecoration: 'none'}}
             to={target}>
@@ -147,7 +177,7 @@ export default class GameCard extends Component {
         </Link>
       );
     } else {
-      joinOrStartButton = (
+      gameActionButton = (
         <Button
             onClick={() => this.joinSession()}
             disabled={this.isInSession() || this.isFull()}>
@@ -188,7 +218,7 @@ export default class GameCard extends Component {
           </CardContent>
         </Collapse>
         <CardActions>
-          {joinOrStartButton}
+          {gameActionButton}
           <Button
               onClick={() => this.deleteSession()}
               disabled={!this.isGameCreator()}>
