@@ -27,6 +27,7 @@ export default class GameCard extends Component {
       expanded: false,
     };
   }
+
   getTitle() {
     return gameData[this.props.session.type].title;
   }
@@ -132,7 +133,8 @@ export default class GameCard extends Component {
         state: {
           id: this.props.session.id,
           creator: this.props.session.creator,
-          users: this.props.session.users
+          users: this.props.session.users,
+          title: this.getTitle(),
         }
       }
       joinOrStartButton = (

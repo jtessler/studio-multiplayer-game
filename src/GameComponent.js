@@ -48,6 +48,7 @@ export default class GameComponent extends React.Component {
         this.onSessionDataChanged(snapshot.val());
       }
     });
+    document.title = this.props.location.state.title || "Studio Games!";
   }
 
   componentWillUnmount() {

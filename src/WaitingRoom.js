@@ -34,6 +34,8 @@ export default class WaitingRoom extends Component {
       });
       this.setState({ sessions: sessions });
     });
+
+    document.title = "Studio Games!"
   }
 
   componentWillUnmount() {
