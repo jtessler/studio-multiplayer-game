@@ -6,20 +6,15 @@ import React, { Component } from 'react';
 import {FILTER_TYPE} from './WaitingRoom.js'
 
 export default class FilterSelect extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { filterType: FILTER_TYPE.MY_GAMES };
-  }
 
   handleChange = event => {
     this.props.onFilterGames(event.target.value)
-    this.setState({ filterType: event.target.value });
   };
 
   render() {
     return (
       <Select
-          value={this.state.filterType}
+          value={this.props.filterType}
           onChange={this.handleChange}
       >
         <MenuItem value={FILTER_TYPE.MY_GAMES}>My Games</MenuItem>

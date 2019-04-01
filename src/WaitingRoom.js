@@ -87,7 +87,10 @@ export default class WaitingRoom extends Component {
     return (
       <div >
         <div style={{display:'flex', justifyContent: 'space-between', margin: '20px'}}>
-          <FilterSelect style={cardStyle} onFilterGames={(f)=>this.onFilterGames(f)} />
+          <FilterSelect 
+                style={cardStyle}
+                filterType={this.state.filterType}
+                onFilterGames={(f)=>this.onFilterGames(f)} />
           <AddGameButton style={cardStyle} />
         </div>
         {cards}
