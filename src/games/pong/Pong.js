@@ -1,7 +1,7 @@
-import Avatar from 'material-ui/Avatar';
-import RaisedButton from 'material-ui/RaisedButton';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
-import Subheader from 'material-ui/Subheader';
+import Typography from '@material-ui/core/Typography';
 import UserApi from '../../UserApi.js';
 import firebase from 'firebase';
 
@@ -146,12 +146,24 @@ export default class Pong extends Component {
             <h1>Game Over: {this.state.winner === 0 ?  'Computer':
                 UserApi.getName(this.state.winner)} won</h1>
           }
-          <RaisedButton label="Start Game"
-            onClick={() => this.started.set(true)}/>
-          <div>
-            <Subheader>Users:</Subheader>
+          <Button
+              style={{margin: 10}}
+              variant="contained"
+              onClick={() => this.started.set(true)}>
+            Start Game
+          </Button>
+          <div style={{
+              display:'flex',
+              justifyContent: 'center',
+          }}>
+            <Typography variant="title">
+              Users:
+            </Typography>
             {this.props.location.state.users.map((uid) =>
-                <Avatar key={uid} src={UserApi.getPhotoUrl(uid)} />
+              <Avatar
+                  key={uid}
+                  style={{marginLeft: 10}}
+                  src={UserApi.getPhotoUrl(uid)} />
             )}
           </div>
         </div>

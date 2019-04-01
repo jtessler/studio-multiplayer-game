@@ -1,6 +1,6 @@
-import CircularProgress from 'material-ui/CircularProgress';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import GameComponent from '../../GameComponent.js';
-import RaisedButton from 'material-ui/RaisedButton';
 import React from 'react';
 
 const gameOverMessages = {
@@ -56,12 +56,19 @@ export default class RockPaperScissors extends GameComponent {
       return (<div>
         <h1>Make your choice!</h1>
         <div>
-          <RaisedButton label="Rock"
-            onClick={() => this.select("Rock")} />
-          <RaisedButton label="Paper" primary={true}
-            onClick={() => this.select("Paper")} />
-          <RaisedButton label="Rock" secondary={true}
-            onClick={() => this.select("Scissors")} />
+          <Button onClick={() => this.select("Rock")}>
+            Rock
+          </Button>
+          <Button
+              color="primary"
+              onClick={() => this.select("Paper")}>
+            Paper
+          </Button>
+          <Button
+              color="secondary"
+              onClick={() => this.select("Scissors")}>
+            Scissors
+          </Button>
         </div>
       </div>);
     } else if(this.state.opponent === "") {

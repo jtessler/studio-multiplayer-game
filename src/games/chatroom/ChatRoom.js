@@ -1,7 +1,7 @@
-import Avatar from 'material-ui/Avatar';
+import Avatar from '@material-ui/core/Avatar';
 import GameComponent from '../../GameComponent.js';
 import React from 'react';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import UserApi from '../../UserApi.js';
 import firebase from 'firebase';
 import { List, ListItem } from 'material-ui/List';
@@ -56,9 +56,9 @@ export default class ChatRoom extends GameComponent {
       <div style={{margin: 56}}>
         <TextField
             name="Chat message input"
-            hintText="Type your message and press enter"
+            label="Type your message and press enter"
             fullWidth={true}
-            onChange={(event, value) => this.setState({ input: value })}
+            onChange={(event) => this.setState({ input: event.target.value })}
             onKeyPress={(event) => this.handleKeyEvent(event.key)}
             value={this.state.input} />
         <List>

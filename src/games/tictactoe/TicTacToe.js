@@ -1,6 +1,6 @@
+import Button from '@material-ui/core/Button';
 import GameComponent from '../../GameComponent.js';
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
 import UserApi from '../../UserApi.js';
 
 const State = {
@@ -95,11 +95,14 @@ export default class TicTacToe extends GameComponent {
 
     var allCellsDisabled = winnerState !== null || !this.isMyTurn();
     var cells = this.state.cellState.map((cell, i) => (
-      <RaisedButton
+      <Button
           key={i}
-          label={cell}
+          variant="outlined"
+          style={{height: 36}}
           onClick={() => this.playTurn(i)}
-          disabled={allCellsDisabled || cell !== State.EMPTY} />
+          disabled={allCellsDisabled || cell !== State.EMPTY}>
+        {cell}
+      </Button>
     ));
     return (
       <center>
