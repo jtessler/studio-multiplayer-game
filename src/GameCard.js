@@ -109,6 +109,22 @@ export default class GameCard extends Component {
   }
 
   deleteSession() {
+    var path = "/session/" + this.props.session.id;
+    var sessionDatabaseRef = firebase.database().ref(path);
+    sessionDatabaseRef.remove()
+        .then(() => {
+          // Permission to delete session data depends on state within the
+          // metadata node, so we must delete session metadata *after* removing
+          // session data.
+          this.deleteSessionMetadata();
+        })
+        .catch((error) => {
+          console.warn("Error removing session data", error);
+          this.deleteSessionMetadata();
+        });
+  }
+
+  deleteSessionMetadata() {
     var path = "/session-metadata/" + this.props.session.id;
     var sessionDatabaseRef = firebase.database().ref(path);
     sessionDatabaseRef.remove().catch((error) => {
