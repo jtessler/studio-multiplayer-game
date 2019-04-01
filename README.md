@@ -1,7 +1,7 @@
-ScriptEd Studio Multiplayer Game
-================================
+Code Nation Studio Multiplayer Game
+===================================
 
-**React/Firebase project designed for [ScriptEd][scripted] students**
+**React/Firebase project designed for [Code Nation][code-nation] students**
 
 Students will implement a React/Firebase app that requires collaboration
 between two or more users, be it a game or some other real time, multi-user
@@ -116,8 +116,8 @@ Resources
   - React: [ReactJS documentation][reactjs]
   - Firebase: [Firebase JS documentation][firebase-js]
 
+[code-nation]:https://codenation.org
 [firebase-db]:https://firebase.google.com/docs/database/web/read-and-write
 [firebase-js]:https://firebase.google.com/docs/reference/js/
 [material-ui]:https://www.material-ui.com/#/components/app-bar
 [reactjs]:https://reactjs.org/docs/hello-world.html
-[scripted]:https://scripted.org
