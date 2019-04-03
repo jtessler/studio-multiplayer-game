@@ -25,7 +25,7 @@ game, so it sets `minUsers` and `maxUsers` to 2. These min/max user numbers
 will typically be equal, unless you design a game that can have a variable
 number of players, e.g. a chat room.
 
-```
+```javascript
 import TicTacToe from './games/tictactoe/TicTacToe.js';
 
 const gameData = {
@@ -52,7 +52,7 @@ Next, create a React component to run your game. Using the `tictactoe` example
 above, we must create `src/game/tictactoe/TicTacToe.js`. Your filename and
 component name will obviously be different.
 
-```
+```javascript
 import GameComponent from '../../GameComponent.js';
 import React from 'react';
 
@@ -107,7 +107,7 @@ This webpage shows data like `Session creator: HxTp9DEPvUYbN4eLmge1a7Apjzz2`.
 Can we do better? Can I show meaningful data like, `Session creator: Joe
 Tessler`? *Yes!* Use `UserApi` as shown below:
 
-```
+```javascript
 import GameComponent from '../../GameComponent.js';
 import React from 'react';
 import UserApi from '../../UserApi.js';
@@ -134,7 +134,7 @@ export default class TicTacToe extends GameComponent {
 }
 ```
 
-Try running this code. Do you see meaningful user name now?
+Try running this code. Do you see meaningful user names now?
 
 But how does `UserApi` work? It is a set of functions that look up user data in
 the Firebase database at the path `/user/<user-id>`. The API exposes the
@@ -148,7 +148,69 @@ following functions:
 
 ## Step 2: Updating game data and listening for changes
 
-TODO
+## Step 2.1: Writing new game data to the Firebase database
+
+Updating game data is as easy! Just write to the Firebase database using the
+reference returned by `this.getSessionDatabaseRef()`, e.g.:
+
+```javascript
+this.getSessionDatabaseRef().set({text: "Hello, World!"});
+```
+
+This reference give you access to all of the Firebase database functions we
+learned about in class. You can learn more about this API in the [Firebase
+docs][firebase-db].
+
+## Step 2.2: Listening for game data changes in the Firebase database
+
+Listening for game data changes is also easy! Extending from `GameComponent`
+gives us access to the following callback functions:
+
+1. `onSessionDataChanged(data)`: Called whenever the session data stored at
+   '/session/<id>/' changes. Passes said data as the argument.
+1. `onSessionMetadataChanged(metadata)`: Called whenever the session metadata
+   stored at '/session-metadata/<id>/' changes. Passes said metadata as the
+   argument.
+
+We can define these functions in our component like the following example:
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.getSessionDatabaseRef().set({text: "Hello, World!"});
+  }
+
+  onSessionDataChanged(data) {
+    console.log("Data changed!", data);
+  }
+
+  render() {
+    var id = this.getSessionId();
+    var users = this.getSessionUserIds().map((user_id) => (
+      <li key={user_id}>{UserApi.getName(user_id)}</li>
+    ));
+    var creator = UserApi.getName(this.getSessionCreatorUserId());
+    return (
+      <div>
+        <p>Session ID: {id}</p>
+        <p>Session creator: {creator}</p>
+        <p>Session users:</p>
+        <ul>
+          {users}
+        </ul>
+      </div>
+    );
+  }
+}
+```
+
+Open your browser console and confirm "Data changed!" is logged. *Yay! Now we
+are writing to our Firebase database!*
 
 ## Step 3: Designing a Firebase data model
 
