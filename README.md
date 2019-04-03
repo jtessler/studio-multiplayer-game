@@ -15,9 +15,9 @@ time (and available for any future job application).
 Day-by-day example: Tic Tac Toe
 -------------------------------
 
-## Step 1: Creating a new game component and reading session metadata
+### Step 1: Creating a new game component and reading session metadata
 
-### Step 1.1: Creating new game data
+#### Step 1.1: Creating new game data
 
 First, add some data about your game to `src/gameData.js`. See the example
 below, which adds `tictactoe` to the `gameData` object. It is a two player
@@ -46,7 +46,7 @@ const gameData = {
 export default gameData;
 ```
 
-### Step 1.2: Extending from the base game component
+#### Step 1.2: Extending from the base game component
 
 Next, create a React component to run your game. Using the `tictactoe` example
 above, we must create `src/game/tictactoe/TicTacToe.js`. Your filename and
@@ -101,7 +101,7 @@ path `/session-metadata/<session-id>`. This is the database shared with all
 users playing the current game session. You can explore this data using the
 "Debug Tool" in the sidebar menu.
 
-### Step 1.3: Accessing user data via `UserApi`
+#### Step 1.3: Accessing user data via `UserApi`
 
 This webpage shows data like `Session creator: HxTp9DEPvUYbN4eLmge1a7Apjzz2`.
 Can we do better? Can I show meaningful data like, `Session creator: Joe
@@ -146,9 +146,9 @@ following functions:
 1. `UserApi.getLastSignIn(uid)`: Returns the user's last login date as a
    JavaScript `Date` object
 
-## Step 2: Updating game data and listening for changes
+### Step 2: Updating game data and listening for changes
 
-## Step 2.1: Writing new game data to the Firebase database
+#### Step 2.1: Writing new game data to the Firebase database
 
 Updating game data is as easy! Just write to the Firebase database using the
 reference returned by `this.getSessionDatabaseRef()`, e.g.:
@@ -161,7 +161,7 @@ This reference give you access to all of the Firebase database functions we
 learned about in class. You can learn more about this API in the [Firebase
 docs][firebase-db].
 
-## Step 2.2: Listening for game data changes in the Firebase database
+#### Step 2.2: Listening for game data changes in the Firebase database
 
 Listening for game data changes is also easy! Extending from `GameComponent`
 gives us access to the following callback functions:
@@ -212,7 +212,7 @@ export default class TicTacToe extends GameComponent {
 Open your browser console and confirm "Data changed!" is logged. *Yay! Now we
 are writing to our Firebase database!*
 
-## Step 2.3: Building a more interesting demo (button mashing)
+#### Step 2.3: Building a more interesting demo (button mashing)
 
 **Goal**: Create a webpage that shows a button and some text saying, "Joe
 Tessler clicked the button." The text updates whenever a user clicks the button
@@ -329,7 +329,7 @@ export default class TicTacToe extends GameComponent {
 Try playing this with your teammates and confirm the "clicked the button"
 message changes whenever someone new presses the button!
 
-## Step 3: Designing a Firebase data model
+### Step 3: Designing a Firebase data model
 
 **Now things get harder**. How do I store my actual game's data in Firebase?
 We'll continue using our Tic Tac Toe example here.
@@ -343,7 +343,7 @@ We will represent these two states in Firebase as follows:
 
 ```
 /session/<session-id>/: {
-  cell_state: ["X", "O", "X", " ", "X", "O", " ", " ", "X"],
+  cell_state: ["X", "O", "X", ".", "X", "O", ".", ".", "X"],
   current_user: "HxTp9DEPvUYbN4eLmge1a7Apjzz2"
 }
 ```
@@ -478,11 +478,11 @@ export default class TicTacToe extends GameComponent {
 Obviously this is **not** complete, but we now have a way to mark a Tic Tac Toe
 spot as `X` or `O` depending on the user.
 
-## Step 4: Updating your game component state based on Firebase data changes
+### Step 4: Updating your game component state based on Firebase data changes
 
 TODO
 
-## Step 5: Game style improvements (stretch goal)
+### Step 5: Game style improvements (stretch goal)
 
 TODO
 
