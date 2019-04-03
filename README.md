@@ -12,42 +12,33 @@ At the end of the project, teachers will merge all groups' projects into a
 single React application to be hosted forever, making any game playable at any
 time (and available for any future job application).
 
-Groups
-------
+Day-by-day example: Tic Tac Toe
+-------------------------------
 
-Students will work in groups of three. Each students should choose one "focus":
-_architect_, _designer_, or _implementer_. The _architect_ will draft
-high-level concepts like the React component hierarchy and prop data flow. The
-_designer_ will make the app look good, e.g. choosing a style library, keeping
-the theme consistent, etc. The _implementer_ will make sure everything works,
-writing most of the code, confirming whether the _architect_ and the
-_designer_'s plans are possible, etc.
+## Step 1: Creating a new game component and reading session metadata
 
-Adding a New Game
------------------
+### Step 1.1: Creating new game data
 
 First, add some data about your game to `src/gameData.js`. See the example
-below, which adds `mygameid` to the `gameData` object. It is a four player
-game, so it sets `minUsers` and `maxUsers` to 4. These min/max user numbers
+below, which adds `tictactoe` to the `gameData` object. It is a two player
+game, so it sets `minUsers` and `maxUsers` to 2. These min/max user numbers
 will typically be equal, unless you design a game that can have a variable
 number of players, e.g. a chat room.
 
 ```
-import MyGameComponent from './games/mygame/MyGameComponent.js';
+import TicTacToe from './games/tictactoe/TicTacToe.js';
 
 const gameData = {
 
   chatroom: { ... },
 
-  tictactoe: { ... },
-
-  mygameid: {
-    title: "My Game Title",
-    authors: "My team names",
-    description: "My game description: it's the best",
-    minUsers: 4,
-    maxUsers: 4,
-    component: MyGameComponent,
+  tictactoe: {
+    title: "Tic Tac Toe",
+    authors: "Joe Tessler",
+    description: "The classic two-player game with Xs and Os",
+    minUsers: 2,
+    maxUsers: 2,
+    component: TicTacToe,
   },
 
 }
@@ -55,59 +46,121 @@ const gameData = {
 export default gameData;
 ```
 
-Then create a component to run your game. Using the `mygameid` example above,
-we must create `src/game/mygame/MyGameComponent.js` (shown below). Feel free to
-copy this template for your own game. Notice how it extends from
-`GameComponent` and uses the following functions to access important game
-session data:
+### Step 1.2: Extending from the base game component
 
-  1. `this.onSessionDataChanged(data)`: Called whenever the session data stored
-     at `/session/<id>/` changes (passes said `data` as the argument)
-  1. `this.getSessionDatabaseRef()`: Returns a Firebase real-time database
-     reference to the current session data, i.e. `/session/<id>/`
+Next, create a React component to run your game. Using the `tictactoe` example
+above, we must create `src/game/tictactoe/TicTacToe.js`. Your filename and
+component name will obviously be different.
+
+```
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+
+export default class Test extends GameComponent {
+
+  render() {
+    var id = this.getSessionId();
+    var users = this.getSessionUserIds().map((user_id) => (
+      <li key={user_id}>{user_id}</li>
+    ));
+    var creator = this.getSessionCreatorUserId();
+    return (
+      <div>
+        <p>Session ID: {id}</p>
+        <p>Session creator: {creator}</p>
+        <p>Session users:</p>
+        <ul>
+          {users}
+        </ul>
+      </div>
+    );
+  }
+}
+```
+
+Run your code and see what happens! Ask a teammate (who is running the same
+code) to join your newly created game and see what happens to the list of
+users. It should grow! *This is real time collaboration!*
+
+But what is `GameComponent` and how do we use these `this.getSessionId()`
+functions? `GameComponent` is our "parent" component and gives us access to the
+following functions:
+
   1. `this.getSessionId()`: Returns the current session ID as stored in
      Firebase
   1. `this.getSessionUserIds()`: Returns the list of user IDs connected to the
      current session
   1. `this.getSessionCreatorUserId()`: Returns the user ID of the one who
      created this current session
+  1. `this.getSessionTitle()`: Returns the session title, e.g., "Rock, Paper,
+     Scissors"
   1. `this.getMyUserId()`: Returns the user ID of the current user, i.e. YOU
 
-All of the above functions are accessing the [Firebase Realtime
-Database][firebase-db] path `/session/<session-id>`. This is the database
-shared with all users playing the current game session.
+All of the above functions are accessing the [Firebase Database][firebase-db]
+path `/session-metadata/<session-id>`. This is the database shared with all
+users playing the current game session. You can explore this data using the
+"Debug Tool" in the sidebar menu.
+
+### Step 1.3: Accessing user data via `UserApi`
+
+This webpage shows data like `Session creator: HxTp9DEPvUYbN4eLmge1a7Apjzz2`.
+Can we do better? Can I show meaningful data like, `Session creator: Joe
+Tessler`? *Yes!* Use `UserApi` as shown below:
 
 ```
 import GameComponent from '../../GameComponent.js';
-import UserApi from './UserApi.js';
-import firebase from 'firebase';
+import React from 'react';
+import UserApi from '../../UserApi.js';
 
-export default class MyGameComponent extends GameComponent {
-
-  onSessionDataChanged(data) {
-    // TODO: Do something with your new game data!
-    console.log("Game data updated", data);
-  }
+export default class TicTacToe extends GameComponent {
 
   render() {
     var id = this.getSessionId();
-    var users = this.getSessionUserIds().map((uid) => (
-      <li key={uid}>{UserApi.getName(uid)}</li>
+    var users = this.getSessionUserIds().map((user_id) => (
+      <li key={user_id}>{UserApi.getName(user_id)}</li>
     ));
     var creator = UserApi.getName(this.getSessionCreatorUserId());
     return (
       <div>
         <p>Session ID: {id}</p>
+        <p>Session creator: {creator}</p>
         <p>Session users:</p>
         <ul>
           {users}
         </ul>
-        <p>Session creator: {creator}</p>
       </div>
     );
   }
 }
 ```
+
+Try running this code. Do you see meaningful user name now?
+
+But how does `UserApi` work? It is a set of functions that look up user data in
+the Firebase database at the path `/user/<user-id>`. The API exposes the
+following functions:
+
+1. `UserApi.getName(uid)`: Returns the user's display name, e.g. "Joe Tessler"
+1. `UserApi.getPhotoUrl(uid)`: Returns the user's avatar photo URL to use in an
+   `<img>` tag
+1. `UserApi.getLastSignIn(uid)`: Returns the user's last login date as a
+   JavaScript `Date` object
+
+## Step 2: Updating game data and listening for changes
+
+TODO
+
+## Step 3: Designing a Firebase data model
+
+TODO
+
+## Step 4: Updating your game component state based on Firebase data changes
+
+TODO
+
+## Step 5: Game style improvements (stretch goal)
+
+TODO
 
 Resources
 ---------
