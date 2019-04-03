@@ -167,9 +167,9 @@ Listening for game data changes is also easy! Extending from `GameComponent`
 gives us access to the following callback functions:
 
 1. `onSessionDataChanged(data)`: Called whenever the session data stored at
-   '/session/<id>/' changes. Passes said data as the argument.
+   `/session/<id>/` changes. Passes said data as the argument.
 1. `onSessionMetadataChanged(metadata)`: Called whenever the session metadata
-   stored at '/session-metadata/<id>/' changes. Passes said metadata as the
+   stored at `/session-metadata/<id>/` changes. Passes said metadata as the
    argument.
 
 We can define these functions in our component like the following example:
@@ -211,6 +211,123 @@ export default class TicTacToe extends GameComponent {
 
 Open your browser console and confirm "Data changed!" is logged. *Yay! Now we
 are writing to our Firebase database!*
+
+## Step 2.3: Building a more interesting demo (button mashing)
+
+**Goal**: Create a webpage that shows a button and some text saying, "Joe
+Tessler clicked the button." The text updates whenever a user clicks the button
+(and shows their name instead).
+
+First, we must define some default state for the last user who clicked on the
+button. Let's default to `null` (nothing).
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.state = { last_user_id: null, };
+  }
+}
+```
+
+Next, we need to use `onSessionDataChanged` to listen for changes to the path
+`/session/<id>/user_id`, which will store the User ID of the last user who
+clicked on the button. Just update the `this.state.last_userid` state whenever
+this change occurs.
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.state = { last_user_id: null, };
+  }
+
+  onSessionDataChanged(data) {
+    this.setState({ last_user_id: data.user_id });
+  }
+}
+```
+
+Then we need to add the rendered `<button>` and its click handler,
+`handleButtonClick`, which updates the Firebase database using
+`this.getSessionDatabaseRef()`.
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.state = { last_user_id: null, };
+  }
+
+  onSessionDataChanged(data) {
+    this.setState({ last_user_id: data.user_id });
+  }
+
+  handleButtonClick() {
+    this.getSessionDatabaseRef().set({ user_id: this.getMyUserId() });
+  }
+
+  render() {
+    return (
+      <button onClick={() => this.handleButtonClick()}>Click me!</button>
+    );
+  }
+}
+```
+
+What's missing? Conditional rendering! We must render the "Joe Tessler clicked
+the button" message. Simply add this to the `render()` function:
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.state = { last_user_id: null, };
+  }
+
+  onSessionDataChanged(data) {
+    this.setState({ last_user_id: data.user_id });
+  }
+
+  handleButtonClick() {
+    this.getSessionDatabaseRef().set({ user_id: this.getMyUserId() });
+  }
+
+  render() {
+    var last_user = "No one";
+    if (this.state.last_user_id !== null) {
+      last_user = UserApi.getName(this.state.last_user_id);
+    }
+    var last_user_message = last_user + " clicked the button";
+
+    return (
+      <div>
+        <button onClick={() => this.handleButtonClick()}>Click me!</button>
+        <p>{last_user_message}</p>
+      </div>
+    );
+  }
+}
+```
+
+Try playing this with your teammates and confirm the "clicked the button"
+message changes whenever someone new presses the button!
 
 ## Step 3: Designing a Firebase data model
 
