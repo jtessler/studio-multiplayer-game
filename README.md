@@ -331,7 +331,152 @@ message changes whenever someone new presses the button!
 
 ## Step 3: Designing a Firebase data model
 
-TODO
+**Now things get harder**. How do I store my actual game's data in Firebase?
+We'll continue using our Tic Tac Toe example here.
+
+There are two states we care about for Tic Tac Toe:
+
+1. The 3x3 grid of `X` and `O`
+1. Which player is selecting the next `X` or `O`
+
+We will represent these two states in Firebase as follows:
+
+```
+/session/<session-id>/: {
+  cell_state: ["X", "O", "X", " ", "X", "O", " ", " ", "X"],
+  current_user: "HxTp9DEPvUYbN4eLmge1a7Apjzz2"
+}
+```
+
+The `cell_state` is a nine element array of `X`s, `O`s, or `.` (empty). The
+`current_user` is the User ID of the player selecting the next move (i.e. it's
+their turn).
+
+First, define our default state and update it whenever the database changes.
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cellState: [".", ".",  ".",  ".",  ".",  ".",  ".",  ".",  "."],
+      currentUser: this.getSessionCreatorUserId(),
+    };
+  }
+
+  onSessionDataChanged(data) {
+    this.setState({
+      cellState: data.cell_state,
+      currentUser: data.current_user,
+    });
+  }
+}
+```
+
+Notice how the component state is very similar to the Firebase state. We give
+the first turn to the session creator using `this.getSessionCreatorUserId()`.
+
+Next, let's render our Tic Tac Toe grid as a 3x3 set of `<button>` elements:
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cellState: [".", ".",  ".",  ".",  ".",  ".",  ".",  ".",  "."],
+      currentUser: this.getSessionCreatorUserId(),
+    };
+  }
+
+  onSessionDataChanged(data) {
+    this.setState({
+      cellState: data.cell_state,
+      currentUser: data.current_user,
+    });
+  }
+
+  render() {
+    var buttons = this.state.cellState.map((state, i) => (
+      <button>{state}</button>
+    ));
+    return (
+      <div>
+        {buttons[0]} {buttons[1]} {buttons[2]}
+        <br />
+        {buttons[3]} {buttons[4]} {buttons[5]}
+        <br />
+        {buttons[6]} {buttons[7]} {buttons[8]}
+      </div>
+    );
+  }
+}
+```
+
+Finally, add a button click handler to update the Firebase database. If you are
+the session creator (checked using `this.getMyUserId() ===
+this.getSessionCreatorUserId()`), mark an `X`, otherwise an `O`:
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cellState: [".", ".",  ".",  ".",  ".",  ".",  ".",  ".",  "."],
+      currentUser: this.getSessionCreatorUserId(),
+    };
+  }
+
+  onSessionDataChanged(data) {
+    this.setState({
+      cellState: data.cell_state,
+      currentUser: data.current_user,
+    });
+  }
+
+  handleButtonClick(i) {
+    var cellState = this.state.cellState;
+    if (this.getMyUserId() === this.getSessionCreatorUserId()) {
+      cellState[i] = "X";
+    } else {
+      cellState[i] = "O";
+    }
+    this.getSessionDatabaseRef().set({
+      cell_state: cellState,
+      current_user: this.getMyUserId(),
+    });
+  }
+
+  render() {
+    var buttons = this.state.cellState.map((state, i) => (
+      <button onClick={() => this.handleButtonClick(i)}>{state}</button>
+    ));
+    return (
+      <div>
+        {buttons[0]} {buttons[1]} {buttons[2]}
+        <br />
+        {buttons[3]} {buttons[4]} {buttons[5]}
+        <br />
+        {buttons[6]} {buttons[7]} {buttons[8]}
+      </div>
+    );
+  }
+}
+```
+
+Obviously this is **not** complete, but we now have a way to mark a Tic Tac Toe
+spot as `X` or `O` depending on the user.
 
 ## Step 4: Updating your game component state based on Firebase data changes
 
