@@ -98,13 +98,16 @@ export default class GameCard extends Component {
     var uid = firebase.auth().currentUser.uid;
     var path = "/session-metadata/" + this.props.session.id + "/users";
     var sessionDatabaseRef = firebase.database().ref(path);
+    var maxUsers = this.getGameData().maxUsers;
     sessionDatabaseRef.transaction((users) => {
-      if (users.indexOf(uid) < 0) {
+      // Only join the session is there is room and this user is not already in
+      // the session (i.e., spamming "join game").
+      if (users.length < maxUsers && users.indexOf(uid) < 0) {
         users.push(uid);
       }
       return users;
     }).catch((error, committed, snapshot) => {
-      console.error("Error removing session metadata", error);
+      console.error("Error joining session", error);
     });
   }
 
