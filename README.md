@@ -429,8 +429,24 @@ export default class TicTacToe extends GameComponent {
 }
 ```
 
-Finally, add a button click handler to update the Firebase database. If you are
-the session creator (checked using `this.getMyUserId() ===
+Now we have a Tic Tac Toe data model defined and a simple component to render
+the default state. Next we need to make it interactive.
+
+### Step 4: Conditional rendering based on database changes and user input
+
+Using the same Tic Tac Toe example from Step 3, we need to perform the following
+actions whenever a user clicks on the board:
+
+1. Determine on which Tic Tac Toe cell the user clicked
+1. Determine whether the current user is an `X` or `O`
+1. Update the Tic Tac Toe grid values (with a new `X` or `O`)
+1. Look up the user ID of the "other" player (to change turns)
+1. Write the new grid values and "current player" user ID to Firebase
+
+#### Step 4.1: Create a button click handler
+
+Add a button click handler to update the Firebase database. If you are the
+session creator (checked using `this.getMyUserId() ===
 this.getSessionCreatorUserId()`), mark an `X`, otherwise an `O`:
 
 ```javascript
@@ -484,10 +500,18 @@ export default class TicTacToe extends GameComponent {
 }
 ```
 
-Obviously this is **not** complete, but we now have a way to mark a Tic Tac Toe
-spot as `X` or `O` depending on the user.
+Obviously this is **not** complete. Can you list what is wrong with this
+code?
 
-### Step 4: Updating your game component state based on Firebase data changes
+1. No turn-by-turn support (can make a move at any time)
+1. Able to override any `X` with an `O` or vice versa
+1. No announcement saying who won or if there is a draw
+
+#### Step 4.2: Add turn-based gameplay support
+
+TODO
+
+#### Step 4.3: Announce when the game is over
 
 TODO
 
