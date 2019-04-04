@@ -56,7 +56,7 @@ component name will obviously be different.
 import GameComponent from '../../GameComponent.js';
 import React from 'react';
 
-export default class Test extends GameComponent {
+export default class TicTacToe extends GameComponent {
 
   render() {
     var id = this.getSessionId();
@@ -145,6 +145,15 @@ following functions:
    `<img>` tag
 1. `UserApi.getLastSignIn(uid)`: Returns the user's last login date as a
    JavaScript `Date` object
+
+#### Step 1.4: Determine if the current user is the session creator or "game host"
+
+**An exercise for the reader**
+
+Use the `this.getMyUserId()` and `this.getSessionCreatorUserId()` functions to
+determine if the current user is the session creator. Try adding this check to
+the `render()` function and conditionally display "I am the host" or "I am a
+guest".
 
 ### Step 2: Updating game data and listening for changes
 
