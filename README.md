@@ -167,13 +167,15 @@ this.getSessionDatabaseRef().set({text: "Hello, World!"});
 ```
 
 This reference give you access to all of the Firebase database functions we
-learned about in class. You can learn more about this API in the [Firebase
-docs][firebase-db].
+learned about in class. **Warning: this code snippet is writing to the remote
+Firebase database, NOT React state.** You can learn more about this API in the
+[Firebase docs][firebase-db].
 
 #### Step 2.2: Listening for game data changes in the Firebase database
 
 Listening for game data changes is also easy! Extending from `GameComponent`
-gives us access to the following callback functions:
+gives us access to the following callback functions. **Warning: these functions
+are listening for changes to the Firebase database, NOT React state.**
 
 1. `onSessionDataChanged(data)`: Called whenever the session data stored at
    `/session/<id>/` changes. Passes said data as the argument.
@@ -228,7 +230,8 @@ Tessler clicked the button." The text updates whenever a user clicks the button
 (and shows their name instead).
 
 First, we must define some default state for the last user who clicked on the
-button. Let's default to `null` (nothing).
+button. Let's default to `null` (nothing). **Warning: this is writing to React
+state, NOT the remote Firebase database.**
 
 ```javascript
 import GameComponent from '../../GameComponent.js';
@@ -244,9 +247,11 @@ export default class TicTacToe extends GameComponent {
 ```
 
 Next, we need to use `onSessionDataChanged` to listen for changes to the path
-`/session/<id>/user_id`, which will store the User ID of the last user who
-clicked on the button. Just update the `this.state.last_userid` state whenever
-this change occurs.
+`/session/<id>/user_id`, which will store the user ID of the last user who
+clicked on the button. **Warning: this is listening for changes to the remote
+Firebase database, not React state.** We _then_ update the React state
+`this.state.last_userid` state whenever this remote Firebase data change
+occurs.
 
 ```javascript
 import GameComponent from '../../GameComponent.js';
@@ -267,7 +272,8 @@ export default class TicTacToe extends GameComponent {
 
 Then we need to add the rendered `<button>` and its click handler,
 `handleButtonClick`, which updates the Firebase database using
-`this.getSessionDatabaseRef()`.
+`this.getSessionDatabaseRef()`. **Warning: this writes to the remote Firebase
+database, not React state.**
 
 ```javascript
 import GameComponent from '../../GameComponent.js';
