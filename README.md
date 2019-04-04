@@ -515,15 +515,133 @@ code?
 
 #### Step 4.2: Add turn-based gameplay support
 
-TODO
+We need a way to determine whether it is the "current" user's turn and a way to
+find other "other" user's ID. We can write these as two helper functions:
+
+```javascript
+isMyTurn() {
+  return this.getMyUserId() === this.state.currentUser;
+}
+
+getOtherUserId() {
+  var user_ids = this.getSessionUserIds();
+  for (var i = 0; i < user_ids.length; i++) {
+    if (user_ids[i] !== this.getMyUserId()) {
+      return user_ids[i];
+    }
+  }
+  console.error("Could not find other player's user ID", user_ids);
+  return null;
+}
+```
+
+Now we only need to make two more modifications:
+
+1. Use `this.getOtherUserId()` when updating the `current_user` in the Firebase
+   database
+2. Disable any button if it is not the current user's turn or if the button is
+   already an `X` or `O`
+
+```javascript
+import GameComponent from '../../GameComponent.js';
+import React from 'react';
+import UserApi from '../../UserApi.js';
+
+export default class TicTacToe extends GameComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cellState: [".", ".",  ".",  ".",  ".",  ".",  ".",  ".",  "."],
+      currentUser: this.getSessionCreatorUserId(),
+    };
+  }
+
+  onSessionDataChanged(data) {
+    this.setState({
+      cellState: data.cell_state,
+      currentUser: data.current_user,
+    });
+  }
+
+  handleButtonClick(i) {
+    var cellState = this.state.cellState;
+    if (this.getMyUserId() === this.getSessionCreatorUserId()) {
+      cellState[i] = "X";
+    } else {
+      cellState[i] = "O";
+    }
+    this.getSessionDatabaseRef().set({
+      cell_state: cellState,
+      current_user: this.getOtherUserId(),
+    });
+  }
+
+  isMyTurn() {
+    return this.getMyUserId() === this.state.currentUser;
+  }
+
+  getOtherUserId() {
+    var user_ids = this.getSessionUserIds();
+    for (var i = 0; i < user_ids.length; i++) {
+      if (user_ids[i] !== this.getMyUserId()) {
+        return user_ids[i];
+      }
+    }
+    console.error("Could not find other player's user ID", user_ids);
+    return null;
+  }
+
+  render() {
+    var buttons = this.state.cellState.map((state, i) => (
+      <button
+          disabled={!this.isMyTurn() || state !== "."}
+          onClick={() => this.handleButtonClick(i)}>
+        {state}
+      </button>
+    ));
+    return (
+      <div>
+        {buttons[0]} {buttons[1]} {buttons[2]}
+        <br />
+        {buttons[3]} {buttons[4]} {buttons[5]}
+        <br />
+        {buttons[6]} {buttons[7]} {buttons[8]}
+      </div>
+    );
+  }
+}
+```
+
+Try playing the game with a teammate to confirm that you cannot edit the Tic
+Tac Toe board when it is not your turn.
 
 #### Step 4.3: Announce when the game is over
 
-TODO
+**An exercise for the reader**
+
+Using `this.state.currentUser` and `UserApi.getName(user_id)`, render a message
+indicating the current turn. For example, "Waiting for Joe Tessler to make a
+move."
+
+Add the code that determines if a "winning condition" exists. In other words,
+does the Tic Tac Toe board have one of the following three configurations:
+
+1. A horizontal row of three `X`s or `O`s
+1. A vertical column of three `X`s or `O`s
+1. A diagonal line of three `X`s or `O`s
+
+Run this logic whenever the Firebase data changes, i.e. in the
+`onSessionDataChanged(data)` function. Update the rendered message if a winning
+condition is found, e.g. "Joe Tessler wins!"
 
 ### Step 5: Game style improvements (stretch goal)
 
-TODO
+**An exercise for the reader**
+
+This game framework was created using the [Material UI React
+library][material-ui], which provides React components pre-styled with Google's
+Material theme. **Check out the component demos and try using one in your
+game!**
 
 Resources
 ---------
