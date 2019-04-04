@@ -4,14 +4,17 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import GameCard from './GameCard.js';
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import gameData from './gameData.js';
 
 const cardStyle = {
   marginTop: 14,
 };
 
 export const FILTER_TYPE = Object.freeze({
-  ALL: 0,
+  ALL_GAMES: 0,
   MY_GAMES: 1,
+  GAMES_WITH_SPACE: 2,
+  GAMES_I_AM_IN: 3,
 });
 
 export default class WaitingRoom extends Component {
@@ -56,11 +59,20 @@ export default class WaitingRoom extends Component {
   }
 
   getFilterFunction() {
+    var my_uid = firebase.auth().currentUser.uid;
+
     switch (this.state.filterType) {
-      case FILTER_TYPE.ALL:
+      case FILTER_TYPE.ALL_GAMES:
         return (session) => true; // no-op
       case FILTER_TYPE.MY_GAMES:
-        return (session) => session.creator === firebase.auth().currentUser.uid;
+        return (session) => session.creator === my_uid;
+      case FILTER_TYPE.GAMES_WITH_SPACE:
+        return (session) => {
+          return session.type in gameData &&
+              session.users.length < gameData[session.type].maxUsers;
+        }
+      case FILTER_TYPE.GAMES_I_AM_IN:
+        return (session) => session.users.indexOf(my_uid) >= 0;
       default: // Log an error.
         console.log("There's been an Error");
     }
@@ -76,6 +88,11 @@ export default class WaitingRoom extends Component {
     }
 
     var sessions = this.state.sessions.filter(this.getFilterFunction());
+
+    // Sort by timestamp (in reverse).
+    sessions.sort((a, b) => {
+      return b.timestamp - a.timestamp;
+    });
 
     var cards = sessions.map((session) => (
       <GameCard
