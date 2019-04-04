@@ -516,7 +516,7 @@ code?
 #### Step 4.2: Add turn-based gameplay support
 
 We need a way to determine whether it is the "current" user's turn and a way to
-find other "other" user's ID. We can write these as two helper functions:
+find the "other" user's ID. We can write these as two helper functions:
 
 ```javascript
 isMyTurn() {
