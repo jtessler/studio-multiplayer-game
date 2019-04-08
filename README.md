@@ -643,6 +643,21 @@ library][material-ui], which provides React components pre-styled with Google's
 Material theme. **Check out the component demos and try using one in your
 game!**
 
+Troubleshooting
+---------------
+
+### I can't log in!
+
+Are you using a new browser-based IDE that we have not used in class? Ask your
+teacher to whitelist the new IDE in Firebase.
+
+### My editor/IDE is really slow
+
+This happens when React tries to reload the application every time the file
+changes. Try disabling this feature so React only reloads when you save the
+file. In codesandbox.io, go to `File -> Preferences -> CodeSandbox Settings`,
+then disable `Preview on edit` in the `Preview` preferences.
+
 Resources
 ---------
 
