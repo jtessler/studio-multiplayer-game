@@ -28,14 +28,19 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    firebase.initializeApp({
-      apiKey: "AIzaSyCJPYgNY-rgkZul563iUipYrFKD7BLt_HA",
-      authDomain: "studio-multiplayer-game.firebaseapp.com",
-      databaseURL: "https://studio-multiplayer-game.firebaseio.com",
-      projectId: "studio-multiplayer-game",
-      storageBucket: "studio-multiplayer-game.appspot.com",
-      messagingSenderId: "953054375831"
-    });
+    // Some browser-based IDEs cleverly reload the app without destroying the
+    // Firebase instance. Check for this case to avoid initializing the same
+    // application twice (which throws an error).
+    if (firebase.apps.length === 0) {
+      firebase.initializeApp({
+        apiKey: "AIzaSyCJPYgNY-rgkZul563iUipYrFKD7BLt_HA",
+        authDomain: "studio-multiplayer-game.firebaseapp.com",
+        databaseURL: "https://studio-multiplayer-game.firebaseio.com",
+        projectId: "studio-multiplayer-game",
+        storageBucket: "studio-multiplayer-game.appspot.com",
+        messagingSenderId: "953054375831"
+      });
+    }
 
     firebase.auth().onAuthStateChanged(
         (user) => this.setState({
