@@ -8,12 +8,7 @@ const SESSION_METADATA_PATH = "/session-metadata";
 export default class GameComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      creator: props.location.state.creator || "",
-      users: props.location.state.users || [],
-      title: props.location.state.title || "Studio Games!",
-    };
-    document.title = this.state.title;
+    document.title = this.getSessionTitle();
   }
 
   /**
@@ -54,30 +49,79 @@ export default class GameComponent extends React.Component {
 
   /** Returns the current session ID as stored in Firebase.  */
   getSessionId() {
-    return this.props.match.params.id;
+    if (this.props &&
+        this.props.match &&
+        this.props.match.params &&
+        this.props.match.params.id) {
+      return this.props.match.params.id;
+    }
+    if (this.props &&
+        this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.id) {
+      return this.props.location.state.id;
+    }
+    throw new Error("Unable to get session ID from URL nor browser history");
   }
 
   /** Returns the list of user IDs connected to the current session.  */
   getSessionUserIds() {
-    return this.state.users;
+    if (this.state &&
+        this.state.users) {
+      return this.state.users;
+    }
+    if (this.props &&
+        this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.users) {
+      return this.props.location.state.users;
+    }
+    console.warn("Session user list not yet available, using empty list");
+    return [];
   }
 
   /** Returns the user ID of the one who created this current session. */
   getSessionCreatorUserId() {
-    return this.state.creator;
+    if (this.state &&
+        this.state.creator) {
+      return this.state.creator;
+    }
+    if (this.props &&
+        this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.creator) {
+      return this.props.location.state.creator;
+    }
+    console.warn("Session creator ID not yet available, using empty string");
+    return "";
   }
 
   /** Returns the session title, e.g., "Rock, Paper, Scissors" */
   getSessionTitle() {
-    return this.state.title;
+    if (this.state &&
+        this.state.title) {
+      return this.state.title;
+    }
+    if (this.props &&
+        this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.title) {
+      return this.props.location.state.title;
+    }
+    return "Studio Games!";  // Silently fall back to default value.
   }
 
   /** Returns the user ID of the current user, i.e. YOU. */
   getMyUserId() {
-    return firebase.auth().currentUser.uid;
+    if (firebase.auth() &&
+        firebase.auth().currentUser &&
+        firebase.auth().currentUser.uid) {
+      return firebase.auth().currentUser.uid;
+    }
+    throw new Error("Unable to get current user ID");
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getSessionDatabaseRef().on("value", snapshot => {
       if (snapshot.val() !== null) {
         this.onSessionDataChanged(snapshot.val());
@@ -87,19 +131,23 @@ export default class GameComponent extends React.Component {
     this.getSessionMetadataDatabaseRef().on("value", snapshot => {
       let data = snapshot.val();
       if (data !== null) {
-        let title = this.state.title;
-        if (data.type in gameData) {
-          title = gameData[data.type].title;
-        }
-        document.title = title;
-        this.setState({
+        let newState = {
           creator: data.creator,
           users: data.users,
-          title: title,
-        });
+        }
+        if (data.type in gameData) {
+          newState.title = gameData[data.type].title;
+        }
+        this.setState(newState);
         this.onSessionMetadataChanged(data);
       }
     });
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevState.title !== this.state.title) {
+      document.title = this.getSessionTitle();
+    }
   }
 
   componentWillUnmount() {
