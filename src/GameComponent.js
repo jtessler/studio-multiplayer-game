@@ -67,8 +67,9 @@ export default class GameComponent extends React.Component {
   /** Returns the list of user IDs connected to the current session.  */
   getSessionUserIds() {
     if (this.state &&
-        this.state.users) {
-      return this.state.users;
+        this.state.metadata &&
+        this.state.metadata.users) {
+      return this.state.metadata.users;
     }
     if (this.props &&
         this.props.location &&
@@ -83,8 +84,9 @@ export default class GameComponent extends React.Component {
   /** Returns the user ID of the one who created this current session. */
   getSessionCreatorUserId() {
     if (this.state &&
-        this.state.creator) {
-      return this.state.creator;
+        this.state.metadata &&
+        this.state.metadata.creator) {
+      return this.state.metadata.creator;
     }
     if (this.props &&
         this.props.location &&
@@ -99,8 +101,9 @@ export default class GameComponent extends React.Component {
   /** Returns the session title, e.g., "Rock, Paper, Scissors" */
   getSessionTitle() {
     if (this.state &&
-        this.state.title) {
-      return this.state.title;
+        this.state.metadata &&
+        this.state.metadata.title) {
+      return this.state.metadata.title;
     }
     if (this.props &&
         this.props.location &&
@@ -131,13 +134,15 @@ export default class GameComponent extends React.Component {
     this.getSessionMetadataDatabaseRef().on("value", snapshot => {
       let data = snapshot.val();
       if (data !== null) {
-        let newState = {
+        let sessionMetadata = {
           creator: data.creator,
           users: data.users,
         }
         if (data.type in gameData) {
-          newState.title = gameData[data.type].title;
+          sessionMetadata.title = gameData[data.type].title;
         }
+        let newState = this.state;
+        newState.metadata = sessionMetadata;
         this.setState(newState);
         this.onSessionMetadataChanged(data);
       }
@@ -145,9 +150,7 @@ export default class GameComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevState.title !== this.state.title) {
-      document.title = this.getSessionTitle();
-    }
+    document.title = this.getSessionTitle();
   }
 
   componentWillUnmount() {
