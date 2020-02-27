@@ -8,6 +8,7 @@ import RockPaperScissors from './games/rps/RockPaperScissors.js';
 import Spark from './games/spark/Spark.js';
 import TicTacToe from './games/tictactoe/TicTacToe.js';
 import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js';
+import burst_Forth from "./games/Burst_Forth/burstForth.js";
 import fight from "./games/fight/fight.js";
 import uno from './games/uno/uno.js';
 
@@ -120,6 +121,16 @@ const gameData = {
     maxUsers: 2,
     component: fight
   },
-}
+
+  Burst_Forth: {
+    title: "Burst Forth",
+    authors: "Jason Alvarez, William Collazo, Usman",
+    description: "oof",
+    minUsers: 2,
+    maxUsers: 2,
+    component: burst_Forth
+  },
+
+};
 
 export default gameData;
