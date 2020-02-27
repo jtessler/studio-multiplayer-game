@@ -1,13 +1,13 @@
 import ChatRoom from './games/chatroom/ChatRoom.js';
-import TicTacToe from './games/tictactoe/TicTacToe.js';
-import RockPaperScissors from './games/rps/RockPaperScissors.js';
-import Multiplication from './games/multiplication/Multiplication.js';
-import Pong from './games/pong/Pong.js';
-import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js';
-import Spark from './games/spark/Spark.js';
-import uno from './games/uno/uno.js';
 import Mafia from './games/mafia/Mafia.js';
+import Multiplication from './games/multiplication/Multiplication.js';
 import Pokemon from './games/pokemon/Pokemon.js'
+import Pong from './games/pong/Pong.js';
+import RockPaperScissors from './games/rps/RockPaperScissors.js';
+import Spark from './games/spark/Spark.js';
+import TicTacToe from './games/tictactoe/TicTacToe.js';
+import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js';
+import uno from './games/uno/uno.js';
 
 const gameData = {
 
