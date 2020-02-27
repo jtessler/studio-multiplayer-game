@@ -7,6 +7,7 @@ import Pong from './games/pong/Pong.js';
 import RockPaperScissors from './games/rps/RockPaperScissors.js';
 import Spark from './games/spark/Spark.js';
 import TicTacToe from './games/tictactoe/TicTacToe.js';
+import TugOfWar from "./games/TugOfWar/TugOfWar.js";
 import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js';
 import burst_Forth from "./games/Burst_Forth/burstForth.js";
 import fight from "./games/fight/fight.js";
@@ -130,6 +131,15 @@ const gameData = {
     maxUsers: 2,
     component: burst_Forth
   },
+
+  TugOfWar: {
+    title: "Tug Of War",
+    authors: "Joel Veras",
+    description: "Pull the rope and win ",
+    minUsers: 2,
+    maxUsers: 2,
+    component: TugOfWar
+  }
 
 };
 

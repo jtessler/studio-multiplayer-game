@@ -1,0 +1,27 @@
+.main {
+  height: 20px;
+  width: 100%;
+  text-align: center;
+}
+.rope {
+  background-color: black;
+  width: 250px;
+  height: 100%;
+  display: inline-block;
+}
+.marker {
+  background-color: red;
+  width: 11%;
+  height: 100%;
+  display: inline-block;
+}
+.ropeBorder {
+  width: 630px;
+  border-left: 6px solid green;
+  border-right: 6px solid green;
+  display: inline-block;
+  height: 100%;
+}
+.text-Cen {
+  text-align: center;
+}
