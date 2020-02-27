@@ -1,5 +1,6 @@
 import ChatRoom from './games/chatroom/ChatRoom.js';
 import CookieClicker from "./games/cookieClicker/CookieClicker.js";
+import GoogleGossip from "./games/googlegossip/GoogleGossip.js";
 import Mafia from './games/mafia/Mafia.js';
 import Multiplication from './games/multiplication/Multiplication.js';
 import Pokemon from './games/pokemon/Pokemon.js'
@@ -139,7 +140,17 @@ const gameData = {
     minUsers: 2,
     maxUsers: 2,
     component: TugOfWar
-  }
+  },
+
+  googlegossip: {
+    title: "Google Gossip",
+    authors: "Zaara Afida, Jermain Lewis, Daril Alanis",
+    description:
+      "We are here to spill teas and destroy lives while exposing fake people around us.",
+    minUsers: 1,
+    maxUsers: 10,
+    component: GoogleGossip
+  },
 
 };
 
