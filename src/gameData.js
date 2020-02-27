@@ -1,4 +1,5 @@
 import ChatRoom from './games/chatroom/ChatRoom.js';
+import CookieClicker from "./games/cookieClicker/CookieClicker.js";
 import Mafia from './games/mafia/Mafia.js';
 import Multiplication from './games/multiplication/Multiplication.js';
 import Pokemon from './games/pokemon/Pokemon.js'
@@ -99,6 +100,15 @@ const gameData = {
     minUsers: 1,
     maxUsers: 20,
     component: Mafia,
+  },
+
+  cookieClicker: {
+    title: "Cookie Clicker",
+    authors: "Mahfuz,",
+    description: "click the cookie fast as possible",
+    minUsers: 2,
+    maxUsers: 2,
+    component: CookieClicker
   },
 }
 
