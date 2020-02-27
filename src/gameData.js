@@ -8,6 +8,7 @@ import RockPaperScissors from './games/rps/RockPaperScissors.js';
 import Spark from './games/spark/Spark.js';
 import TicTacToe from './games/tictactoe/TicTacToe.js';
 import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js';
+import fight from "./games/fight/fight.js";
 import uno from './games/uno/uno.js';
 
 const gameData = {
@@ -109,6 +110,15 @@ const gameData = {
     minUsers: 2,
     maxUsers: 2,
     component: CookieClicker
+  },
+
+  fight: {
+    title: "fight",
+    authors: "Linhong Zhou, Jennifer P",
+    description: "FIGHT!",
+    minUsers: 2,
+    maxUsers: 2,
+    component: fight
   },
 }
 
