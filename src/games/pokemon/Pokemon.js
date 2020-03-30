@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 // import AppBar from 'material-ui/AppBar';
 import firebase from 'firebase'
-import UserApi from './UserApi.js';
+import UserApi from '../../UserApi.js';
 import Avatar from 'material-ui/Avatar';
 
 export default class Pokemon extends Component {
@@ -66,7 +66,7 @@ export default class Pokemon extends Component {
         this.sessionDatabaseRef.update({ playerOneHealth: 100 });
         this.sessionDatabaseRef.update({ playerTwoHealth: 100 });
     }
-    
+
     runScene(){
         console.log("Scene is Running")
     }
@@ -76,8 +76,8 @@ export default class Pokemon extends Component {
     }
 
     render() {
-        
-        let display 
+
+        let display
          if(this.state.playerOneHealth <= 0) {
              display = <h1>{UserApi.getName(this.state.playerTwo)} Wins</h1>
              this.gameReset()
@@ -120,7 +120,7 @@ export default class Pokemon extends Component {
                         <RaisedButton className = "Attack4" label="random2" />
                     </div>
                 </div>
-                
+
             </div>
 
         );

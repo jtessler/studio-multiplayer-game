@@ -1,7 +1,6 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # firebase configuration
-/src/firebaseConfig.js
 .firebaserc
 firebase.json
 

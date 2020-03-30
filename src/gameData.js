@@ -1,13 +1,18 @@
-import ChatRoom from './ChatRoom.js';
-import TicTacToe from './TicTacToe.js';
-import RockPaperScissors from './RockPaperScissors.js';
-import Multiplication from './Multiplication.js';
-import Pong from './Pong.js';
-import Questions from './TwentyOneQuestions.js';
-import Spark from './Spark.js';
-import uno from './uno.js';
-import Mafia from './Mafia.js';
-import Pokemon from './Pokemon.js'
+import ChatRoom from './games/chatroom/ChatRoom.js';
+import CookieClicker from "./games/cookieClicker/CookieClicker.js";
+import GoogleGossip from "./games/googlegossip/GoogleGossip.js";
+import Mafia from './games/mafia/Mafia.js';
+import Multiplication from './games/multiplication/Multiplication.js';
+import Pokemon from './games/pokemon/Pokemon.js'
+import Pong from './games/pong/Pong.js';
+import RockPaperScissors from './games/rps/RockPaperScissors.js';
+import Spark from './games/spark/Spark.js';
+import TicTacToe from './games/tictactoe/TicTacToe.js';
+import TugOfWar from "./games/TugOfWar/TugOfWar.js";
+import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js';
+import burst_Forth from "./games/Burst_Forth/burstForth.js";
+import fight from "./games/fight/fight.js";
+import uno from './games/uno/uno.js';
 
 const gameData = {
 
@@ -37,7 +42,7 @@ const gameData = {
     maxUsers: 2,
     component: RockPaperScissors,
   },
-  
+
   multiplication: {
     title: "Multiplication",
     authors: "Edwin Fuquen",
@@ -55,7 +60,7 @@ const gameData = {
     maxUsers: 2,
     component: Pong,
   },
-  
+
   pokemon: {
       title: "Pokemon Simulator",
       authors: "Imani Greenidge and Raishan Bernard",
@@ -71,7 +76,7 @@ const gameData = {
     description: "21 questions between 2 players",
     minUsers: 1,
     maxUsers: 2,
-    component: Questions,
+    component: TwentyOneQuestions,
   },
 
   photosharing: {
@@ -100,6 +105,53 @@ const gameData = {
     maxUsers: 20,
     component: Mafia,
   },
-}
+
+  cookieClicker: {
+    title: "Cookie Clicker",
+    authors: "Mahfuz,",
+    description: "click the cookie fast as possible",
+    minUsers: 2,
+    maxUsers: 2,
+    component: CookieClicker
+  },
+
+  fight: {
+    title: "fight",
+    authors: "Linhong Zhou, Jennifer P",
+    description: "FIGHT!",
+    minUsers: 2,
+    maxUsers: 2,
+    component: fight
+  },
+
+  Burst_Forth: {
+    title: "Burst Forth",
+    authors: "Jason Alvarez, William Collazo, Usman",
+    description: "oof",
+    minUsers: 2,
+    maxUsers: 2,
+    component: burst_Forth
+  },
+
+  TugOfWar: {
+    title: "Tug Of War",
+    authors: "Joel Veras",
+    description: "Pull the rope and win ",
+    minUsers: 2,
+    maxUsers: 2,
+    component: TugOfWar
+  },
+
+  googlegossip: {
+    title: "Google Gossip",
+    authors: "Zaara Afida, Jermain Lewis, Daril Alanis",
+    description:
+      "We are here to spill teas and destroy lives while exposing fake people around us.",
+    minUsers: 1,
+    maxUsers: 10,
+    component: GoogleGossip
+  },
+
+};
 
 export default gameData;

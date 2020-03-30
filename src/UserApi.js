@@ -44,6 +44,11 @@ var users = null; // In-memory cache of all user metadata.
 
 export class UserApiConfig {
   static startListeningForChanges() {
+    // Some browser-based IDEs cleverly reload the app without destroying the
+    // in-memory cache. Clear it before listening to Firebase changes to ensure
+    // Promise.resolve() is called.
+    users = null;
+
     var usersDatabaseRef = firebase.database().ref("/user");
     // Returns a Promise that resolves whenever the first load completes.
     return new Promise((resolve) => {

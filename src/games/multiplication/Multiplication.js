@@ -1,7 +1,7 @@
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import React, { Component } from 'react';
-import CircularProgress from 'material-ui/CircularProgress';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import firebase from 'firebase';
 
 export default class WordGuessing extends Component {
@@ -79,8 +79,15 @@ export default class WordGuessing extends Component {
     if(this.state.answer_uid === "") {
       return (<div>
         <h1>7 X 9</h1>
-        <TextField onChange={this.handleAnswerText.bind(this)}></TextField>
-        <RaisedButton onClick={this.submitAnswer.bind(this)}>Submit</RaisedButton>
+        <TextField
+            name="Multiplication input"
+            onChange={this.handleAnswerText.bind(this)} />
+        <Button
+            style={{marginLeft: 10}}
+            variant="contained"
+            onClick={this.submitAnswer.bind(this)}>
+          Submit
+        </Button>
       </div>);
     }
     var result;

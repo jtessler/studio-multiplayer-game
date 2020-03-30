@@ -1,14 +1,14 @@
-import CircularProgress from 'material-ui/CircularProgress';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import DataViewer from './DataViewer.js';
+import Fab from '@material-ui/core/Fab';
 import Header from './Header.js'
-import Paper from 'material-ui/Paper';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
+import PersonAdd from '@material-ui/icons/PersonAdd';
 import React, { Component } from 'react';
+import UnknownGameType from './UnknownGameType.js';
 import WaitingRoom from './WaitingRoom.js';
 import firebase from 'firebase';
-import firebaseConfig from './firebaseConfig.js';
 import gameData from './gameData.js';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { UserApiConfig } from './UserApi.js';
 
 const buttonStyle = {
@@ -28,7 +28,19 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    firebase.initializeApp(firebaseConfig);
+    // Some browser-based IDEs cleverly reload the app without destroying the
+    // Firebase instance. Check for this case to avoid initializing the same
+    // application twice (which throws an error).
+    if (firebase.apps.length === 0) {
+      firebase.initializeApp({
+        apiKey: "AIzaSyCJPYgNY-rgkZul563iUipYrFKD7BLt_HA",
+        authDomain: "studio-multiplayer-game.firebaseapp.com",
+        databaseURL: "https://studio-multiplayer-game.firebaseio.com",
+        projectId: "studio-multiplayer-game",
+        storageBucket: "studio-multiplayer-game.appspot.com",
+        messagingSenderId: "953054375831"
+      });
+    }
 
     firebase.auth().onAuthStateChanged(
         (user) => this.setState({
@@ -36,32 +48,12 @@ export default class App extends Component {
           user: user
         }));
 
-    firebase.auth().getRedirectResult().then(
-        (result) => {
-          if (result.user) {
-            this.logSignIn(result.user);
-          }
-        },
-        (error) => { console.error("Failed to sign in", error) });
-
     UserApiConfig.startListeningForChanges().then(
         () => this.setState({ userApiIsLoading: false }));
   }
 
   componentWillUnmount() {
     UserApiConfig.stopListeningForChanges();
-  }
-
-  logSignIn(user) {
-    var userData = {
-      name: user.displayName,
-      photoURL: user.photoURL,
-      lastSignIn: firebase.database.ServerValue.TIMESTAMP,
-    }
-    var userDatabaseRef = firebase.database().ref('/user/' + user.uid);
-
-    userDatabaseRef.set(userData).catch(
-        (error) => console.error("Error storing user metadata", error));
   }
 
   signIn() {
@@ -74,19 +66,19 @@ export default class App extends Component {
     if (!this.state.authIsLoading && this.state.user === null) {
       return (
         <center>
-          <FloatingActionButton
+          <Fab
               style={buttonStyle}
               onClick={() => this.signIn()}>
             <PersonAdd />
-          </FloatingActionButton>
+          </Fab>
         </center>
       );
     } else if (this.state.authIsLoading || this.state.userApiIsLoading) {
       return (
         <center>
-          <Paper style={buttonStyle} circle={true}>
-            <CircularProgress size={56} />
-          </Paper>
+          <CircularProgress
+              style={buttonStyle}
+              size={56} />
         </center>
       );
     } else {
@@ -99,8 +91,14 @@ export default class App extends Component {
       return (
         <div>
           <Header />
-          <Route path="/" component={WaitingRoom} exact />
-          {gameRoutes}
+          <Switch>
+            <Route path="/" component={WaitingRoom} exact />
+            <Route path="/dataViewer" component={DataViewer} exact />
+            {gameRoutes}
+            <Route
+                path={"/:type/:id"}
+                component={UnknownGameType} exact />
+          </Switch>
         </div>
       );
     }

@@ -1,0 +1,5 @@
+div {
+  border-radius: 5px;
+  animation-name: fadeIn;
+  animation-duration: 3s;
+}
