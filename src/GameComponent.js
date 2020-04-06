@@ -141,7 +141,7 @@ export default class GameComponent extends React.Component {
         if (data.type in gameData) {
           sessionMetadata.title = gameData[data.type].title;
         }
-        let newState = this.state;
+        let newState = this.state || {};
         newState.metadata = sessionMetadata;
         this.setState(newState);
         this.onSessionMetadataChanged(data);
