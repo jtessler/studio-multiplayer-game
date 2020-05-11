@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class Enemy extends React.Component {
+export default class Shot extends React.Component {
   constructor(props) {
     super(props);
     var defaultValue = {};
@@ -8,15 +8,15 @@ export default class Enemy extends React.Component {
   }
 
   render() {
-    let enemyStyle = {
-      width: "20px",
-      height: "20px",
-      backgroundColor: "red",
+    let shotStyle = {
+      width: "10px",
+      height: "10px",
+      backgroundColor: "white",
       position: "relative",
       top: this.props.pos.top + "px",
       left: this.props.pos.left + "px"
     };
 
-    return <div className="enemy" style={enemyStyle} />;
+    return <div className="shot" style={shotStyle} />;
   }
 }

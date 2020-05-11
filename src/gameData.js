@@ -154,7 +154,7 @@ const gameData = {
   },
   SpaceInvaders: {
     title: "Space Invaders",
-    authors: "Jason Alvarez, Patrick Cooney, ",
+    authors: "Jason Alvarez, Patrick Cooney, David ",
     description:
       "Are you going to let Aliens invade your perfect dictatorship? Of course not! Defend your glorious planet.",
     minUsers: 1,
