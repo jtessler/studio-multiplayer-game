@@ -1,0 +1,21 @@
+canvas {
+  border:2px solid;
+}
+
+.pictionary-app {  
+  background-color:turquoise;
+  font-family: Helvetica;
+  text-align:center
+}
+
+canvas{
+  background:white;
+}
+
+.scoreboard {
+  border:solid black 3px;
+  display: flex;
+  justify-content:space-around;
+
+}
+

@@ -13,6 +13,7 @@ import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js
 import burst_Forth from "./games/Burst_Forth/burstForth.js";
 import fight from "./games/fight/fight.js";
 import uno from './games/uno/uno.js';
+import pictionary from './games/pictionary';
 
 const gameData = {
 
@@ -151,6 +152,15 @@ const gameData = {
     maxUsers: 10,
     component: GoogleGossip
   },
+
+  pictionary: {
+    title: "Pictionary",
+    authors: "Emily, Michael, and Mike",
+    description: "a pictionary-style canvas game",
+    minUsers: 2,
+    maxUsers: 2,
+    component: pictionary
+  }
 
 };
 
