@@ -28,20 +28,14 @@ function Guessing(props) {
   }
 
   function handleNextGameButtonClick() {
-    props.dispatch({
-      type: "setAnimal",
-      payload: "",
+    props.updateFirebase({
+      animal: "",
+      drawingPlayer: props.getNextDrawingPlayer(),
+      phase: "drawing",
+      round: props.round + 1
     });
-    props.dispatch({
-      type: "setRound",
-    });
-    props.dispatch({
-      type: "setPhase",
-      payload: "drawing",
-    });
-    props.dispatch({
-      type: "setDrawingPlayer",
-    });
+
+    // erase the canvas:
     let canvas = props.refCanvas.current;
     canvas.clear();
   }

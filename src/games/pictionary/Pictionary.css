@@ -1,21 +1,24 @@
-canvas {
+#can {
   border:2px solid;
+  background:white;
+  display: flex;
+  max-width: 50%;
+  position: initial;
+  margin: 0 auto;
+  margin-bottom: 30px;
 }
 
 .pictionary-app {  
   background-color:turquoise;
   font-family: Helvetica;
-  text-align:center
-}
-
-canvas{
-  background:white;
+  text-align:center;
+  display: flex;
+  flex-direction: column;
 }
 
 .scoreboard {
   border:solid black 3px;
   display: flex;
   justify-content:space-around;
-
 }
 

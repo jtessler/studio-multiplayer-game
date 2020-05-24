@@ -9,43 +9,35 @@ export default class App extends GameComponent {
 
     this.state = {
       animal: "",
-      drawingPlayer: null,
+      drawingPlayer: this.getSessionCreatorUserId(),
+      guess: "",
+      myId: this.getMyUserId(),
       phase: "drawing",
+      players: this.getSessionUserIds(),
       round: 1,
       score: 0,
     };
 
     this.updateFirebase = this.updateFirebase.bind(this);
-    this.setDrawingPlayer = this.setDrawingPlayer.bind(this);
+    this.getNextDrawingPlayer = this.getNextDrawingPlayer.bind(this);
   }
 
   componentDidMount() {
-    // these two properties are constant and don't need to be maintained in state:
-    this.myId = this.getMyUserId();
-    this.players = this.getSessionUserIds();
-    this.setDrawingPlayer();
-
-    this.getSessionDatabaseRef().update(this.state, err => {
-      if (err) console.log(err);
-    });
-
-    this.getSessionDatabaseRef().update({ animal: 'cow' }, err => {
-      if (err) console.log(err);
+    this.getSessionDatabaseRef().set(this.state, err => {
+      if (err) console.error(err);
     });
   }
 
-  setDrawingPlayer() {
-    let newDrawingPlayer;
+  getNextDrawingPlayer() {
+    let nextDrawingPlayer;
 
     if (this.state.drawingPlayer === this.players[0]) {
-      newDrawingPlayer = this.players[1];
+      nextDrawingPlayer = this.players[1];
     } else {
-      newDrawingPlayer = this.players[0];
+      nextDrawingPlayer = this.players[0];
     }
 
-    this.setState({
-      drawingPlayer: newDrawingPlayer
-    });
+    return nextDrawingPlayer;
   }
 
   onSessionDataChanged(data) {
@@ -62,9 +54,7 @@ export default class App extends GameComponent {
   updateFirebase(data) {
     console.log("data from updateFirebase:", data);
     this.getSessionDatabaseRef().set(data, err => {
-      if (err) {
-        console.error(err);
-      }
+      if (err) console.error(err);
     });
   }
 
@@ -77,8 +67,10 @@ export default class App extends GameComponent {
           phase={this.state.phase}
           animal={this.state.animal}
           drawingPlayer={this.state.drawingPlayer}
-          myId={this.myId}
+          guess={this.state.guess}
+          myId={this.state.myId}
           players={this.state.players}
+          setDrawingPlayer={this.setDrawingPlayer}
           updateFirebase={this.updateFirebase}
         />
       </div>

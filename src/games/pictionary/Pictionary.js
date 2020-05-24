@@ -28,6 +28,7 @@ function Pictionary(props) {
           animal={props.animal}
           refCanvas={refCanvas}
           score={props.score}
+          setDrawingPlayer={props.setDrawingPlayer}
           updateFirebase={props.updateFirebase}
         />
       )}

@@ -116,6 +116,7 @@ class Canvas extends Component {
     this.ctx.lineWidth = this.state.lineWidth;
     this.ctx.stroke();
     this.ctx.closePath();
+    // this will clear the canvas and prevent drawing from working until we have firebase working:
     if (this.props.animal === "") {
       this.clear();
     }
