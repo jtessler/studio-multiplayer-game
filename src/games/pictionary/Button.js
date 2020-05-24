@@ -2,7 +2,7 @@ import React from 'react';
 
 
 function Button(props) {
-    return(
+    return (
         <div>
             <button 
                 onClick={props.handleClick}
@@ -10,9 +10,7 @@ function Button(props) {
                 {props.text}
             </button>
         </div>
-    )
-
-
+    );
 }
 
 export default Button;

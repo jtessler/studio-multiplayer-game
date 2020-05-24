@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Scoreboard(props){
-    return(
+    return (
         <div className='scoreboard'>
             <div>
                 <p><strong>Round:</strong> {props.round}/7</p>
@@ -14,10 +14,8 @@ function Scoreboard(props){
                     <p><strong>Score:</strong> {props.score}</p>
                 </div>
             </div>
-
         </div>
-
-    )
+    );
 }
 
 export default Scoreboard;
