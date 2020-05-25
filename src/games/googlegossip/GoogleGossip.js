@@ -103,7 +103,7 @@ export default class GoogleGossip extends GameComponent {
 
   landingPageRender() {
     return (
-      <div class="main">
+      <div className="main">
         <img alt="" id="logo" src={Logo} />
         <br />
         <Button
@@ -120,7 +120,7 @@ export default class GoogleGossip extends GameComponent {
 
   pickAnAnswerRender() {
     return (
-      <div class="main3">
+      <div className="main3">
         <div className="AnswerWrapper">
           <div className={this.shouldShowCorrect() ? "Shown" : "Hidden"}>
             Correct
@@ -183,14 +183,14 @@ export default class GoogleGossip extends GameComponent {
 
   submitAQuestionRender() {
     return (
-      <div class="main2">
+      <div className="main2">
         <img alt="" id="Whisper" src={Whisper} />
         <form onSubmit={event => this.handleFormSubmit(event)}>
           <label id="input0">Truth or Lie #0</label>
           <br />
           
           <input
-            class="flexform"
+            className="flexform"
             type="text"
             value={this.state.statements[0]}
             onChange={event => this.handleFormChange(0, event)}
@@ -201,7 +201,7 @@ export default class GoogleGossip extends GameComponent {
           <label id="input1">Truth or Lie #1</label>
           <br />
           <input
-            class="flexform"
+            className="flexform"
             type="text"
             value={this.state.statements[1]}
             onChange={event => this.handleFormChange(1, event)}
@@ -212,7 +212,7 @@ export default class GoogleGossip extends GameComponent {
           <label id="input2">Truth or Lie #2</label>
           <br />
           <input
-            class="flexform"
+            className="flexform"
             type="text"
             value={this.state.statements[2]}
             onChange={event => this.handleFormChange(2, event)}
@@ -223,7 +223,7 @@ export default class GoogleGossip extends GameComponent {
           <label id="truthIdx">Index for Truth Statement</label>
           <br />
           <input
-            class="flexform"
+            className="flexform"
             type="text"
             value={this.state.truth}
             onChange={event => this.handleLieChange(event)}
@@ -242,7 +242,7 @@ export default class GoogleGossip extends GameComponent {
     return <div>Wait....</div>;
   }
 
-  render() {
+  renderPage() {
     // var users = this.getSessionUserIds().map(user_id => (
     //   <li key={user_id}>{UserApi.getName(user_id)}</li>
     // ));
@@ -261,5 +261,13 @@ export default class GoogleGossip extends GameComponent {
     } else if (this.state.isWaitPage) {
       return this.waitPageRender();
     }
+  }
+
+  render() {
+    return (
+      <div className="GoogleGossip">
+        {this.renderPage()}
+      </div>
+    );
   }
 }
