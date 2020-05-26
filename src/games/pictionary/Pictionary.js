@@ -1,44 +1,112 @@
-import React, { useRef } from "react";
-import "./Pictionary.css";
-import Canvas from "./Canvas";
-import Drawing from "./Drawing";
-import Guessing from "./Guessing";
-import Scoreboard from "./Scoreboard";
+import firebase from 'firebase';
+import React from "react";
+import GameComponent from "../../GameComponent.js";
+import Pictionary from "./PictionaryApp";
 
-function Pictionary(props) {
-    let refCanvas = useRef(null);
+const SESSION_DATA_PATH = "/session";
 
-    return (
-        <div className="pictionary-app">
-            <h1>Code Nation Presents: Pictionary</h1>
-            {props.phase === "drawing" && props.drawingPlayer === props.myId && (
-                <Drawing
-                    updateFirebase={props.updateFirebase}
-                    animal={props.animal}
+export default class App extends GameComponent {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            animal: "",
+            drawingPlayer: this.getSessionCreatorUserId(),
+            globalCanvasBlob: null,
+            guess: "",
+            phase: "drawing",
+            players: this.getSessionUserIds(),
+            round: 1,
+            score: 0,
+        };
+
+        this.updateFirebase = this.updateFirebase.bind(this);
+        this.getNextDrawingPlayer = this.getNextDrawingPlayer.bind(this);
+        this.sendBlobToFirebase = this.sendBlobToFirebase.bind(this);
+
+        this.myId = this.getMyUserId();
+
+        // set the initial global state if this is the creator session
+        if (this.state.drawingPlayer === this.state.players[0]) {
+            this.getSessionDatabaseRef().update(this.state, err => {
+                if (err) console.error(err);
+            });
+        }
+    }
+
+    getNextDrawingPlayer() {
+        let nextDrawingPlayer;
+
+        if (this.state.drawingPlayer === this.players[0]) {
+            nextDrawingPlayer = this.players[1];
+        } else {
+            nextDrawingPlayer = this.players[0];
+        }
+
+        return nextDrawingPlayer;
+    }
+
+    onSessionDataChanged(data) {
+        console.log("new data from Firebase:", data);
+        this.setState({
+            ...data,
+        });
+    }
+
+    onSessionMetadataChanged(metaData) {
+        console.log("new metaData from Firebase:", metaData);
+    }
+
+    updateFirebase(data) {
+        console.log("data sent to Firebase:", data);
+        this.getSessionDatabaseRef().update(data, err => {
+            if (err) console.error(err);
+        });
+    }
+
+    sendBlobToFirebase(canvas) {
+        canvas.toBlob(blob => {
+            try {
+                const newImg = document.createElement('img');
+                const url = URL.createObjectURL(blob);
+                
+                newImg.onload = function() {
+                    // no longer need to read the blob so it's revoked
+                    URL.revokeObjectURL(url);
+                };
+                
+                newImg.src = url;
+    
+                const ref = firebase.storage().ref();
+                
+                ref.put(blob, snapshot => {
+                    console.log('success uploading blob');
+                });
+            } catch (err) {
+                console.error(JSON.stringify(err));
+            }
+        });
+    }
+
+    render() {
+        return (
+            <div>
+                <Pictionary
+                    animal={this.state.animal}
+                    globalCanvasBlob ={this.state.globalCanvasBlob}
+                    drawingPlayer={this.state.drawingPlayer}
+                    guess={this.state.guess}
+                    myId={this.myId}
+                    phase={this.state.phase}
+                    players={this.state.players}
+                    round={this.state.round}
+                    score={this.state.score}
+                    sendBlobToFirebase={this.sendBlobToFirebase}
+                    setDrawingPlayer={this.setDrawingPlayer}
+                    updateFirebase={this.updateFirebase}
                 />
-            )}
-            <Canvas
-                ref={refCanvas}
-                animal={props.animal}
-                phase={props.phase}
-                updateFirebase={props.updateFirebase}
-            />
-            {props.phase === "guessing" && props.drawingPlayer !== props.myId && (
-                <Guessing
-                    animal={props.animal}
-                    refCanvas={refCanvas}
-                    score={props.score}
-                    setDrawingPlayer={props.setDrawingPlayer}
-                    updateFirebase={props.updateFirebase}
-                />
-            )}
-            <Scoreboard
-                score={props.score}
-                round={props.round}
-                drawingPlayer={props.drawingPlayer}
-            />
-        </div>
-    );
+            </div>
+        );
+    }
 }
-
-export default Pictionary;

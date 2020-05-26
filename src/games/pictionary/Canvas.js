@@ -3,6 +3,7 @@ import React, { Component } from "react";
 class Canvas extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             flag: false,
             prevX: 0,
@@ -13,6 +14,8 @@ class Canvas extends Component {
             lineWidth: 2,
             dot_flag: false,
         };
+
+        this.isDrawingPlayer = this.isDrawingPlayer.bind(this);
         this.init = this.init.bind(this);
         this.addEventListeners = this.addEventListeners.bind(this);
         this.findxy = this.findxy.bind(this);
@@ -22,6 +25,18 @@ class Canvas extends Component {
 
     componentDidMount() {
         this.init();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.globalCanvasBlob !== this.props.globalCanvasBlob) {
+            if (!this.isDrawingPlayer()) {
+                this.canvas.append(this.props.globalCanvasBlob);
+            }
+        }
+    }
+
+    isDrawingPlayer() {
+        return this.props.myId === this.props.drawingPlayer;
     }
 
     addEventListeners() {
@@ -87,6 +102,8 @@ class Canvas extends Component {
                     this.ctx.closePath();
                     this.setState({
                         dot_flag: false,
+                    }, () => {
+                        this.props.sendBlobToFirebase(this.canvas);
                     });
                 }
             );
@@ -95,6 +112,8 @@ class Canvas extends Component {
         if (res === "up" || res === "out") {
             this.setState({
                 flag: false,
+            }, () => {
+                this.props.sendBlobToFirebase(this.canvas);
             });
         }
 
@@ -109,6 +128,7 @@ class Canvas extends Component {
                     },
                     () => {
                         this.draw();
+                        this.props.sendBlobToFirebase(this.canvas);
                     }
                 );
             }
@@ -119,6 +139,7 @@ class Canvas extends Component {
         if (this.props.phase === "guessing") {
             return;
         }
+
         this.ctx.beginPath();
         this.ctx.moveTo(this.state.prevX, this.state.prevY);
         this.ctx.lineTo(this.state.currX, this.state.currY);
@@ -126,7 +147,7 @@ class Canvas extends Component {
         this.ctx.lineWidth = this.state.lineWidth;
         this.ctx.stroke();
         this.ctx.closePath();
-        // this will clear the canvas and prevent drawing from working until we have firebase working:
+
         if (this.props.animal === "") {
             this.clear();
         }
