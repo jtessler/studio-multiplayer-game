@@ -67,25 +67,7 @@ export default class App extends GameComponent {
 
     sendBlobToFirebase(canvas) {
         canvas.toBlob(blob => {
-            try {
-                const newImg = document.createElement('img');
-                const url = URL.createObjectURL(blob);
-                
-                newImg.onload = function() {
-                    // no longer need to read the blob so it's revoked
-                    URL.revokeObjectURL(url);
-                };
-                
-                newImg.src = url;
-    
-                const ref = firebase.storage().ref();
-                
-                ref.put(blob, snapshot => {
-                    console.log('success uploading blob');
-                });
-            } catch (err) {
-                console.error(JSON.stringify(err));
-            }
+            this.updateFirebase({ globalCanvasBlob: blob });
         });
     }
 
@@ -94,7 +76,7 @@ export default class App extends GameComponent {
             <div>
                 <Pictionary
                     animal={this.state.animal}
-                    globalCanvasBlob ={this.state.globalCanvasBlob}
+                    globalCanvasBlob={this.state.globalCanvasBlob}
                     drawingPlayer={this.state.drawingPlayer}
                     guess={this.state.guess}
                     myId={this.myId}
