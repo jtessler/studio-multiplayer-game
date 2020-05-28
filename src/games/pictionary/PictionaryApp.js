@@ -5,7 +5,7 @@ import Drawing from "./Drawing";
 import Guessing from "./Guessing";
 import Scoreboard from "./Scoreboard";
 
-function Pictionary(props) {
+function PictionaryApp(props) {
     let refCanvas = useRef(null);
 
     return (
@@ -45,4 +45,4 @@ function Pictionary(props) {
     );
 }
 
-export default Pictionary;
+export default PictionaryApp;
