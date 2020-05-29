@@ -1,4 +1,5 @@
 import React from "react";
+import Alien from "./Alien.png";
 
 export default class Enemy extends React.Component {
   constructor(props) {
@@ -8,15 +9,31 @@ export default class Enemy extends React.Component {
   }
 
   render() {
-    let enemyStyle = {
+    let pos = this.props.pos || [];
+    console.log(pos, "enemy positions");
+
+    let imgStyle = {
       width: "20px",
-      height: "20px",
-      backgroundColor: "red",
-      position: "relative",
-      top: this.props.pos.top + "px",
-      left: this.props.pos.left + "px"
+      height: "20px"
     };
 
-    return <div className="enemy" style={enemyStyle} />;
+    return pos.map(position => {
+      console.log(position, "single enemy position");
+      return (
+        <div
+          className="enemy"
+          style={{
+            width: "20px",
+            height: "20px",
+            backgroundColor: "red",
+            position: "absolute",
+            transform: `translate(${position.left}px, ${position.top}px)`
+          }}
+        >
+          {" "}
+          <img style={imgStyle} src={Alien} alt="alien" />
+        </div>
+      );
+    });
   }
 }

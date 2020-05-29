@@ -1,6 +1,7 @@
 import React from "react";
 import Enemy from "./Enemy";
 import Player from "./Player";
+import Shot from "./Shot";
 
 export default class GameBoard extends React.Component {
   render() {
@@ -9,7 +10,8 @@ export default class GameBoard extends React.Component {
       height: "500px",
       backgroundColor: "black",
       margin: "auto",
-      border: "5px solid"
+      border: "5px solid",
+      position: "relative"
     };
 
     // console.log(`
@@ -24,7 +26,10 @@ export default class GameBoard extends React.Component {
           <button onClick={() => this.props.playing()}>Start</button>
         </div>
       );
-    } else if (this.props.status === "playing") {
+    } else if (
+      this.props.status === "playing" ||
+      this.props.status === "paused"
+    ) {
       return (
         <div
           className="board"
@@ -43,6 +48,7 @@ export default class GameBoard extends React.Component {
             isCreator={this.props.isCreator}
             pos={this.props.playerTwo}
           />
+          <Shot shots={this.props.shots} />
         </div>
       );
     }
