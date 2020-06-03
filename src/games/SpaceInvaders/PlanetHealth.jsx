@@ -9,7 +9,7 @@ function damage(D) {
   currentHealth = startHealth - D;
   console.log(currentHealth);
 }
-function hit() {
+function hitz() {
   if (EnemyPos === 440) {
     damage(100);
   } else if (shotCollide === true) {
@@ -22,16 +22,16 @@ function healthDisplay() {
 function gameOver() {
   return <text> "Game Over, Your planet was destroyed"+ score</text>;
 }
-function destroyPlanet() {
+function destroyPlanetz() {
   if (currentHealth > 10) {
     healthDisplay();
   } else {
     gameOver();
   }
 }
-hit();
+hitz();
 healthDisplay();
-destroyPlanet();
+destroyPlanetz();
 //----------------Test2UwU-----------// (Totally Not Adapted From Something Else)
 
 class PlanetHealthBar extends React.Component {
@@ -53,23 +53,24 @@ class PlanetHealthBar extends React.Component {
 
   render() {
     let bal =
-      this.state.Overall - this.state.DamageTaken - this.state.DamageOccuring;
+      this.state.Overall - this.state.DamageTaken;
     let DamageTakenPercent =
       (this.state.DamageTaken / this.state.Overall) * 100;
-    let DamageOccuringPercent =
-      (this.state.DamageOccuring / this.state.Overall) * 100;
-    let balPercent = 100 - DamageTakenPercent - DamageOccuringPercent;
-
-    return (
+    let balPercent = 100 - DamageTakenPercent
+    const hit = () => {
+      if (EnemyPos === 440) {
+        //Add 100% to damageTaken;
+      } else if (shotCollide === true) {
+        //Add 10% to  DamageTaken
+      }
+    const destroyPlanet = () => {
+      if (currentHealth > 10) {
+         return (
       <div>
         <div className="PlanetHealthBar">
           <div
             className="balanceSection DamageTaken"
             style={{ width: DamageTakenPercent + "%" }}
-          />
-          <div
-            className="balanceSection DamageOccuring"
-            style={{ width: DamageOccuringPercent + "%" }}
           />
           <div
             id="left"
@@ -81,6 +82,13 @@ class PlanetHealthBar extends React.Component {
         </div>
       </div>
     );
+      } else {
+        return( <text> "Game Over, Your planet was destroyed"+ score</text>
+        );
+
+    }
+
+   
   }
 }
 

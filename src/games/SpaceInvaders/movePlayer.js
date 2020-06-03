@@ -1,8 +1,8 @@
-function movePlayer(top, left, e) {
+function movePlayer(player, e) {
   //change to use constants when refering to player width and height
   // console.log(top, left, e);
-  let newTop = top;
-  let newLeft = left;
+  let newTop = player.top;
+  let newLeft = player.left;
 
   if ((e.key === "d" || e.key === "ArrowRight") && newLeft + 20 + 10 <= 500) {
     newLeft += 10;
@@ -27,7 +27,7 @@ function movePlayer(top, left, e) {
   }
 
   // console.log({ top: newTop, left: newLeft });
-  return { top: newTop, left: newLeft };
+  return { ...player, top: newTop, left: newLeft };
   // if (e.keyCode === 32) {
   //   this.shoot();
   //   //add a shot component to firebase and render

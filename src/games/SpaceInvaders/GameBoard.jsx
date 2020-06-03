@@ -48,7 +48,10 @@ export default class GameBoard extends React.Component {
             isCreator={this.props.isCreator}
             pos={this.props.playerTwo}
           />
-          <Shot shots={this.props.shots} />
+          <Shot
+            playerOne={this.props.playerOne}
+            playerTwo={this.props.playerTwo}
+          />
         </div>
       );
     }
