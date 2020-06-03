@@ -5,8 +5,9 @@ import GameBoard from "./GameBoard.jsx";
 import CONFIG, { PLAYER_HEIGHT, PLAYER_WIDTH } from "./config";
 import movePlayer from "./PlayerMovement.jsx";
 import handleShots from "./moveShot.jsx";
+import handleEnemies from "./handleEnemies.jsx";
 import spawnEnemy from "./spawnEnemies.jsx";
-import shotCollide from "./shotHit.jsx";
+import readOutLoud from "./sounds.jsx";
 
 export default class SpaceInvaders extends GameComponent {
   constructor(props) {
@@ -23,8 +24,8 @@ export default class SpaceInvaders extends GameComponent {
           health: 3
         },
         playerTwo: {
-          left: 0,
-          top: 0,
+          left: 300,
+          top: 400,
           health: 3
         }
       },
@@ -92,21 +93,21 @@ export default class SpaceInvaders extends GameComponent {
     let shots = this.state.shots || [];
     let enemies = this.state.enemies || [];
     let newShots = handleShots(shots, enemies);
+    let newEnemies = handleEnemies(shots, enemies);
     this.getSessionDatabaseRef().update({
-      shots: newShots
+      shots: newShots,
+      enemies: newEnemies
     });
   };
 
   enemyFall = num => {
+    let currentEnemies = this.state.enemies || [];
     let newEnemies = [];
-    for (let i = 0; i < this.state.enemies.length; i++) {
-      let enemy = this.state.enemies[i];
-      console.log(enemy.left, "enemy in enemyfall");
-      // let left = Math.floor(Math.random() * CONFIG.GAME_BOARD_WIDTH);
-      // console.log(`enemy falls: ${JSON.stringify(enemy)}`);
+    for (let i = 0; i < currentEnemies.length; i++) {
+      let enemy = currentEnemies[i];
       let newTop = enemy.top;
       let newDirection = enemy.direction;
-      let newLeft = enemy.left + num * newDirection; // Num can be + or -, randomly go left and right(?)
+      let newLeft = enemy.left + num * newDirection;
 
       // Check if enemy is within the left/right bounds here.
       if (
@@ -130,14 +131,13 @@ export default class SpaceInvaders extends GameComponent {
       });
     }
 
-    // also calculate where shots, move, and enemy health
-
     this.getSessionDatabaseRef().update({
       enemies: newEnemies
     });
   };
 
   handlePlayerInput = e => {
+    // e.preventDefault();
     // console.log("moving player");
     let playerOne = this.state.players.playerOne;
     let playerTwo = this.state.players.playerTwo;
@@ -149,6 +149,7 @@ export default class SpaceInvaders extends GameComponent {
     }
     if (e.keyCode === 32) {
       this.shoot();
+      readOutLoud("pew");
       //add a shot component to firebase and render
     }
 
@@ -195,7 +196,6 @@ export default class SpaceInvaders extends GameComponent {
   };
 
   render() {
-    shotCollide({ left: 0, top: 0 }, this.state.enemies);
     // console.log(`Render this.state: ${JSON.stringify(this.state)}`);
 
     var id = this.getSessionId();

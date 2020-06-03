@@ -13,7 +13,6 @@ function spawnEnemy(num) {
       newTop += 30;
     }
   }
-  console.log(enemies, "enmies in spwan enemies");
   return enemies;
 }
 

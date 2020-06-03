@@ -1,0 +1,34 @@
+//---------CSS for PlanetHealthBar//
+.PlanetHealthBar {
+  width: 100%;
+  height: 20px;
+  border: 2px #ccc solid;
+}
+
+.balanceSection {
+  display: inline-block;
+  height: 20px;
+  font-size: 10pt;
+  vertical-align: top;
+  text-align: center;
+}
+
+.balanceSection p {
+  margin: 0;
+  padding: 3px;
+}
+
+.DamageTaken {
+  background-color: red;
+  transition: width 1s ease-in-out;
+}
+
+.DamageOccuring {
+  background-color: yellow;
+  transition: width 1s ease-in-out;
+}
+
+.left {
+  background-color: lightgreen;
+  transition: width 1s ease-in-out;
+}

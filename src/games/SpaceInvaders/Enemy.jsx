@@ -10,7 +10,6 @@ export default class Enemy extends React.Component {
 
   render() {
     let pos = this.props.pos || [];
-    console.log(pos, "enemy positions");
 
     let imgStyle = {
       width: "20px",
@@ -18,7 +17,6 @@ export default class Enemy extends React.Component {
     };
 
     return pos.map(position => {
-      console.log(position, "single enemy position");
       return (
         <div
           className="enemy"

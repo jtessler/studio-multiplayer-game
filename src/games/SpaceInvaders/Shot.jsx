@@ -13,8 +13,9 @@ export default class Shot extends React.Component {
                 height: "10px",
                 backgroundColor: "white",
                 position: "absolute",
-                top: shot.top + "px",
-                left: shot.left + "px"
+                top: 0,
+                left: 0,
+                transform: `translate(${shot.left}px, ${shot.top}px)`
               }}
             />
           );

@@ -1,6 +1,6 @@
 function movePlayer(top, left, e) {
   //change to use constants when refering to player width and height
-  console.log(top, left, e);
+  // console.log(top, left, e);
   let newTop = top;
   let newLeft = left;
 
