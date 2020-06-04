@@ -10,7 +10,7 @@ class Canvas extends Component {
             currX: 0,
             prevY: 0,
             currY: 0,
-            fillStyle: "black",
+            fillStyle: "#0080ff",
             lineWidth: 2,
             dot_flag: false,
         };
@@ -28,10 +28,23 @@ class Canvas extends Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (this.isDrawingPlayer()) {
+            return;
+        }
+
         if (prevProps.globalCanvasBlob !== this.props.globalCanvasBlob) {
-            if (!this.isDrawingPlayer()) {
-                this.canvas.append(this.props.globalCanvasBlob);
-            }
+
+            /**
+             * then other client decodes base64-encoded string to blob
+             * then converts blob to image
+             * then puts blob on own canvas
+             */
+
+            // this.ctx.fillStyle = 'white';
+            // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            let image = new Image;
+            image.onload = () => { this.ctx.drawImage(image, 0, 0, 400, 400); };
+            image.src = this.props.globalCanvasBlob;        
         }
     }
 
@@ -82,6 +95,14 @@ class Canvas extends Component {
     }
 
     findxy(res, e) {
+        if (
+            this.props.animal === "" ||
+            this.props.phase !== "drawing" ||
+            !this.isDrawingPlayer()
+        ) {
+            return;
+        }
+
         if (res === "down") {
             this.setState(
                 {
@@ -93,9 +114,6 @@ class Canvas extends Component {
                     dot_flag: true,
                 },
                 () => {
-                    if (this.props.animal === "" || this.props.phase !== "drawing") {
-                        return;
-                    }
                     this.ctx.beginPath();
                     this.ctx.fillStyle = this.state.fillStyle;
                     this.ctx.fillRect(this.state.currX, this.state.currY, 2, 2);

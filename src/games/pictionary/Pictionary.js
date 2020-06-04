@@ -65,25 +65,13 @@ export default class App extends GameComponent {
         });
     }
 
-    /**
-     * convert blob to base64-encoded string
-     * then send to firebase
-     
-     * then other client decodes base64-encoded string to blob
-     * then converts blob to image
-     * then puts blob on own canvas
-     */
-
-
     sendBlobToFirebase(canvas) {
-        canvas.toBlob(async blob => {
-            let reader = new FileReader();
-            reader.readAsDataURL(blob); 
-            reader.onloadend = () => {
-                let base64data = reader.result;                
-                this.updateFirebase({ globalCanvasBlob: base64data });
-            }
-        }, 'image/jpeg', 0.5);
+        // const dataURL = canvas.toDataURL('image/jpeg', 0.5);
+        const dataURL = canvas.toDataURL();
+
+        this.updateFirebase({
+            globalCanvasBlob: dataURL
+        });
     }
 
     render() {
