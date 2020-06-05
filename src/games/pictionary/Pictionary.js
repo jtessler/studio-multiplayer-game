@@ -18,7 +18,6 @@ export default class App extends GameComponent {
       players: this.getSessionUserIds(),
       round: 1,
       score: 0,
-      clearCanvas: null,
     };
 
     this.updateFirebase = this.updateFirebase.bind(this);
@@ -103,7 +102,6 @@ export default class App extends GameComponent {
           sendBlobToFirebase={this.sendBlobToFirebase}
           updateFirebase={this.updateFirebase}
           getNextDrawingPlayer={this.getNextDrawingPlayer}
-          clearCanvas={this.state.clearCanvas}
         />
       </div>
     );

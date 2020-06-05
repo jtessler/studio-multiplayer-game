@@ -190,6 +190,7 @@ export default class GoogleGossip extends GameComponent {
           <br />
           
           <input
+            className="gg-input"
             class="flexform"
             type="text"
             value={this.state.statements[0]}
@@ -201,6 +202,7 @@ export default class GoogleGossip extends GameComponent {
           <label id="input1">Truth or Lie #1</label>
           <br />
           <input
+            className="gg-input"
             class="flexform"
             type="text"
             value={this.state.statements[1]}
@@ -212,6 +214,7 @@ export default class GoogleGossip extends GameComponent {
           <label id="input2">Truth or Lie #2</label>
           <br />
           <input
+            className="gg-input"
             class="flexform"
             type="text"
             value={this.state.statements[2]}
@@ -223,6 +226,7 @@ export default class GoogleGossip extends GameComponent {
           <label id="truthIdx">Index for Truth Statement</label>
           <br />
           <input
+            className="gg-input"
             class="flexform"
             type="text"
             value={this.state.truth}

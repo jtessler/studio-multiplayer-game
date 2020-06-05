@@ -34,7 +34,6 @@ function Guessing(props) {
       drawingPlayer: nextDrawingPlayer,
       phase: "drawing",
       round: props.round + 1,
-      clearCanvas: true,
     });
   }
 
@@ -42,7 +41,7 @@ function Guessing(props) {
     <div>
       <form onSubmit={handleSubmit}>
         <label>Make Your Guess! </label>
-        <input type="text" name="guess" value={guess} onChange={handleChange} />
+        <input id="guess-input" type="text" name="guess" value={guess} onChange={handleChange} />
         <button>Submit Your Answer</button>
       </form>
       <NextGameButton

@@ -21,6 +21,7 @@ function PictionaryApp(props) {
         myId={props.myId}
         phase={props.phase}
         ref={refCanvas}
+        round={props.round}
         sendBlobToFirebase={props.sendBlobToFirebase}
         updateFirebase={props.updateFirebase}
         clearCanvas={props.clearCanvas}

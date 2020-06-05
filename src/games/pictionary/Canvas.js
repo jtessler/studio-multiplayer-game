@@ -28,11 +28,10 @@ class Canvas extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.clearCanvas !== this.props.clearCanvas) {
-      if (this.props.clearCanvas) {
+    if (prevProps.round !== this.props.round) {
         this.clear();
-      }
     }
+
     if (this.isDrawingPlayer()) {
       return;
     }
