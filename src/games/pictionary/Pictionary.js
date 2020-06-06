@@ -1,7 +1,7 @@
 import firebase from "firebase";
 import React from "react";
 import GameComponent from "../../GameComponent.js";
-import Pictionary from "./PictionaryApp";
+import PictionaryBoard from "./PictionaryBoard";
 
 const SESSION_DATA_PATH = "/session";
 
@@ -88,7 +88,7 @@ export default class App extends GameComponent {
   render() {
     return (
       <div>
-        <Pictionary
+        <PictionaryBoard
           animal={this.state.animal}
           globalCanvasBlob={this.state.globalCanvasBlob}
           drawingPlayer={this.state.drawingPlayer}
