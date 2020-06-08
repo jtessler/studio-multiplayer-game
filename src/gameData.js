@@ -10,10 +10,11 @@ import Spark from "./games/spark/Spark.js";
 import TicTacToe from "./games/tictactoe/TicTacToe.js";
 import TugOfWar from "./games/TugOfWar/TugOfWar.js";
 import TwentyOneQuestions from "./games/twentyOneQuestions/TwentyOneQuestions.js";
+import WeWatch from "./games/wewatch/WeWatch.js";
+import WheelofFortune from "./games/wheeloffortune/WheelofFortune.js";
 import burst_Forth from "./games/Burst_Forth/burstForth.js";
 import fight from "./games/fight/fight.js";
 import uno from "./games/uno/uno.js";
-import WeWatch from "./games/wewatch/WeWatch.js";
 
 const gameData = {
   chatroom: {
@@ -160,6 +161,15 @@ const gameData = {
     minUsers: 1,
     maxUsers: 8,
     component: WeWatch
+  },
+
+  wheeloffortune: {
+    title: "Wheel of Fortune",
+    authors: "Nathan A., Shandon M., Damon N., Neera T.",
+    description: "Spin the wheel, answer your riddle, and get your points.",
+    minUsers: 2,
+    maxUsers: 3,
+    component: WheelofFortune
   }
 };
 
