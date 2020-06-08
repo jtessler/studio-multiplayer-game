@@ -1,7 +1,6 @@
 import GameComponent from "../../GameComponent.js";
 import UserApi from "../../UserApi.js";
 import React from "react";
-import Question from "./Question.js";
 import Timer from "./Timer.js";
 import question_data from "./Data.js";
 import "./WheelofFortune.css";
@@ -115,8 +114,7 @@ export default class WheelofFortune extends GameComponent {
       "--selected-item": selectedItem
     };
     const spinning = selectedItem !== null ? "spinning" : "";
-    
-    var id = this.getSessionId();
+
     if (this.state.points != null) {
       var points = this.state.points;
     } else {
@@ -127,28 +125,12 @@ export default class WheelofFortune extends GameComponent {
         {UserApi.getName(user_id)} -----> {points[index]}
       </li>
     ));
-    var creator = UserApi.getName(this.getSessionCreatorUserId());
-    var title = this.getSessionTitle();
-    var me = UserApi.getName(this.getMyUserId());
-
-    var status = "";
-    if (this.getMyUserId() === this.getSessionCreatorUserId()) {
-      // Display "I am a host"
-      status = "I am a host";
-    } else {
-      // Dipsplay " I am a guest"
-      status = "I am a guest";
-    }
 
     var last_user = "No one";
     if (this.state.last_user_id != null) {
       last_user = UserApi.getName(this.state.last_user_id);
     }
 
-    // Using get Session Id here to get all players
-    var user_ids = this.getSessionUserIds().map(user_id => (
-      <li key={user_id}>{UserApi.getName(user_id)}</li>
-    ));
     var player_index = this.state.player_index;
     var current_player = UserApi.getName(
       this.getSessionUserIds()[player_index]
