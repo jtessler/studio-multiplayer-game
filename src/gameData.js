@@ -12,6 +12,7 @@ import StrengthTester from "./games/StrengthTester/StrengthTester.js";
 import TicTacToe from "./games/tictactoe/TicTacToe.js";
 import TugOfWar from "./games/TugOfWar/TugOfWar.js";
 import TwentyOneQuestions from "./games/twentyOneQuestions/TwentyOneQuestions.js";
+import Unscrambled from "./games/unscrambled/HomePage.js";
 import WeWatch from "./games/wewatch/WeWatch.js";
 import WheelofFortune from "./games/wheeloffortune/WheelofFortune.js";
 import burst_Forth from "./games/Burst_Forth/burstForth.js";
@@ -193,6 +194,14 @@ const gameData = {
     component: StrengthTester
   },
 
+  unscrambled: {
+    title: "Unscrambled",
+    authors: "Kayla Campbell, Cindi Morales, Shania",
+    description: "Guess the scrambled word",
+    minUsers: 1,
+    maxUsers: 10,
+    component: Unscrambled
+  }
 };
 
 export default gameData;
