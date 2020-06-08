@@ -1,0 +1,24 @@
+.pictionary-board {  
+  background-color:turquoise;
+  font-family: Helvetica;
+  text-align:center;
+  display: flex;
+  flex-direction: column;
+}
+
+.pictionary-board #can {
+  border:2px solid;
+  background:white;
+  display: flex;
+  max-width: 50%;
+  position: initial;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
+.pictionary-board .scoreboard {
+  border:solid black 3px;
+  display: flex;
+  justify-content:space-around;
+}
+
