@@ -22,6 +22,15 @@ export default class WheelofFortune extends GameComponent {
       is_response_correct: false
     };
     this.selectItem = this.selectItem.bind(this);
+
+    this.getSessionDatabaseRef().update({
+      user_id: this.state.last_user_id,
+      response: this.state.response,
+      player_index: this.state.player_index,
+      selected_question: this.state.selected_question,
+      is_response_correct: this.state.is_response_correct,
+      points: this.state.points
+    });
   }
 
   selectItem() {
