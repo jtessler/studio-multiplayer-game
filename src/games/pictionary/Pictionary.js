@@ -1,9 +1,6 @@
-import firebase from "firebase";
 import React from "react";
 import GameComponent from "../../GameComponent.js";
 import PictionaryBoard from "./PictionaryBoard";
-
-const SESSION_DATA_PATH = "/session";
 
 export default class App extends GameComponent {
   constructor(props) {
@@ -87,23 +84,21 @@ export default class App extends GameComponent {
 
   render() {
     return (
-      <div>
-        <PictionaryBoard
-          animal={this.state.animal}
-          globalCanvasBlob={this.state.globalCanvasBlob}
-          drawingPlayer={this.state.drawingPlayer}
-          guess={this.state.guess}
-          myId={this.myId}
-          phase={this.state.phase}
-          players={this.state.players}
-          round={this.state.round}
-          score={this.state.score}
-          setScore={this.setScore}
-          sendBlobToFirebase={this.sendBlobToFirebase}
-          updateFirebase={this.updateFirebase}
-          getNextDrawingPlayer={this.getNextDrawingPlayer}
-        />
-      </div>
+      <PictionaryBoard
+        animal={this.state.animal}
+        globalCanvasBlob={this.state.globalCanvasBlob}
+        drawingPlayer={this.state.drawingPlayer}
+        guess={this.state.guess}
+        myId={this.myId}
+        phase={this.state.phase}
+        players={this.state.players}
+        round={this.state.round}
+        score={this.state.score}
+        setScore={this.setScore}
+        sendBlobToFirebase={this.sendBlobToFirebase}
+        updateFirebase={this.updateFirebase}
+        getNextDrawingPlayer={this.getNextDrawingPlayer}
+      />
     );
   }
 }

@@ -48,7 +48,7 @@
   color: white;
   border-color: white;
 }
-.gg-input {
+input {
   background-color: #dbdada;
   color: Black;
   border: 3px transparent;
@@ -58,7 +58,7 @@
   transition: width 2s linear 1s;
 }
 
-.gg-input:focus {
+input:focus {
   width: 500px;
   height: 100px;
 }

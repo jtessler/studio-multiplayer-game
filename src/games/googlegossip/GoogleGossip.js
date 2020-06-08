@@ -226,7 +226,6 @@ export default class GoogleGossip extends GameComponent {
           <label id="truthIdx">Index for Truth Statement</label>
           <br />
           <input
-            className="gg-input"
             class="flexform"
             type="text"
             value={this.state.truth}
