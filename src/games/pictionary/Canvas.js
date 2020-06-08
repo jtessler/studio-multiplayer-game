@@ -37,14 +37,6 @@ class Canvas extends Component {
     }
 
     if (prevProps.globalCanvasBlob !== this.props.globalCanvasBlob) {
-      /**
-       * then other client decodes base64-encoded string to blob
-       * then converts blob to image
-       * then puts blob on own canvas
-       */
-
-      // this.ctx.fillStyle = 'white';
-      // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       let image = new Image();
       image.onload = () => {
         this.ctx.drawImage(image, 0, 0, 400, 400);
