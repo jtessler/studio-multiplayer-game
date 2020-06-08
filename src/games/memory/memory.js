@@ -1,7 +1,6 @@
 import GameComponent from "../../GameComponent.js";
 import React from "react";
 import UserApi from "../../UserApi.js";
-import { zIndex } from "material-ui/styles";
 import CardComponent from "./card.js";
 
 export default class Memory extends GameComponent {
@@ -73,7 +72,6 @@ export default class Memory extends GameComponent {
       return <CardComponent image={imageUrl} />;
     });
 
-    var host = this.getSessionCreatorUserId();
     // var funVar = "the other variable";
     var message;
     if (id === host) {
