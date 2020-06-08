@@ -2,6 +2,7 @@ import ChatRoom from "./games/chatroom/ChatRoom.js";
 import CookieClicker from "./games/cookieClicker/CookieClicker.js";
 import GoogleGossip from "./games/googlegossip/GoogleGossip.js";
 import Mafia from "./games/mafia/Mafia.js";
+import Memory from "./games/memory/memory.js";
 import Multiplication from "./games/multiplication/Multiplication.js";
 import Pokemon from "./games/pokemon/Pokemon.js";
 import Pong from "./games/pong/Pong.js";
@@ -170,6 +171,16 @@ const gameData = {
     minUsers: 2,
     maxUsers: 3,
     component: WheelofFortune
+  },
+
+  memory: {
+    title: "Memory",
+    authors: "Danielle Ong",
+    description:
+      "The ultimate game to test your memory with amazing pictures and other people",
+    minUsers: 1,
+    maxUsers: 2,
+    component: Memory
   }
 };
 
