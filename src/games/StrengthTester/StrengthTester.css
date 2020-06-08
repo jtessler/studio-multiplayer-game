@@ -1,0 +1,21 @@
+#knot {
+  width: 20%;
+}
+
+.centercontent {
+  margin: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+#left {
+  width: 100%;
+}
+
+#right {
+  width: 100%;
+}
+
+#button {
+  margin: 25px;
+}

@@ -1,0 +1,11 @@
+.VoteUI {
+  width: 12.5%;
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}

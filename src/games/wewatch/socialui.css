@@ -1,0 +1,37 @@
+/* I worked on the rest of the CSS, however I noticed that you can't put in a new video, or view videos in the Que.
+ * <div class="SocialUi">
+ *   <div class="RedBox">
+ *     <div class="AddVideoForm"></div>
+ *     <div class="EventLog"></div>
+ *   </div>
+ *   <div class="Buttons"></div>
+ * </div>
+ */
+
+.SocialUI {
+  width: 50%;
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.SocialUI .RedBox {
+  height: 100px;
+}
+/* I like this setup, but I would also like to make it so that the "Next Video" is on Top of the Buttons */
+.SocialUI .Buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.SocialUI .AddVideoForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}

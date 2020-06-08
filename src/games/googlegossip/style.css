@@ -1,4 +1,4 @@
-.main {
+.GoogleGossip .main {
   background-image: url("https://i.gifer.com/embedded/download/M0Yy.gif");
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -8,7 +8,7 @@
   justify-content: center;
   align-items: center;
 }
-.main2 {
+.GoogleGossip .main2 {
   background-image: linear-gradient(
     to bottom,
     #3f51b5,
@@ -21,10 +21,10 @@
   justify-content: center;
   align-items: center;
 }
-.Text {
+.GoogleGossip .Text {
   font-size: 100px;
 }
-.main3 {
+.GoogleGossip .main3 {
   background-image: linear-gradient(to bottom, #3f51b5, #7cddac);
   height: 100vh;
   display: flex;
@@ -32,23 +32,23 @@
   justify-content: center;
   align-items: center;
 }
-.Teacup {
+.GoogleGossip .Teacup {
   display: flex;
   justify-content: center;
 }
-#Whisper {
+.GoogleGossip #Whisper {
   height: 200px;
   width: 200px;
 }
-#logo {
+.GoogleGossip #logo {
   height: 225px;
   width: 450px;
 }
-#landbuttton {
+.GoogleGossip #landbuttton {
   color: white;
   border-color: white;
 }
-input {
+.GoogleGossip input {
   background-color: #dbdada;
   color: Black;
   border: 3px transparent;
@@ -58,22 +58,22 @@ input {
   transition: width 2s linear 1s;
 }
 
-input:focus {
+.GoogleGossip input:focus {
   width: 500px;
   height: 100px;
 }
-#NewSession {
+.GoogleGossip #NewSession {
   border-radius: 10px;
   text-shadow: 1px 1px 2px black;
   border-color: transparent;
   width: 200px;
   height: 35px;
 }
-#NewSession:hover {
+.GoogleGossip #NewSession:hover {
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#2d2f32, endColorstr=#1a1a1a);
 }
 
-.Hidden {
+.GoogleGossip .Hidden {
   display: none;
 }
 
