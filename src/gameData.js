@@ -8,6 +8,7 @@ import Pokemon from "./games/pokemon/Pokemon.js";
 import Pong from "./games/pong/Pong.js";
 import RockPaperScissors from "./games/rps/RockPaperScissors.js";
 import Spark from "./games/spark/Spark.js";
+import StrengthTester from "./games/StrengthTester/StrengthTester.js";
 import TicTacToe from "./games/tictactoe/TicTacToe.js";
 import TugOfWar from "./games/TugOfWar/TugOfWar.js";
 import TwentyOneQuestions from "./games/twentyOneQuestions/TwentyOneQuestions.js";
@@ -181,7 +182,17 @@ const gameData = {
     minUsers: 1,
     maxUsers: 2,
     component: Memory
-  }
+  },
+
+  strengthtester: {
+    title: "StrengthTester",
+    authors: "Olivia, Keanneyi, Wendy",
+    description: "Two player tug of war game",
+    minUsers: 2,
+    maxUsers: 2,
+    component: StrengthTester
+  },
+
 };
 
 export default gameData;
