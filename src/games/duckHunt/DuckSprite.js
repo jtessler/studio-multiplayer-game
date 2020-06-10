@@ -42,7 +42,6 @@ const DuckSprite = (props) => {
         <div
           className={`DuckSprite ${movingClass}`}
           onClick={() => {
-            {/* duckWasShotBeforeHeGotAway(); */}
             resetDuck();
             props.duckClick();
           }}

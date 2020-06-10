@@ -1,10 +1,6 @@
-import Button from '@material-ui/core/Button';
 import GameComponent from '../../GameComponent.js';
 import React from 'react';
-import UserApi from '../../UserApi.js';
-import { TitleScreen } from "./TitleScreen";
 import { GameScreen } from "./GameScreen";
-import { ScoreBoard } from "./ScoreBoard";
 
 import './DuckHunt.css';
 
@@ -77,28 +73,9 @@ export default class DuckHunt extends GameComponent {
 
   render() {
     console.log(this.state.gameScore)
-    const pages = {
-      'title': (
-        <TitleScreen
-          handleClick={this.handleClick}
-          currentUser={this.state.currentUser}
-        />
-      ),
-      'game': (
-        <GameScreen duckClick={this.duckClick} />
-      ),
-      'scoreboard': (
-        <ScoreBoard />
-      ),
-      'default': (
-        `What? how did we get here? currentScreen is set to: ${this.state.currentScreen}`
-      )
-    };
-    const selectedPage = pages[this.state.currentScreen];
-    const CurrentScreen = selectedPage ? selectedPage : pages.default;
     const currentScore = this.state.gameScore[this.getMyUserId()]
     return (
-      <div className="allPages">
+      <div className="DuckHunt">
         <GameScreen 
         duckClick={this.duckClick}
         currentScore={currentScore}/>

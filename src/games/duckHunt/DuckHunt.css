@@ -1,8 +1,8 @@
-body {
+.DuckHunt {
   background-color: pink;
 }
 
-.screen {
+.DuckHunt .screen {
   width: 1280px;
   height: 720px;
   padding: 10px;
@@ -10,18 +10,18 @@ body {
   position: relative;
 }
 
-.titleScreen {
+.DuckHunt .titleScreen {
   background-image: url("/imgs/titleScreen.jpg");
   color: white;
 }
-.gameScreen {
+.DuckHunt .gameScreen {
   background-image: url("/imgs/gameScreen.png");
   background-repeat: no-repeat;
   background-size: 1830px auto;
   width: 590px;
   height: 542px;
 }
-.buttons {
+.DuckHunt .buttons {
   background-color: black;
   position: absolute;
   top: 400px;
@@ -32,7 +32,7 @@ body {
   height: 150px;
 }
 
-.startGameButton {
+.DuckHunt .startGameButton {
   width: 300px;
   height: 100px;
   font-size: 2em;
@@ -40,46 +40,46 @@ body {
   background-color: black;
 }
 
-.rank-score-name-section-row {
+.DuckHunt .rank-score-name-section-row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 600px;
 }
 
-.user-score {
+.DuckHunt .user-score {
   text-align: center;
   align-items: center;
 }
 
-.user-rank {
+.DuckHunt .user-rank {
   text-align: left;
   align-items: left;
 }
 
-.user-name {
+.DuckHunt .user-name {
   text-align: right;
   align-items: right;
 }
 
-.startGameButton:hover {
+.DuckHunt .startGameButton:hover {
   border: aqua solid 5px;
 }
 
-.blueText {
+.DuckHunt .blueText {
   color: blue;
 }
-.whiteText {
+.DuckHunt .whiteText {
   color: white;
 }
-.orangeText {
+.DuckHunt .orangeText {
   color: orange;
 }
-.pinkText {
+.DuckHunt .pinkText {
   color: pink;
 }
 
-.scoreBoard {
+.DuckHunt .scoreBoard {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -105,7 +105,7 @@ body {
   }
 }
 
-.DuckSprite {
+.DuckHunt .DuckSprite {
   background-image: url("/imgs/DuckHuntDuckGif.gif");
   background-size: 35px;
   position: absolute;
@@ -114,15 +114,15 @@ body {
   left: -5%;
 }
 
-.duckMove {
+.DuckHunt .duckMove {
   left: 100%;
 }
 
-.duckReset {
+.DuckHunt .duckReset {
   transition: none;
 }
 
-.duckhuntscore {
+.DuckHunt .duckhuntscore {
   text-align: center;
   height: 20px;
   width: 115px;
