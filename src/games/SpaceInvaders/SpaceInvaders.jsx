@@ -2,7 +2,7 @@ import React from "react";
 import GameComponent from "../../GameComponent.js";
 import UserApi from "../../UserApi.js";
 import GameBoard from "./GameBoard.jsx";
-import CONFIG, { PLAYER_HEIGHT, PLAYER_WIDTH } from "./config";
+import CONFIG from "./config";
 import movePlayer from "./movePlayer.js";
 import handleShots from "./moveShot.jsx";
 import handleEnemies from "./handleEnemies.jsx";
@@ -97,7 +97,7 @@ export default class SpaceInvaders extends GameComponent {
     }
     for (let i = 0; i < enemyShots; i++) {
       let enemyShot = enemyShots[i];
-      let newEnemyShots = handleEnemyShots(player, enemyShot);
+      handleEnemyShots(player, enemyShot);
     }
   };
 
