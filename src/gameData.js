@@ -1,5 +1,6 @@
 import ChatRoom from "./games/chatroom/ChatRoom.js";
 import CookieClicker from "./games/cookieClicker/CookieClicker.js";
+import DuckHunt from './games/duckHunt/DuckHunt';
 import GoogleGossip from "./games/googlegossip/GoogleGossip.js";
 import Mafia from "./games/mafia/Mafia.js";
 import Memory from "./games/memory/memory.js";
@@ -222,7 +223,16 @@ const gameData = {
     minUsers: 1,
     maxUsers: 10,
     component: SpaceInvaders
-  }
+  },
+
+  duckHunt: {
+    title: "Duck Hunt",
+    authors: "Kevin",
+    description: "Destroying ducks",
+    minUsers: 1,
+    maxUsers: 1,
+    component: DuckHunt,
+  },
 };
 
 export default gameData;

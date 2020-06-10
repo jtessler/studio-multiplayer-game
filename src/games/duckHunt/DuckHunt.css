@@ -1,0 +1,135 @@
+body {
+  background-color: pink;
+}
+
+.screen {
+  width: 1280px;
+  height: 720px;
+  padding: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.titleScreen {
+  background-image: url("/imgs/titleScreen.jpg");
+  color: white;
+}
+.gameScreen {
+  background-image: url("/imgs/gameScreen.png");
+  background-repeat: no-repeat;
+  background-size: 1830px auto;
+  width: 590px;
+  height: 542px;
+}
+.buttons {
+  background-color: black;
+  position: absolute;
+  top: 400px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+}
+
+.startGameButton {
+  width: 300px;
+  height: 100px;
+  font-size: 2em;
+  color: aqua;
+  background-color: black;
+}
+
+.rank-score-name-section-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 600px;
+}
+
+.user-score {
+  text-align: center;
+  align-items: center;
+}
+
+.user-rank {
+  text-align: left;
+  align-items: left;
+}
+
+.user-name {
+  text-align: right;
+  align-items: right;
+}
+
+.startGameButton:hover {
+  border: aqua solid 5px;
+}
+
+.blueText {
+  color: blue;
+}
+.whiteText {
+  color: white;
+}
+.orangeText {
+  color: orange;
+}
+.pinkText {
+  color: pink;
+}
+
+.scoreBoard {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-size: 24px;
+  background-color: black;
+}
+
+@keyframes duck-wing-flaps {
+  from {
+    background-position-x: 0px;
+  }
+  to {
+    background-position-x: -35px;
+  }
+}
+@keyframes duck-movement {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+.DuckSprite {
+  background-image: url("/imgs/DuckHuntDuckGif.gif");
+  background-size: 35px;
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  left: -5%;
+}
+
+.duckMove {
+  left: 100%;
+}
+
+.duckReset {
+  transition: none;
+}
+
+.duckhuntscore {
+  text-align: center;
+  height: 20px;
+  width: 115px;
+  background-color: purple;
+  color: yellow;
+  position: absolute;
+  bottom: 47px;
+  right: 39px;
+}
+/*testing git*/
