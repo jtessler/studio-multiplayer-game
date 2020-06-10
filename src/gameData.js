@@ -7,6 +7,7 @@ import Multiplication from "./games/multiplication/Multiplication.js";
 import Pokemon from "./games/pokemon/Pokemon.js";
 import Pong from "./games/pong/Pong.js";
 import RockPaperScissors from "./games/rps/RockPaperScissors.js";
+import SpaceInvaders from "./games/SpaceInvaders/SpaceInvaders.jsx";
 import Spark from "./games/spark/Spark.js";
 import StrengthTester from "./games/StrengthTester/StrengthTester.js";
 import TicTacToe from "./games/tictactoe/TicTacToe.js";
@@ -17,9 +18,8 @@ import WeWatch from "./games/wewatch/WeWatch.js";
 import WheelofFortune from "./games/wheeloffortune/WheelofFortune.js";
 import burst_Forth from "./games/Burst_Forth/burstForth.js";
 import fight from "./games/fight/fight.js";
-import uno from './games/uno/uno.js';
 import pictionary from './games/pictionary/Pictionary.js';
-
+import uno from './games/uno/uno.js';
 
 const gameData = {
   chatroom: {
@@ -212,6 +212,16 @@ const gameData = {
     minUsers: 1,
     maxUsers: 10,
     component: Unscrambled
+  },
+
+  SpaceInvaders: {
+    title: "Space Invaders",
+    authors: "Jason Alvarez, Patrick Cooney, David ",
+    description:
+      "Are you going to let Aliens invade your perfect dictatorship? Of course not! Defend your glorious planet.",
+    minUsers: 1,
+    maxUsers: 10,
+    component: SpaceInvaders
   }
 };
 
