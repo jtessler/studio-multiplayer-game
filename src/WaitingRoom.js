@@ -55,6 +55,11 @@ export default class WaitingRoom extends Component {
   }
 
   onFilterGames(filterType) {
+    firebase.analytics().logEvent('select_content', {
+      content_type: 'filter_games',
+      content_id: filterType
+    });
+
     this.setState({ filterType });
   }
 

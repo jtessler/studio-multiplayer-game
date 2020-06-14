@@ -95,6 +95,11 @@ export default class GameCard extends Component {
   }
 
   joinSession() {
+    firebase.analytics().logEvent('select_content', {
+      content_type: 'join_game',
+      content_id: this.props.session.type
+    });
+
     var uid = firebase.auth().currentUser.uid;
     var path = "/session-metadata/" + this.props.session.id + "/users";
     var sessionDatabaseRef = firebase.database().ref(path);
@@ -112,6 +117,11 @@ export default class GameCard extends Component {
   }
 
   deleteSession() {
+    firebase.analytics().logEvent('select_content', {
+      content_type: 'delete_game',
+      content_id: this.props.session.type
+    });
+
     var path = "/session/" + this.props.session.id;
     var sessionDatabaseRef = firebase.database().ref(path);
     sessionDatabaseRef.remove()

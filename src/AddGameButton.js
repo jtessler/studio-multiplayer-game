@@ -7,6 +7,11 @@ import gameData from './gameData.js';
 
 class AddGameMenuItem extends Component {
   addGame() {
+    firebase.analytics().logEvent('select_content', {
+      content_type: 'add_game',
+      content_id: this.props.type
+    });
+
     var user = firebase.auth().currentUser;
     var sessionData = {
       type: this.props.type,

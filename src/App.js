@@ -60,6 +60,9 @@ export default class App extends Component {
   }
 
   signIn() {
+    firebase.analytics().logEvent('login', {
+      method: 'google'
+    });
     this.setState({ authIsLoading: true });
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);

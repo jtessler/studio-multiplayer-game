@@ -28,6 +28,10 @@ class DatabaseViewer extends Component {
     if (expanded) {
       switch (this.state.db_state) {
         case DB_STATE.UNINITIALIZED:
+          firebase.analytics().logEvent('select_content', {
+            content_type: 'view_game_data'
+          });
+
           this.setState({ db_state: DB_STATE.LOADING });
           firebase.database().ref("/").once("value", (snapshot) => {
             // Check if user data firebase download is done yet.
