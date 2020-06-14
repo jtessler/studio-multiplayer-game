@@ -38,8 +38,11 @@ export default class App extends Component {
         databaseURL: "https://studio-multiplayer-game.firebaseio.com",
         projectId: "studio-multiplayer-game",
         storageBucket: "studio-multiplayer-game.appspot.com",
-        messagingSenderId: "953054375831"
+        messagingSenderId: "953054375831",
+        appId: "1:953054375831:web:f8908ae5304170ef125ed2",
+        measurementId: "G-JWBGFS2PBT"
       });
+      firebase.analytics();
     }
 
     firebase.auth().onAuthStateChanged(
