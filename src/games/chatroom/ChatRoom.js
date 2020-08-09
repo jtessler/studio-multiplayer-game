@@ -26,12 +26,11 @@ export default function ChatRoom(props) {
         timestamp: firebase.database.ServerValue.TIMESTAMP,
         user: session.getMyUserId(),
       }
-      firebase.database().ref("/session").child(props.match.params.id).push(
-          chatData, (error) => {
-            if (error) {
-              console.error("Error storing session metadata", error);
-            }
-          });
+      session.getSessionDatabaseRef().push(chatData, (error) => {
+        if (error) {
+          console.error("Error storing session metadata", error);
+        }
+      });
       setInput("");
     }
   }

@@ -137,9 +137,9 @@ export default class Session {
     const id = this.getSessionId();
     useEffect(() => {
       const onValueChange = snapshot => {
-        const users = snapshot.val();
-        if (users !== null) {
-          setCreatorUserId(users);
+        const creatorUserId = snapshot.val();
+        if (creatorUserId !== null) {
+          setCreatorUserId(creatorUserId);
         }
       };
       const ref = this.getSessionMetadataDatabaseRef().child("creator");
