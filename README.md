@@ -12,8 +12,317 @@ At the end of the project, teachers will merge all groups' projects into a
 single React application to be hosted forever, making any game playable at any
 time (and available for any future job application).
 
-Day-by-day example: Tic Tac Toe
--------------------------------
+As of the 2020-2021 school year, **we switched to using functional components**
+rather than class-based components. This repository supports both component
+styles, but newer games should use functional components to take advantage of
+the latest changes.
+
+Functional Components: Chatroom
+-------------------------------------------------------------
+
+### Step 1: Register the new component; access backend data
+
+#### Step 1.1: Add the new component to the game data registry
+
+Add some data about your game to `src/gameData.js`. See the example below,
+which adds `chatroom` to the `gameData` object. The `minUsers` property sets
+how many users must be signed up before the "game" session can start, which is
+just one our chat room. The `maxUsers` property caps the number of users that
+can join the chat room. The remaining properties should be self explanatory.
+
+```javascript
+import ChatRoom from "./games/chatroom/ChatRoom.js";
+
+const gameData = {
+
+  tictactoe: { ... },
+
+  chatroom: {
+    title: "Chat Room",
+    authors: "Joe Tessler",
+    description: "A place to chat with a group of friends",
+    minUsers: 1,
+    maxUsers: 10,
+    component: ChatRoom
+  },
+
+}
+
+export default gameData;
+```
+
+#### Step 1.2: Create the functional component
+
+Create a React component to run your game. Using the `chatroom` example above,
+we must create `src/game/chatroom/ChatRoom.js`. Your filename and component
+name will obviously be different.
+
+
+```javascript
+import React, { useState } from 'react';
+import Session from '../../Session.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const sessionId = session.getSessionId();
+  const sessionUserIds = session.useSessionUserIds();
+  const sessionCreatorId = session.useSessionCreatorUserId();
+
+  const user_elements = sessionUserIds.map((userId) => (
+    <li key={userId}>{userId}</li>
+  ));
+  return (
+    <div>
+      <p>Session ID: {sessionId}</p>
+      <p>Session creator: {sessionCreatorId}</p>
+      <p>Session users:</p>
+      <ul>
+        {user_elements}
+      </ul>
+    </div>
+  );
+}
+```
+
+Run your code and see what happens! Ask a teammate (who is running the same
+code) to join your newly created game and see what happens to the list of
+users. It should grow! *This is real time collaboration!*
+
+But what is this magical `Session` class and how do we use it? It parses the
+session metadata from the URL and browser state and exposes helper getter
+methods and use-effect functions to access the remote data stored in Firebase.
+The getter functions are of the form `getX` and the use-effect functions take
+the form `useX`.
+
+For this step, we should know about the following `Session` functions:
+
+  1. `session.getSessionId()`: Returns the current session ID as stored in
+     Firebase
+  1. `session.getMyUserId()`: Returns the user ID of the current user, i.e. YOU
+  1. `session.useSessionUserIds()`: Use-effect that provides the list of user
+     IDs connected to the current session
+  1. `session.useSessionCreatorUserId()`: Use-effect that provides the user ID
+     of the one who created this current session
+  1. `session.useSessionTitle()`: Use-effect that provides the session title,
+     e.g., "Chatroom"
+
+All of the above functions are accessing the [Firebase Database][firebase-db]
+path `/session-metadata/<session-id>`. This is the database shared with all
+users playing the current game session. You can explore this data using the
+"Debug Tool" in the sidebar menu.
+
+#### Step 1.3: Access human-friendly user data via `UserApi`
+
+This webpage shows data like `Session creator: HxTp9DEPvUYbN4eLmge1a7Apjzz2`.
+Can we do better? Can I show meaningful data like, `Session creator: Joe
+Tessler`? *Yes!* Use `UserApi` as shown below:
+
+```javascript
+import React, { useState } from 'react';
+import Session from '../../Session.js';
+import UserApi from '../../UserApi.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const sessionId = session.getSessionId();
+  const sessionUserIds = session.useSessionUserIds();
+  const sessionCreatorId = session.useSessionCreatorUserId();
+
+  const user_elements = sessionUserIds.map((userId) => (
+    <li key={userId}>{UserApi.getName(userId)}</li>
+  ));
+  return (
+    <div>
+      <p>Session ID: {sessionId}</p>
+      <p>Session creator: {UserApi.getName(sessionCreatorId)}</p>
+      <p>Session users:</p>
+      <ul>
+        {user_elements}
+      </ul>
+    </div>
+  );
+}
+```
+
+Try running this code. Do you see meaningful user names now?
+
+But how does `UserApi` work? It is a set of functions that look up user data in
+the Firebase database at the path `/user/<user-id>`. The API exposes the
+following functions:
+
+1. `UserApi.getName(userId)`: Returns the user's display name, e.g. "Joe
+   Tessler"
+1. `UserApi.getPhotoUrl(userId)`: Returns the user's avatar photo URL to use
+   in an `<img>` tag
+1. `UserApi.getLastSignIn(userId)`: Returns the user's last login date as a
+   JavaScript `Date` object
+
+#### Step 1.4: Determine if the current user is the session creator or "game host"
+
+**An exercise for the reader**
+
+Use the `session.getMyUserId()` getter method and
+`session.useSessionCreatorUserId()` use-effect function to determine if the
+current user is the session creator. Try to conditionally display "I am the
+host" or "I am a guest" in the rendered webpage.
+
+### Step 2: Updating game data and listening for changes
+
+#### Step 2.1: Write new game data to the Firebase database
+
+Updating game data is as easy! Just write to the Firebase database using the
+reference returned by `session.getSessionDatabaseRef()`, e.g.:
+
+```javascript
+this.getSessionDatabaseRef().set({text: "Hello, World!"});
+```
+
+This reference give you access to all of the Firebase database functions we
+learned about in class. **Warning: this code snippet is writing to the remote
+Firebase database, NOT React state.** You can learn more about this API in the
+[Firebase docs][firebase-db].
+
+This step requires understanding the following `Session` getter methods:
+
+  1. `session.getSessionDatabaseRef()`: Returns a Firebase real-time database
+   reference to the current session data, i.e. '/session/<id>/'
+  1. `session.getSessionMetadataDatabaseRef()`: Returns a Firebase real-time
+     database reference to the current session metadata, i.e
+     '/session-metadata/<id>/'
+
+#### Step 2.2: Listen for game data changes in the Firebase database
+
+Listening for game data changes is also easy! Time to learn about more
+use-effect functions in the magical `Session` class, which gives us access to
+the following callback functions. **Warning: these functions are listening for
+changes to the Firebase database, NOT React state.**
+
+1. `session.useSessionData()`: Use-effect function that provides all session
+   data stored at `/session/<id>/` changes. The data returned is whatever
+   JavaScript object you stored in Firebase from Step 2.1.
+
+We can use this use-effect function in our functional component like in the
+following example:
+
+```javascript
+import React, { useState } from 'react';
+import Session from '../../Session.js';
+import UserApi from '../../UserApi.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const sessionId = session.getSessionId();
+  const sessionUserIds = session.useSessionUserIds();
+  const sessionCreatorId = session.useSessionCreatorUserId();
+
+  const session_data = session.useSessionData();
+  console.log("Session data", session_data);
+
+  const user_elements = sessionUserIds.map((userId) => (
+    <li key={userId}>{UserApi.getName(userId)}</li>
+  ));
+  return (
+    <div>
+      <p>Session ID: {sessionId}</p>
+      <p>Session creator: {UserApi.getName(sessionCreatorId)}</p>
+      <p>Session users:</p>
+      <ul>
+        {user_elements}
+      </ul>
+    </div>
+  );
+}
+```
+
+Open your browser's developer console and confirm "Session data" is logged.
+*Yay! Now we are writing to our Firebase database!*
+
+#### Step 2.3: Build a more interesting demo (button mashing)
+
+**Goal**: Create a webpage that shows a button and some text saying, "Joe
+Tessler clicked the button." The text updates whenever a user clicks the button
+(and shows their name instead).
+
+We need to use the `session.useSessionData()` use-effect function to listen for
+changes to the path `/session/<id>/user_id`, which will store the user ID of
+the last user who clicked on the button.
+
+```javascript
+import React, { useState } from 'react';
+import Session from '../../Session.js';
+import UserApi from '../../UserApi.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const session_data = session.useSessionData();
+
+  return (
+    <div>TODO!</div>
+  );
+}
+```
+
+Then we need to add the rendered `<button>` and its click handler,
+`handleButtonClick`, which updates the Firebase database using
+`session.getSessionDatabaseRef()`.
+
+```javascript
+import React, { useState } from 'react';
+import Session from '../../Session.js';
+import UserApi from '../../UserApi.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const session_data = session.useSessionData();
+
+  const handleButtonClick = () => {
+    session.getSessionDatabaseRef().set({
+      last_user_id: session.getMyUserId()
+    });
+  }
+  return (
+    <div>
+      <button onClick={() => handleButtonClick()}>Click me!</button>
+    </div>
+  );
+}
+```
+
+What's missing? Conditional rendering! We must render the "Joe Tessler clicked
+the button" message. Simply add some text to the JSX that is returned.
+
+
+```javascript
+import React, { useState } from 'react';
+import Session from '../../Session.js';
+import UserApi from '../../UserApi.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const session_data = session.useSessionData();
+  const handleButtonClick = () => {
+    session.getSessionDatabaseRef().set({
+      last_user_id: session.getMyUserId()
+    });
+  }
+  return (
+    <div>
+      <button onClick={() => handleButtonClick()}>Click me!</button>
+      <p>Last user to press the button: {session_data.last_user_id}</p>
+    </div>
+  );
+}
+```
+
+Try playing this with your teammates and confirm the "clicked the button"
+message changes whenever someone new presses the button!
+
+### Step 3+: TODO
+
+TODO.
+
+Class-based Components: Tic Tac Toe
+-------------------------------------------------------------
 
 ### Step 1: Creating a new game component and reading session metadata
 
