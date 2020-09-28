@@ -59,7 +59,7 @@ name will obviously be different.
 
 
 ```javascript
-import React, { useState } from 'react';
+import React from 'react';
 import Session from '../../Session.js';
 
 export default function ChatRoom(props) {
@@ -68,7 +68,7 @@ export default function ChatRoom(props) {
   const sessionUserIds = session.useSessionUserIds();
   const sessionCreatorId = session.useSessionCreatorUserId();
 
-  const user_elements = sessionUserIds.map((userId) => (
+  const userElements = sessionUserIds.map((userId) => (
     <li key={userId}>{userId}</li>
   ));
   return (
@@ -77,7 +77,7 @@ export default function ChatRoom(props) {
       <p>Session creator: {sessionCreatorId}</p>
       <p>Session users:</p>
       <ul>
-        {user_elements}
+        {userElements}
       </ul>
     </div>
   );
@@ -118,7 +118,7 @@ Can we do better? Can I show meaningful data like, `Session creator: Joe
 Tessler`? *Yes!* Use `UserApi` as shown below:
 
 ```javascript
-import React, { useState } from 'react';
+import React from 'react';
 import Session from '../../Session.js';
 import UserApi from '../../UserApi.js';
 
@@ -128,7 +128,7 @@ export default function ChatRoom(props) {
   const sessionUserIds = session.useSessionUserIds();
   const sessionCreatorId = session.useSessionCreatorUserId();
 
-  const user_elements = sessionUserIds.map((userId) => (
+  const userElements = sessionUserIds.map((userId) => (
     <li key={userId}>{UserApi.getName(userId)}</li>
   ));
   return (
@@ -137,7 +137,7 @@ export default function ChatRoom(props) {
       <p>Session creator: {UserApi.getName(sessionCreatorId)}</p>
       <p>Session users:</p>
       <ul>
-        {user_elements}
+        {userElements}
       </ul>
     </div>
   );
@@ -185,10 +185,10 @@ Firebase database, NOT React state.** You can learn more about this API in the
 This step requires understanding the following `Session` getter methods:
 
   1. `session.getSessionDatabaseRef()`: Returns a Firebase real-time database
-   reference to the current session data, i.e. '/session/<id>/'
+   reference to the current session data, i.e. `/session/<id>/`
   1. `session.getSessionMetadataDatabaseRef()`: Returns a Firebase real-time
      database reference to the current session metadata, i.e
-     '/session-metadata/<id>/'
+     `/session-metadata/<id>/`
 
 #### Step 2.2: Listen for game data changes in the Firebase database
 
@@ -205,7 +205,7 @@ We can use this use-effect function in our functional component like in the
 following example:
 
 ```javascript
-import React, { useState } from 'react';
+import React from 'react';
 import Session from '../../Session.js';
 import UserApi from '../../UserApi.js';
 
@@ -215,10 +215,10 @@ export default function ChatRoom(props) {
   const sessionUserIds = session.useSessionUserIds();
   const sessionCreatorId = session.useSessionCreatorUserId();
 
-  const session_data = session.useSessionData();
-  console.log("Session data", session_data);
+  const sessionData = session.useSessionData();
+  console.log("Session data", sessionData);
 
-  const user_elements = sessionUserIds.map((userId) => (
+  const userElements = sessionUserIds.map((userId) => (
     <li key={userId}>{UserApi.getName(userId)}</li>
   ));
   return (
@@ -227,7 +227,7 @@ export default function ChatRoom(props) {
       <p>Session creator: {UserApi.getName(sessionCreatorId)}</p>
       <p>Session users:</p>
       <ul>
-        {user_elements}
+        {userElements}
       </ul>
     </div>
   );
@@ -244,17 +244,18 @@ Tessler clicked the button." The text updates whenever a user clicks the button
 (and shows their name instead).
 
 We need to use the `session.useSessionData()` use-effect function to listen for
-changes to the path `/session/<id>/user_id`, which will store the user ID of
-the last user who clicked on the button.
+changes to the path `/session/<id>/last_user_id`, which will store the user ID
+of the last user who clicked on the button.
 
 ```javascript
-import React, { useState } from 'react';
+import React from 'react';
 import Session from '../../Session.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
   const session = new Session(props);
-  const session_data = session.useSessionData();
+  const sessionData = session.useSessionData();
+  console.log("Session data", sessionData);
 
   return (
     <div>TODO!</div>
@@ -267,13 +268,14 @@ Then we need to add the rendered `<button>` and its click handler,
 `session.getSessionDatabaseRef()`.
 
 ```javascript
-import React, { useState } from 'react';
+import React from 'react';
 import Session from '../../Session.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
   const session = new Session(props);
-  const session_data = session.useSessionData();
+  const sessionData = session.useSessionData();
+  console.log("Session data", sessionData);
 
   const handleButtonClick = () => {
     session.getSessionDatabaseRef().set({
@@ -293,13 +295,14 @@ the button" message. Simply add some text to the JSX that is returned.
 
 
 ```javascript
-import React, { useState } from 'react';
+import React from 'react';
 import Session from '../../Session.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
   const session = new Session(props);
-  const session_data = session.useSessionData();
+  const sessionData = session.useSessionData();
+
   const handleButtonClick = () => {
     session.getSessionDatabaseRef().set({
       last_user_id: session.getMyUserId()
@@ -308,7 +311,7 @@ export default function ChatRoom(props) {
   return (
     <div>
       <button onClick={() => handleButtonClick()}>Click me!</button>
-      <p>Last user to press the button: {session_data.last_user_id}</p>
+      <p>{sessionData.last_user_id} clicked the button</p>
     </div>
   );
 }
