@@ -332,9 +332,197 @@ export default function ChatRoom(props) {
 Try playing this with your teammates and confirm the "clicked the button"
 message changes whenever someone new presses the button!
 
-### Step 3+: TODO
+### Step 3: Designing a Firebase data model
 
-TODO.
+**Now things get harder**. How do I store my actual game's data in Firebase?
+We'll continue using our Chatroom example here.
+
+We only care about one thing in out chatroom: the list of messages. However,
+each message should contain the following three pieces of information:
+
+1. The message text: `"Hi mom!"`
+1. The message timestamp: `Sunday, 2020-10-04 at 10:00`
+1. The user who sent the message: `Joe Tessler`
+
+We will represent this data in Firebase as follows. **Note: the "list" of
+messages is actually an object of message IDs pointing to message objects.**
+
+```
+/session/<session-id>/: {
+  <message-1-id>: {
+    message: "Hi mom!",
+    timestamp: Sunday, 2020-10-04 at 10:00,
+    user: "HxTp9DEPvUYbN4eLmge1a7Apjzz2"
+  },
+  <message-2-id>: {
+    message: "What's up?",
+    timestamp: Sunday, 2020-10-04 at 10:01,
+    user: "HxTp9DEPvUYbN4eLmge1a7Apjzz2"
+  },
+  <message-3-id>: { ... },
+  <message-4-id>: { ... },
+  ...
+}
+```
+
+Rendering this chatroom data is a simple `map` of each message object to an
+`<li>` element to render as an unordered list. Here I'll use the
+`Object.values(object)` function to get the array of all message objects. Read
+more about this function on [MDN][object-values].
+
+```javascript
+import React from 'react';
+import Session from '../../Session.js';
+import UserApi from '../../UserApi.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const sessionData = session.useSessionData();
+
+  const messages = Object.values(sessionData);
+  const messageElements = messages.map(message_object => (
+    <li>{UserApi.getName(message_object.user)}: {message_object.message}</li>
+  ));
+
+  return (
+    <div>
+      <ul>{messageElements}</ul>
+    </div>
+  );
+}
+```
+
+### Step 4: Conditional rendering based on database changes and user input
+
+Using the same Chatroom example from Step 3, we need to add an element to allow
+user input and perform the following actions whenever a user submits a new
+message:
+
+1. Find the current user's ID
+1. Find the current message stored in the input field
+1. Find the current time to use as the message timestamp
+1. Store the new message in the remote Firebase database
+
+#### Step 4.1: Create an input field and button click handler
+
+First, we need to add the `<textarea>` and `<button>` elements and their
+corresponding handlers:
+
+```javascript
+import React from 'react';
+import Session from '../../Session.js';
+import UserApi from '../../UserApi.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const sessionData = session.useSessionData();
+
+  const messages = Object.values(sessionData);
+  const messageElements = messages.map(message_object => (
+    <li>{UserApi.getName(message_object.user)}: {message_object.message}</li>
+  ));
+
+  const handleTextChange = (text) => {
+    console.log("text changed", text);
+  }
+  const handleSendClicked = () => {
+    console.log("submit clicked");
+  }
+
+  return (
+    <div>
+      <ul>{messageElements}</ul>
+      <textarea
+          value={"foo"}
+          onChange={(e) => handleTextChange(e.target.value)} />
+      <button onClick={() => handleSendClicked()}>Send</button>
+    </div>
+  );
+}
+```
+
+When you run this code, you'll see logs printed to the console every time you
+press the Send button and type in the input field. However, the input field
+always shows "foo". Why? **We need to add React state to store the input field
+value!**
+
+```javascript
+const [inputText, setInputText] = useState("");
+const handleTextChange = (text) => {
+  setInputText(text);
+}
+```
+
+```javascript
+<textarea
+    value={inputText}
+    onChange={(e) => handleTextChange(e.target.value)} />
+```
+
+You should see the input field update with whatever text you type. Now we have
+access to the variable `inputText` to write `handleSendClicked()`. This code is
+using the more advanced Firebase database function `push(data)` rather than
+`setSessionData(data)`. You can read more about it in the [Firebase
+documentation][firebase-db].
+
+```javascript
+const handleSendClicked = () => {
+  session.getSessionDatabaseRef().push({
+    message: inputText,
+    user: session.getMyUserId(),
+    timestamp: Date.now()
+  });
+}
+```
+
+We now have a complete Chatroom implementation! Try it out!
+
+```javascript
+import React, { useState } from 'react';
+import Session from '../../Session.js';
+import UserApi from '../../UserApi.js';
+
+export default function ChatRoom(props) {
+  const session = new Session(props);
+  const sessionData = session.useSessionData();
+
+  const messages = Object.values(sessionData);
+  const messageElements = messages.map(message_object => (
+    <li>{UserApi.getName(message_object.user)}: {message_object.message}</li>
+  ));
+
+  const [inputText, setInputText] = useState("");
+  const handleTextChange = (text) => {
+    setInputText(text);
+  }
+  const handleSendClicked = () => {
+    session.getSessionDatabaseRef().push({
+      message: inputText,
+      user: session.getMyUserId(),
+      timestamp: Date.now()
+    });
+  }
+
+  return (
+    <div>
+      <ul>{messageElements}</ul>
+      <textarea
+          value={inputText}
+          onChange={(e) => handleTextChange(e.target.value)} />
+      <button onClick={() => handleSendClicked()}>Send</button>
+    </div>
+  );
+}
+```
+
+### Step 5: Game style improvements (stretch goal)
+
+**An exercise for the reader**
+
+This game framework was created using the [Material UI React
+library][material-ui], which provides React components pre-styled with Google's
+Material theme. **Check out the component demos and try using one in your
+game!**
 
 Class-based Components: Tic Tac Toe
 -------------------------------------------------------------
@@ -993,4 +1181,5 @@ Resources
 [firebase-db]:https://firebase.google.com/docs/database/web/read-and-write
 [firebase-js]:https://firebase.google.com/docs/reference/js/
 [material-ui]:https://www.material-ui.com/#/components/app-bar
+[object-values]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
 [reactjs]:https://reactjs.org/docs/hello-world.html
