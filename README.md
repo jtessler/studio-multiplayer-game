@@ -106,6 +106,12 @@ For this step, we should know about the following `Session` functions:
   1. `session.useSessionTitle()`: Use-effect that provides the session title,
      e.g., "Chatroom"
 
+**Note: you should only call `new Session(props)` from the top-level
+component.** Any sub-component will not have the `props` values that `Session`
+expects and, by design, we suggest limiting Firebase data management to one
+component. Pass session data and update callback functions to sub-components
+instead.
+
 All of the above functions are accessing the [Firebase Database][firebase-db]
 path `/session-metadata/<session-id>`. This is the database shared with all
 users playing the current game session. You can explore this data using the
@@ -171,18 +177,27 @@ host" or "I am a guest" in the rendered webpage.
 #### Step 2.1: Write new game data to the Firebase database
 
 Updating game data is as easy! Just write to the Firebase database using the
-reference returned by `session.getSessionDatabaseRef()`, e.g.:
+setter method `session.setSessionData(data)`.
 
 ```javascript
-this.getSessionDatabaseRef().set({text: "Hello, World!"});
+session.setSessionData({text: "Hello, World!"});
 ```
 
-This reference give you access to all of the Firebase database functions we
-learned about in class. **Warning: this code snippet is writing to the remote
-Firebase database, NOT React state.** You can learn more about this API in the
-[Firebase docs][firebase-db].
+This step requires understanding the following `Session` setter methods:
 
-This step requires understanding the following `Session` getter methods:
+  1. `session.setSessionData(data)`: Updates the actual game data
+  1. `session.setSessionMetadata(metadata)`: Updates the metadata associated
+     with your game (**you should not need to use this function**)
+
+These setter methods behave just like React's set-state functions, except they
+**update a remote Firebase database, not local React state**. They only update
+the key and value pairs provided in the data parameter. They do not override
+the entire object.
+
+For more advanced use of the remote database storage, you can access the
+Firebase database references directly using the following getter methods. Read
+more about what operations are available in the [Firebase
+documentation][firebase-db].
 
   1. `session.getSessionDatabaseRef()`: Returns a Firebase real-time database
    reference to the current session data, i.e. `/session/<id>/`
@@ -265,7 +280,7 @@ export default function ChatRoom(props) {
 
 Then we need to add the rendered `<button>` and its click handler,
 `handleButtonClick`, which updates the Firebase database using
-`session.getSessionDatabaseRef()`.
+`session.setSessionData(data)`.
 
 ```javascript
 import React from 'react';
@@ -278,10 +293,9 @@ export default function ChatRoom(props) {
   console.log("Session data", sessionData);
 
   const handleButtonClick = () => {
-    session.getSessionDatabaseRef().set({
-      last_user_id: session.getMyUserId()
-    });
+    session.setSessionData({ last_user_id: session.getMyUserId() });
   }
+
   return (
     <div>
       <button onClick={() => handleButtonClick()}>Click me!</button>
@@ -293,7 +307,6 @@ export default function ChatRoom(props) {
 What's missing? Conditional rendering! We must render the "Joe Tessler clicked
 the button" message. Simply add some text to the JSX that is returned.
 
-
 ```javascript
 import React from 'react';
 import Session from '../../Session.js';
@@ -304,10 +317,9 @@ export default function ChatRoom(props) {
   const sessionData = session.useSessionData();
 
   const handleButtonClick = () => {
-    session.getSessionDatabaseRef().set({
-      last_user_id: session.getMyUserId()
-    });
+    session.setSessionData({ last_user_id: session.getMyUserId() });
   }
+
   return (
     <div>
       <button onClick={() => handleButtonClick()}>Click me!</button>

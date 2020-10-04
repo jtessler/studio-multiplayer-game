@@ -173,4 +173,25 @@ export default class Session {
     }, [id]);
     return title;
   }
+
+  /**
+   * Updates the session data object stored in the remote Firebase database.
+   *
+   * Behaves like React set-state functions. It only updates the key and value
+   * pairs provided in the data parameter. This method does not override the
+   * entire object.
+   */
+  setSessionData(data) {
+    this.getSessionDatabaseRef().update(data).catch(error => {
+      console.warn("Error updating session data", this.getSessionId(), error);
+    });
+  }
+
+  /** Updates the metadata object stored in the remote Firebase database. */
+  setSessionMetadata(metadata) {
+    this.getSessionMetadataDatabaseRef().update(metadata).catch(error => {
+      console.warn(
+          "Error updating session metadata", this.getSessionId(), error);
+    });
+  }
 }
