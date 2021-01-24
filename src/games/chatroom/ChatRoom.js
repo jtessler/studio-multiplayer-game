@@ -1,14 +1,14 @@
 import Avatar from '@material-ui/core/Avatar';
+import GameDatabase from '../../GameDatabase.js';
 import React, { useState } from 'react';
-import Session from '../../Session.js';
 import TextField from '@material-ui/core/TextField';
 import UserApi from '../../UserApi.js';
 import firebase from 'firebase';
 import { List, ListItem } from 'material-ui/List';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const data = session.useSessionData();
+  const gameDatabase = new GameDatabase(props);
+  const data = gameDatabase.useGameData();
   const [input, setInput] = useState("");
 
   const chats = Object.keys(data).map((id) => ({
@@ -24,11 +24,11 @@ export default function ChatRoom(props) {
       const chatData = {
         message: input,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
-        user: session.getMyUserId(),
+        user: gameDatabase.getMyUserId(),
       }
-      session.getSessionDatabaseRef().push(chatData, (error) => {
+      gameDatabase.getGameDatabaseRef().push(chatData, (error) => {
         if (error) {
-          console.error("Error storing session metadata", error);
+          console.error("Error storing chat message", error);
         }
       });
       setInput("");

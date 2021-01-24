@@ -60,22 +60,22 @@ name will obviously be different.
 
 ```javascript
 import React from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionId = session.getSessionId();
-  const sessionUserIds = session.useSessionUserIds();
-  const sessionCreatorId = session.useSessionCreatorUserId();
+  const gameDatabase = new GameDatabase(props);
+  const gameId = game.getGameId();
+  const gameUserIds = game.useGameUserIds();
+  const gameCreatorId = game.useGameCreatorUserId();
 
-  const userElements = sessionUserIds.map((userId) => (
+  const userElements = gameUserIds.map((userId) => (
     <li key={userId}>{userId}</li>
   ));
   return (
     <div>
-      <p>Session ID: {sessionId}</p>
-      <p>Session creator: {sessionCreatorId}</p>
-      <p>Session users:</p>
+      <p>Game ID: {gameId}</p>
+      <p>Game creator: {gameCreatorId}</p>
+      <p>Game users:</p>
       <ul>
         {userElements}
       </ul>
@@ -88,60 +88,61 @@ Run your code and see what happens! Ask a teammate (who is running the same
 code) to join your newly created game and see what happens to the list of
 users. It should grow! *This is real time collaboration!*
 
-But what is this magical `Session` class and how do we use it? It parses the
-session metadata from the URL and browser state and exposes helper getter
+But what is this magical `GameDatabase` class and how do we use it? It parses
+the game metadata from the URL and browser state and exposes helper getter
 methods and use-effect functions to access the remote data stored in Firebase.
 The getter functions are of the form `getX` and the use-effect functions take
 the form `useX`.
 
-For this step, we should know about the following `Session` functions:
+For this step, we should know about the following `GameDatabase` functions:
 
-  1. `session.getSessionId()`: Returns the current session ID as stored in
+  1. `gameDatabase.getGameId()`: Returns the current game ID as stored in
      Firebase
-  1. `session.getMyUserId()`: Returns the user ID of the current user, i.e. YOU
-  1. `session.useSessionUserIds()`: Use-effect that provides the list of user
-     IDs connected to the current session
-  1. `session.useSessionCreatorUserId()`: Use-effect that provides the user ID
-     of the one who created this current session
-  1. `session.useSessionTitle()`: Use-effect that provides the session title,
+  1. `gameDatabase.getMyUserId()`: Returns the user ID of the current user,
+     i.e. YOU
+  1. `gameDatabase.useGameUserIds()`: Use-effect that provides the list of user
+     IDs connected to the current game
+  1. `gameDatabase.useGameCreatorUserId()`: Use-effect that provides the user
+     ID of the one who created this current game
+  1. `gameDatabase.useGameTitle()`: Use-effect that provides the game title,
      e.g., "Chatroom"
 
-**Note: you should only call `new Session(props)` from the top-level
-component.** Any sub-component will not have the `props` values that `Session`
-expects and, by design, we suggest limiting Firebase data management to one
-component. Pass session data and update callback functions to sub-components
-instead.
+**Note: you should only call `new GameDatabase(props)` from the top-level
+component.** Any sub-component will not have the `props` values that
+`GameDatabase` expects and, by design, we suggest limiting Firebase data
+management to one component. Pass game data and update callback functions to
+sub-components instead.
 
 All of the above functions are accessing the [Firebase Database][firebase-db]
-path `/session-metadata/<session-id>`. This is the database shared with all
-users playing the current game session. You can explore this data using the
-"Debug Tool" in the sidebar menu.
+path `/session-metadata/<game-id>`. This is the database shared with all users
+playing the current game session. You can explore this data using the "Debug
+Tool" in the sidebar menu.
 
 #### Step 1.3: Access human-friendly user data via `UserApi`
 
-This webpage shows data like `Session creator: HxTp9DEPvUYbN4eLmge1a7Apjzz2`.
-Can we do better? Can I show meaningful data like, `Session creator: Joe
-Tessler`? *Yes!* Use `UserApi` as shown below:
+This webpage shows data like `Game creator: HxTp9DEPvUYbN4eLmge1a7Apjzz2`.  Can
+we do better? Can I show meaningful data like, `Game creator: Joe Tessler`?
+*Yes!* Use `UserApi` as shown below:
 
 ```javascript
 import React from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionId = session.getSessionId();
-  const sessionUserIds = session.useSessionUserIds();
-  const sessionCreatorId = session.useSessionCreatorUserId();
+  const gameDatabase = new GameDatabase(props);
+  const gameId = gameDatabase.getGameId();
+  const gameUserIds = gameDatabase.useGameUserIds();
+  const gameCreatorId = gameDatabase.useGameCreatorUserId();
 
-  const userElements = sessionUserIds.map((userId) => (
+  const userElements = gameUserIds.map((userId) => (
     <li key={userId}>{UserApi.getName(userId)}</li>
   ));
   return (
     <div>
-      <p>Session ID: {sessionId}</p>
-      <p>Session creator: {UserApi.getName(sessionCreatorId)}</p>
-      <p>Session users:</p>
+      <p>Game ID: {gameId}</p>
+      <p>Game creator: {UserApi.getName(gameCreatorId)}</p>
+      <p>Game users:</p>
       <ul>
         {userElements}
       </ul>
@@ -163,30 +164,30 @@ following functions:
 1. `UserApi.getLastSignIn(userId)`: Returns the user's last login date as a
    JavaScript `Date` object
 
-#### Step 1.4: Determine if the current user is the session creator or "game host"
+#### Step 1.4: Determine if the current user is the game creator or "game host"
 
 **An exercise for the reader**
 
-Use the `session.getMyUserId()` getter method and
-`session.useSessionCreatorUserId()` use-effect function to determine if the
-current user is the session creator. Try to conditionally display "I am the
-host" or "I am a guest" in the rendered webpage.
+Use the `gameDatabase.getMyUserId()` getter method and
+`gameDatabase.useGameCreatorUserId()` use-effect function to determine if the
+current user is the game creator. Try to conditionally display "I am the host"
+or "I am a guest" in the rendered webpage.
 
 ### Step 2: Updating game data and listening for changes
 
 #### Step 2.1: Write new game data to the Firebase database
 
 Updating game data is as easy! Just write to the Firebase database using the
-setter method `session.setSessionData(data)`.
+setter method `gameDatabase.setGameData(data)`.
 
 ```javascript
-session.setSessionData({text: "Hello, World!"});
+gameDatabase.setGameData({text: "Hello, World!"});
 ```
 
-This step requires understanding the following `Session` setter methods:
+This step requires understanding the following `GameDatabase` setter methods:
 
-  1. `session.setSessionData(data)`: Updates the actual game data
-  1. `session.setSessionMetadata(metadata)`: Updates the metadata associated
+  1. `gameDatabase.setGameData(data)`: Updates the actual game data
+  1. `gameDatabase.setGameMetadata(metadata)`: Updates the metadata associated
      with your game (**you should not need to use this function**)
 
 These setter methods behave just like React's set-state functions, except they
@@ -199,21 +200,21 @@ Firebase database references directly using the following getter methods. Read
 more about what operations are available in the [Firebase
 documentation][firebase-db].
 
-  1. `session.getSessionDatabaseRef()`: Returns a Firebase real-time database
-   reference to the current session data, i.e. `/session/<id>/`
-  1. `session.getSessionMetadataDatabaseRef()`: Returns a Firebase real-time
-     database reference to the current session metadata, i.e
-     `/session-metadata/<id>/`
+  1. `gameDatabase.getGameDatabaseRef()`: Returns a Firebase real-time database
+   reference to the current game data, i.e. `/session/<game-id>/`
+  1. `gameDatabase.getGameMetadataDatabaseRef()`: Returns a Firebase real-time
+     database reference to the current game metadata, i.e
+     `/session-metadata/<game-id>/`
 
 #### Step 2.2: Listen for game data changes in the Firebase database
 
 Listening for game data changes is also easy! Time to learn about more
-use-effect functions in the magical `Session` class, which gives us access to
-the following callback functions. **Warning: these functions are listening for
-changes to the Firebase database, NOT React state.**
+use-effect functions in the magical `GameDatabase` class, which gives us access
+to the following callback functions. **Warning: these functions are listening
+for changes to the Firebase database, NOT React state.**
 
-1. `session.useSessionData()`: Use-effect function that provides all session
-   data stored at `/session/<id>/` changes. The data returned is whatever
+1. `gameDatabase.useGameData()`: Use-effect function that provides all game
+   data stored at `/session/<game-id>/` changes. The data returned is whatever
    JavaScript object you stored in Firebase from Step 2.1.
 
 We can use this use-effect function in our functional component like in the
@@ -221,26 +222,26 @@ following example:
 
 ```javascript
 import React from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionId = session.getSessionId();
-  const sessionUserIds = session.useSessionUserIds();
-  const sessionCreatorId = session.useSessionCreatorUserId();
+  const gameDatabase = new GameDatabase(props);
+  const gameId = gameDatabase.getGameId();
+  const gameUserIds = gameDatabase.useGameUserIds();
+  const gameCreatorId = gameDatabase.useGameCreatorUserId();
 
-  const sessionData = session.useSessionData();
-  console.log("Session data", sessionData);
+  const gameData = gameDatabase.useGameData();
+  console.log("Game data", gameData);
 
-  const userElements = sessionUserIds.map((userId) => (
+  const userElements = gameUserIds.map((userId) => (
     <li key={userId}>{UserApi.getName(userId)}</li>
   ));
   return (
     <div>
-      <p>Session ID: {sessionId}</p>
-      <p>Session creator: {UserApi.getName(sessionCreatorId)}</p>
-      <p>Session users:</p>
+      <p>Game ID: {gameId}</p>
+      <p>Game creator: {UserApi.getName(gameCreatorId)}</p>
+      <p>Game users:</p>
       <ul>
         {userElements}
       </ul>
@@ -249,8 +250,8 @@ export default function ChatRoom(props) {
 }
 ```
 
-Open your browser's developer console and confirm "Session data" is logged.
-*Yay! Now we are writing to our Firebase database!*
+Open your browser's developer console and confirm "Game data" is logged.  *Yay!
+Now we are writing to our Firebase database!*
 
 #### Step 2.3: Build a more interesting demo (button mashing)
 
@@ -258,19 +259,19 @@ Open your browser's developer console and confirm "Session data" is logged.
 Tessler clicked the button." The text updates whenever a user clicks the button
 (and shows their name instead).
 
-We need to use the `session.useSessionData()` use-effect function to listen for
-changes to the path `/session/<id>/last_user_id`, which will store the user ID
-of the last user who clicked on the button.
+We need to use the `gameDatabase.useGameData()` use-effect function to listen
+for changes to the path `/session/<game-id>/last_user_id`, which will store the
+user ID of the last user who clicked on the button.
 
 ```javascript
 import React from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionData = session.useSessionData();
-  console.log("Session data", sessionData);
+  const gameDatabase = new GameDatabase(props);
+  const gameData = gameDatabase.useGameData();
+  console.log("Game data", gameData);
 
   return (
     <div>TODO!</div>
@@ -280,20 +281,20 @@ export default function ChatRoom(props) {
 
 Then we need to add the rendered `<button>` and its click handler,
 `handleButtonClick`, which updates the Firebase database using
-`session.setSessionData(data)`.
+`gameDatabase.setGameData(data)`.
 
 ```javascript
 import React from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionData = session.useSessionData();
-  console.log("Session data", sessionData);
+  const gameDatabase = new GameDatabase(props);
+  const gameData = gameDatabase.useGameData();
+  console.log("Game data", gameData);
 
   const handleButtonClick = () => {
-    session.setSessionData({ last_user_id: session.getMyUserId() });
+    gameDatabase.setGameData({ last_user_id: gameDatabase.getMyUserId() });
   }
 
   return (
@@ -309,21 +310,21 @@ the button" message. Simply add some text to the JSX that is returned.
 
 ```javascript
 import React from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionData = session.useSessionData();
+  const gameDatabase = new GameDatabase(props);
+  const gameData = gameDatabase.useGameData();
 
   const handleButtonClick = () => {
-    session.setSessionData({ last_user_id: session.getMyUserId() });
+    gameDatabase.setGameData({ last_user_id: gameDatabase.getMyUserId() });
   }
 
   return (
     <div>
       <button onClick={() => handleButtonClick()}>Click me!</button>
-      <p>{sessionData.last_user_id} clicked the button</p>
+      <p>{gameData.last_user_id} clicked the button</p>
     </div>
   );
 }
@@ -348,7 +349,7 @@ We will represent this data in Firebase as follows. **Note: the "list" of
 messages is actually an object of message IDs pointing to message objects.**
 
 ```
-/session/<session-id>/: {
+/session/<game-id>/: {
   <message-1-id>: {
     message: "Hi mom!",
     timestamp: Sunday, 2020-10-04 at 10:00,
@@ -372,14 +373,14 @@ more about this function on [MDN][object-values].
 
 ```javascript
 import React from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionData = session.useSessionData();
+  const gameDatabase = new GameDatabase(props);
+  const gameData = gameDatabase.useGameData();
 
-  const messages = Object.values(sessionData);
+  const messages = Object.values(gameData);
   const messageElements = messages.map(message_object => (
     <li>{UserApi.getName(message_object.user)}: {message_object.message}</li>
   ));
@@ -410,14 +411,14 @@ corresponding handlers:
 
 ```javascript
 import React from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionData = session.useSessionData();
+  const gameDatabase = new GameDatabase(props);
+  const gameData = gameDatabase.useGameData();
 
-  const messages = Object.values(sessionData);
+  const messages = Object.values(gameData);
   const messageElements = messages.map(message_object => (
     <li>{UserApi.getName(message_object.user)}: {message_object.message}</li>
   ));
@@ -462,14 +463,14 @@ const handleTextChange = (text) => {
 You should see the input field update with whatever text you type. Now we have
 access to the variable `inputText` to write `handleSendClicked()`. This code is
 using the more advanced Firebase database function `push(data)` rather than
-`setSessionData(data)`. You can read more about it in the [Firebase
+`setGameData(data)`. You can read more about it in the [Firebase
 documentation][firebase-db].
 
 ```javascript
 const handleSendClicked = () => {
-  session.getSessionDatabaseRef().push({
+  gameDatabase.getGameDatabaseRef().push({
     message: inputText,
-    user: session.getMyUserId(),
+    user: gameDatabase.getMyUserId(),
     timestamp: Date.now()
   });
 }
@@ -479,14 +480,14 @@ We now have a complete Chatroom implementation! Try it out!
 
 ```javascript
 import React, { useState } from 'react';
-import Session from '../../Session.js';
+import GameDatabase from '../../GameDatabase.js';
 import UserApi from '../../UserApi.js';
 
 export default function ChatRoom(props) {
-  const session = new Session(props);
-  const sessionData = session.useSessionData();
+  const gameDatabase = new GameDatabase(props);
+  const gameData = gameDatabase.useGameData();
 
-  const messages = Object.values(sessionData);
+  const messages = Object.values(gameData);
   const messageElements = messages.map(message_object => (
     <li>{UserApi.getName(message_object.user)}: {message_object.message}</li>
   ));
@@ -496,9 +497,9 @@ export default function ChatRoom(props) {
     setInputText(text);
   }
   const handleSendClicked = () => {
-    session.getSessionDatabaseRef().push({
+    gameDatabase.getGameDatabaseRef().push({
       message: inputText,
-      user: session.getMyUserId(),
+      user: gameDatabase.getMyUserId(),
       timestamp: Date.now()
     });
   }

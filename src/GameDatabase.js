@@ -6,50 +6,50 @@ const SESSION_DATA_PATH = "/session";
 const SESSION_METADATA_PATH = "/session-metadata";
 
 /**
- * The session context object to be used by functional components.
+ * The game database object to be used by functional components.
  *
  * Exposes all data previously provided by the parent GameComponent class. Most
  * getters share the same name, but the listeners for Firebase changes differ.
  * Rather than overriding callbacks in subclasses, this class offers several
  * use-effects to provided the same functionality:
  *
- *   - useSessionData: the entire session data object
- *   - useSessionUserIds: the list of user IDs in the current session
- *   - useSessionCreatorUserId: the user ID of the one who created the session
- *   - useSessionTitle: the session type title
+ *   - useGameData: the entire data object stored in the backend for the game
+ *   - useGameUserIds: the list of user IDs in the current game
+ *   - useGameCreatorUserId: the user ID of the one who created the game
+ *   - useGameTitle: the game type title
  */
-export default class Session {
+export default class GameDatabase {
   constructor(props) {
     this.props = props;
 
-    // Force page title changes based on the session type, i.e. this use effect
+    // Force page title changes based on the game type, i.e. this use effect
     // runs every time for any component that constructs this class.
-    const title = this.useSessionTitle();
+    const title = this.useGameTitle();
     document.title = title;
   }
 
   /**
-   * Returns a Firebase real-time database reference to the current session
+   * Returns a Firebase real-time database reference to the current game
    * data, i.e. '/session/<id>/'.
    */
-  getSessionDatabaseRef() {
+  getGameDatabaseRef() {
     return firebase.database()
         .ref(SESSION_DATA_PATH)
-        .child(this.getSessionId());
+        .child(this.getGameId());
   }
 
   /**
-   * Returns a Firebase real-time database reference to the current session
+   * Returns a Firebase real-time database reference to the current game
    * metadata, i.e. '/session-metadata/<id>/'.
    */
-  getSessionMetadataDatabaseRef() {
+  getGameMetadataDatabaseRef() {
     return firebase.database()
         .ref(SESSION_METADATA_PATH)
-        .child(this.getSessionId());
+        .child(this.getGameId());
   }
 
-  /** Returns the current session ID as stored in Firebase. */
-  getSessionId(props) {
+  /** Returns the current game ID as stored in Firebase. */
+  getGameId(props) {
     if (this.props &&
         this.props.match &&
         this.props.match.params &&
@@ -62,7 +62,7 @@ export default class Session {
         this.props.location.state.id) {
       return this.props.location.state.id;
     }
-    throw new Error("Unable to get session ID from URL nor browser history");
+    throw new Error("Unable to get game ID from URL nor browser history");
   }
 
   /** Returns the user ID of the current user, i.e. YOU. */
@@ -75,10 +75,10 @@ export default class Session {
     throw new Error("Unable to get current user ID");
   }
 
-  /** Use effect that provides the entire session data object from Firebase. */
-  useSessionData() {
+  /** Use effect that provides the entire game data object from Firebase. */
+  useGameData() {
     const [data, setData] = useState({});
-    const id = this.getSessionId();
+    const id = this.getGameId();
     useEffect(() => {
       const onValueChange = snapshot => {
         const data = snapshot.val();
@@ -86,18 +86,18 @@ export default class Session {
           setData(data);
         }
       };
-      const ref = this.getSessionDatabaseRef();
+      const ref = this.getGameDatabaseRef();
       ref.on("value", onValueChange);
       return () => { ref.off("value", onValueChange); };
-    }, [id]);  // Only re-run this hook if the session ID changes (it won't).
+    }, [id]);  // Only re-run this hook if the game ID changes (it won't).
     return data;
   }
 
   /**
    * Use effect that provides the list of user IDs connected to the current
-   * session.
+   * game.
    */
-  useSessionUserIds() {
+  useGameUserIds() {
     let defaultUserIds = [];
     if (this.props &&
         this.props.location &&
@@ -106,7 +106,7 @@ export default class Session {
       defaultUserIds = this.props.location.state.users;
     }
     const [userIds, setUserIds] = useState(defaultUserIds);
-    const id = this.getSessionId();
+    const id = this.getGameId();
     useEffect(() => {
       const onValueChange = snapshot => {
         const users = snapshot.val();
@@ -114,7 +114,7 @@ export default class Session {
           setUserIds(users);
         }
       };
-      const ref = this.getSessionMetadataDatabaseRef().child("users");
+      const ref = this.getGameMetadataDatabaseRef().child("users");
       ref.on("value", onValueChange);
       return () => { ref.off("value", onValueChange); };
     }, [id]);
@@ -123,9 +123,9 @@ export default class Session {
 
   /**
    * Use effect that provides the user ID of the one who created this current
-   * session.
+   * game.
    */
-  useSessionCreatorUserId() {
+  useGameCreatorUserId() {
     let defaultCreatorUserId = "";
     if (this.props &&
         this.props.location &&
@@ -134,7 +134,7 @@ export default class Session {
       defaultCreatorUserId = this.props.location.state.creator;
     }
     const [creatorUserId, setCreatorUserId] = useState(defaultCreatorUserId);
-    const id = this.getSessionId();
+    const id = this.getGameId();
     useEffect(() => {
       const onValueChange = snapshot => {
         const creatorUserId = snapshot.val();
@@ -142,15 +142,15 @@ export default class Session {
           setCreatorUserId(creatorUserId);
         }
       };
-      const ref = this.getSessionMetadataDatabaseRef().child("creator");
+      const ref = this.getGameMetadataDatabaseRef().child("creator");
       ref.on("value", onValueChange);
       return () => { ref.off("value", onValueChange); };
     }, [id]);
     return creatorUserId;
   }
 
-  /** Use effect that provides the page title for the given session type. */
-  useSessionTitle() {
+  /** Use effect that provides the page title for the given game type. */
+  useGameTitle() {
     let defaultTitle = "Studio Games!";
     if (this.props &&
         this.props.location &&
@@ -159,7 +159,7 @@ export default class Session {
       defaultTitle = this.props.location.state.title;
     }
     const [title, setTitle] = useState(defaultTitle);
-    const id = this.getSessionId();
+    const id = this.getGameId();
     useEffect(() => {
       const onValueChange = snapshot => {
         const type = snapshot.val();
@@ -167,7 +167,7 @@ export default class Session {
           setTitle(gameData[type].title);
         }
       };
-      const ref = this.getSessionMetadataDatabaseRef().child("type");
+      const ref = this.getGameMetadataDatabaseRef().child("type");
       ref.on("value", onValueChange);
       return () => { ref.off("value", onValueChange); };
     }, [id]);
@@ -175,23 +175,23 @@ export default class Session {
   }
 
   /**
-   * Updates the session data object stored in the remote Firebase database.
+   * Updates the game data object stored in the remote Firebase database.
    *
    * Behaves like React set-state functions. It only updates the key and value
    * pairs provided in the data parameter. This method does not override the
    * entire object.
    */
-  setSessionData(data) {
-    this.getSessionDatabaseRef().update(data).catch(error => {
-      console.warn("Error updating session data", this.getSessionId(), error);
+  setGameData(data) {
+    this.getGameDatabaseRef().update(data).catch(error => {
+      console.warn("Error updating game data", this.getGameId(), error);
     });
   }
 
   /** Updates the metadata object stored in the remote Firebase database. */
-  setSessionMetadata(metadata) {
-    this.getSessionMetadataDatabaseRef().update(metadata).catch(error => {
+  setGameMetadata(metadata) {
+    this.getGameMetadataDatabaseRef().update(metadata).catch(error => {
       console.warn(
-          "Error updating session metadata", this.getSessionId(), error);
+          "Error updating game metadata", this.getGameId(), error);
     });
   }
 }
